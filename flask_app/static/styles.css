@@ -1,16 +1,149 @@
-
+/* General Styles */
 body {
-    background-color: #fff0f5; /* light pink */
-    font-family: 'Poppins', sans-serif;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0f4f8; /* Light background for a clean look */
+  color: #333; /* Dark text for readability */
+  margin: 0;
+  padding: 0;
 }
 
-.navbar {
-    background-color: #ffc0cb; /* millennial pink */
+/* Header Section */
+header.jumbotron {
+  color: white;
+  text-align: center;
+  height: 100vh; /* Full-screen height */
+  background-image: url('../static/images/gym_image1.jpeg'); /* Path to your image */
+  background-size: cover;
+  background-position: center;
+  position: relative; /* Enables overlay */
 }
 
-.navbar-brand {
-    font-weight: bold;
+header.jumbotron::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Adds a semi-transparent overlay for better text contrast */
+  z-index: 1;
 }
 
+header.jumbotron .container {
+  position: relative;
+  z-index: 2; /* Ensures content is above the overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Centers content vertically */
+}
 
+/* Navbar Styles */
+.navbar-nav .nav-link {
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
 
+.navbar-nav .nav-link:hover {
+  color: #d63384; /* Accent color */
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #d63384; /* Vibrant pink for attention */
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #a72463; /* Slightly darker pink for hover */
+}
+
+/* Outline Buttons */
+.btn-outline-primary {
+  color: #d63384;
+  border: 2px solid #d63384;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: #d63384;
+  color: white;
+}
+
+/* Features Section */
+.features-section {
+  background-color: #ffffff; /* Neutral background */
+  padding: 3rem 0;
+  color: #333; /* Dark text */
+}
+
+.features-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #d63384; /* Accent color for headings */
+  margin-bottom: 1.5rem;
+}
+
+.features-section .card {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease;
+}
+
+.features-section .card:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Adds hover depth */
+}
+
+.features-section .card h3 {
+  color: #333; /* Consistent text color */
+}
+
+.features-section .card p {
+  color: #555; /* Slightly lighter text for descriptions */
+}
+
+/* Footer Styles */
+footer {
+  background-color: #f8f9fa; /* Light gray for a clean footer */
+  padding: 1.5rem 0;
+  color: #666;
+}
+
+footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+footer p small {
+  color: #333; /* Ensures small text is readable */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header.jumbotron {
+    height: 300px; /* Adjust for smaller screens */
+    background-size: cover;
+  }
+
+  .features-section h2 {
+    font-size: 2rem; /* Smaller heading size for mobile */
+  }
+
+  .features-section .card {
+    margin-bottom: 1rem; /* Adds spacing for stacked cards */
+  }
+}
+
+/* Additional Styling for Links */
+a {
+  color: #d63384; /* Matching accent color */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #a72463; /* Darker hover color */
+}

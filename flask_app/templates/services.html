@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h2>Our Services</h2>
+  <p>At GirlsCoded Gym, we offer a unique blend of fitness and coding. Whether you're looking to lift heavy or level up your tech skills, we've got a program for you.</p>
+
+  <ul>
+    <li><a href="{{ url_for('classes') }}">View Classes</a></li>
+    <li><a href="{{ url_for('membership_plans') }}">Membership Plans</a></li>
+    <li><a href="{{ url_for('trainers') }}">Trainer Info</a></li>
+  </ul>
+{% endblock %}

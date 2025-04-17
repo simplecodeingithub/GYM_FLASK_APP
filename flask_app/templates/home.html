@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<header class="jumbotron" style="background-image: url('{{ url_for('static', filename='images/gym_image1.jpeg') }}'); background-size: cover; background-position: center; height: 100vh; display: flex; justify-content: center; align-items: center;">
+  <div class="container">
+    <!-- Removed h1, p, and the button -->
+  </div>
+</header>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+  <div class="container text-center">
+    <h2 class="mb-4">Our Features</h2>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h3>Personalized Workouts</h3>
+          <p>Tailored plans to help you reach your goals.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h3>Nutrition Guidance</h3>
+          <p>Expert advice for a healthy lifestyle.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h3>Community Support</h3>
+          <p>A supportive group to keep you motivated.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
