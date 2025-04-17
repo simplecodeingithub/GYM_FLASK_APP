@@ -2,9 +2,10 @@
 
 {% block content %}
 <!-- Hero Section -->
-<header class="jumbotron" style="background-image: url('{{ url_for('static', filename='images/gym_image1.jpeg') }}'); background-size: cover; background-position: center; height: 100vh; display: flex; justify-content: center; align-items: center;">
-  <div class="container">
-    <!-- Removed h1, p, and the button -->
+<header class="jumbotron" style="background-image: url('{{ url_for('static', filename='images/gym_image1.jpeg') }}'); background-size: cover; background-position: center; height: 100vh; display: flex; justify-content: flex-end; align-items: center;">
+  <div class="container text-center text-white">
+    <!-- Only the button below the image quote -->
+    <a class="btn btn-primary btn-lg" href="{% if session.get('user_id') %}{{ url_for('dashboard') }}{% else %}{{ url_for('register') }}{% endif %}">Get Started</a>
   </div>
 </header>
 

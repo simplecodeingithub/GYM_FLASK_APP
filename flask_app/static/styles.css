@@ -33,9 +33,24 @@ header.jumbotron .container {
   position: relative;
   z-index: 2; /* Ensures content is above the overlay */
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Allows vertical stacking */
+  justify-content: flex-end; /* Positions content at the bottom */
   align-items: center;
   height: 100%; /* Centers content vertically */
+  padding-bottom: 2rem; /* Adds spacing below the image quote */
+}
+
+header.jumbotron a.btn {
+  background-color: #d63384; /* Vibrant pink for visibility */
+  border: none;
+  font-weight: bold;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+header.jumbotron a.btn:hover {
+  background-color: #a72463; /* Slightly darker pink for hover */
 }
 
 /* Navbar Styles */
