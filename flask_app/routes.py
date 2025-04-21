@@ -3,7 +3,7 @@ from app import app  # This pulls in the app instance
 from flask import render_template, request, url_for, flash,redirect
 from flask_app import app
 from flask_app.fake_data import mock_classes
-
+from datetime import datetime, date
 
 # define routes():
 @app.route('/')
@@ -21,7 +21,25 @@ def services():
 
 @app.route('/classes')
 def classes():
-    return render_template('classes.html', classes=mock_classes)
+    selected_date_str = request.args.get('date')
+    selected_date = None
+    filtered_classes = []
+
+    if selected_date_str:
+        selected_date = datetime.strptime(selected_date_str, '%Y-%m-%d').date()
+        for cls in mock_classes:
+            filtered_schedule = [
+                s for s in cls['schedule'] if s['ScheduleDate'] == selected_date
+            ]
+            if filtered_schedule:
+                filtered_classes.append({
+                    **cls,
+                    "schedule": filtered_schedule
+                })
+    else:
+        filtered_classes = mock_classes
+
+    return render_template('classes.html', classes=filtered_classes, selected_date=selected_date_str)
 
 @app.route('/book_class/<int:schedule_id>')
 def book_class(schedule_id):
