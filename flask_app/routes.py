@@ -1,7 +1,8 @@
 # from flask import Flask,render_template
 from app import app  # This pulls in the app instance
-from flask import render_template, request
+from flask import render_template, request, url_for, flash,redirect
 from flask_app import app
+from flask_app.fake_data import mock_classes
 
 
 # define routes():
@@ -20,9 +21,24 @@ def services():
 
 @app.route('/classes')
 def classes():
-    return render_template('classes.html')
+    return render_template('classes.html', classes=mock_classes)
 
-@app.route('/membership-plans')
+@app.route('/book_class/<int:schedule_id>')
+def book_class(schedule_id):
+    for cls in mock_classes:
+        for schedule in cls["schedule"]:
+            if schedule["ScheduleID"] == schedule_id:
+                if schedule["AvailableSeats"] > 0:
+                    schedule["AvailableSeats"] -= 1
+                    flash("Successfully booked!", "success")
+                else:
+                    flash("Sorry, no seats available!", "danger")
+                break
+    return redirect(url_for('classes'))
+
+
+
+@app.route('/membership_plans')
 def membership_plans():
     return render_template('membership_plans.html')
 
@@ -49,4 +65,8 @@ def login():
     return render_template('login.html')
 
 
+# @app.route('/book/<int:schedule_id>', methods=['POST'])
+# def book_class(schedule_id):
+#     # Do booking logic here...
+#     return render_template('book_class.html')
 

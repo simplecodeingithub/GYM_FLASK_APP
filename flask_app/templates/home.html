@@ -2,8 +2,12 @@
 
 {% block content %}
 <!-- Hero Section -->
-<header class="jumbotron" style="background-image: url('{{ url_for('static', filename='images/gym_image1.jpeg') }}'); background-size: cover; background-position: center; height: 100vh; display: flex; justify-content: flex-end; align-items: center;">
+<header class="jumbotron" style="background-image: url('{{ url_for('static', filename='images/gymhomepage.png') }}'); background-size: cover; background-position: center; height: 100vh; display: flex; justify-content: flex-end; align-items: center;">
   <div class="container text-center text-white">
+<section class="hero">
+  <h1 class="hero-heading">Welcome to London's #1 Women's Only Gym</h1>
+  <p class="hero-subtext">A luxury fitness experience made by women for women.</p>
+</section>
     <!-- Only the button below the image quote -->
     <a class="btn btn-primary btn-lg" href="{% if session.get('user_id') %}{{ url_for('dashboard') }}{% else %}{{ url_for('register') }}{% endif %}">Get Started</a>
   </div>

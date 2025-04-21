@@ -1,7 +1,8 @@
 /* General Styles */
 body {
   font-family: 'Roboto', sans-serif;
-  background-color: #f0f4f8; /* Light background for a clean look */
+  background-color: #fff0f5; /* light pink */
+  font-family: 'Poppins', sans-serif;
   color: #333; /* Dark text for readability */
   margin: 0;
   padding: 0;
@@ -9,10 +10,10 @@ body {
 
 /* Header Section */
 header.jumbotron {
-  color: white;
+  /*background-color: #fff0f5;*/
   text-align: center;
   height: 100vh; /* Full-screen height */
-  background-image: url('../static/images/gym_image1.jpeg'); /* Path to your image */
+  background-image: url('../static/images/gymhomepage.png'); /* Path to your image */
   background-size: cover;
   background-position: center;
   position: relative; /* Enables overlay */
@@ -25,7 +26,7 @@ header.jumbotron::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Adds a semi-transparent overlay for better text contrast */
+  /*background-color: rgba(0, 0, 0, 0.5); /* Adds a semi-transparent overlay for better text contrast */
   z-index: 1;
 }
 
@@ -54,14 +55,63 @@ header.jumbotron a.btn:hover {
 }
 
 /* Navbar Styles */
+.custom-navbar {
+  background-color: fff0f5; /* light pink that matches your aesthetic */
+  backdrop-filter: blur(6px); /* optional: frosted effect */
+  border-bottom: 1px solid #f5c6da; /* optional: subtle bottom border */
+}
+
+.navbar {
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+.navbar-brand {
+  /*margin-right: 30px; /* Pushes everything else to the right */
+  display: flex;
+  align-items: center;
+  margin-right: 60px;
+}
+
+.navbar-brand img {
+  height: 60px;
+  width: auto;
+  max-height: 100%;
+  object-fit: contain;
+  display: flex;
+}
 .navbar-nav .nav-link {
   color: #333;
+  background-color: #fff0f5;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
   color: #d63384; /* Accent color */
+    background-color: #ffc0cb;
+}
+
+/* Hero */
+.hero {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+}
+
+.hero-heading {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.hero-subtext {
+  font-size: 1.5rem;
+  color: #555;
+  margin-top: 10px;
 }
 
 /* Buttons */
@@ -162,3 +212,16 @@ a {
 a:hover {
   color: #a72463; /* Darker hover color */
 }
+
+.social-icon {
+  font-size: 1.75rem;
+  color: #d63384; /* Vibrant pink */
+  transition: color 0.3s ease, transform 0.3s ease;
+  text-decoration: none;
+}
+
+.social-icon:hover {
+  color: #a72463; /* Slightly darker on hover */
+  transform: scale(1.15); /* Grows slightly on hover */
+}
+
