@@ -5,6 +5,23 @@ USE `gym_app`;
 -- Host: localhost    Database: gym_app
 -- ------------------------------------------------------
 -- Server version	8.4.3
+SELECT * 
+FROM gym_user;
+
+SELECT * FROM gym_user WHERE Email = 'ShineShetty@email.com';
+
+SELECT * 
+FROM address;
+
+SELECT * FROM gym_user ORDER BY UserID DESC LIMIT 1;
+
+SELECT * 
+FROM class_schedule;
+
+SELECT * 
+FROM membership_subscription;
+
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -35,6 +52,22 @@ CREATE TABLE `address` (
   PRIMARY KEY (`AddressID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+SELECT CONSTRAINT_NAME 
+FROM information_schema.KEY_COLUMN_USAGE 
+WHERE TABLE_NAME = 'gym_user' AND COLUMN_NAME = 'AddressID';
+
+ALTER TABLE gym_user DROP FOREIGN KEY gym_user_ibfk_1;
+
+ALTER TABLE address MODIFY COLUMN AddressID INT NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE gym_user
+ADD CONSTRAINT gym_user_ibfk_1
+FOREIGN KEY (AddressID) REFERENCES address(AddressID)
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+
 
 --
 -- Dumping data for table `address`

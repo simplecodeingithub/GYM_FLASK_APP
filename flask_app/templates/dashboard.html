@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2 class="mb-4 text-center">Welcome to Your Dashboard</h2>
+        <p class="lead text-center">Hi {{ current_user.email }}, great to see you back!</p>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-primary">Logout</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

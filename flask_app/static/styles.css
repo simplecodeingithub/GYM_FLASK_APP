@@ -225,3 +225,49 @@ a:hover {
   transform: scale(1.15); /* Grows slightly on hover */
 }
 
+/* Register/Login Form Container */
+.form-container {
+
+  background-color: #ffffff; /* White background for clarity */
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(214, 51, 132, 0.2); /* Subtle pinkish shadow */
+  max-width: 500px;
+  margin: 2rem auto; /* Center on page */
+}
+
+/* Form Field Styles */
+.form-control {
+  border: 1px solid #d63384; /* Pink border */
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: #fff0f5; /* light pink fill */
+  color: #333;
+}
+
+.form-control:focus {
+  border-color: #a72463;
+  box-shadow: 0 0 0 0.2rem rgba(214, 51, 132, 0.25); /* Pink glow */
+  background-color: #fff8fb;
+  outline: none;
+}
+
+/* Label Styling */
+.form-label {
+  font-weight: 600;
+  color: #d63384;
+}
+
+/* Button consistency */
+.btn-primary {
+  background-color: #d63384;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background-color: #a72463;
+}
