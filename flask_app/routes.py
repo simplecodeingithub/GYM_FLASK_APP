@@ -85,7 +85,6 @@ def search():
     return f"<h2>Search Results for: <em>{query}</em></h2>"
 
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -104,6 +103,11 @@ def register():
         country = form.country.data
         date_of_birth = form.date_of_birth.data  # New field for DateOfBirth
 
+        # Ensure required fields are not empty
+        if not first_name or not last_name or not email or not password or not confirm_password:
+            flash('All fields are required!', 'danger')
+            return redirect(url_for('register'))
+
         if check_user_by_email(email):
             flash('Email already exists. Please use a different one.', 'danger')
             return redirect(url_for('register'))
@@ -115,15 +119,13 @@ def register():
         try:
             print("Inserting address...")
             address_id = insert_address(street, city, state_region, postal_code, country)
-            print(f"Address inserted successfully with AddressID: {address_id}")
             if not address_id:
                 raise Exception("Address insertion failed.")
 
             print("Inserting user...")
             hashed_password = generate_password_hash(password)
-            print(f"Calling insert_user with: {first_name}, {last_name}, {email}, {hashed_password}, {phone}, {address_id}, {date_of_birth}")
             insert_user(first_name, last_name, email, hashed_password, phone, address_id, date_of_birth)
-            print("User successfully inserted.")
+
         except Exception as e:
             flash(f"Error during registration: {e}", 'danger')
             return redirect(url_for('register'))

@@ -75,18 +75,15 @@ def insert_user(first_name, last_name, email, password, phone, address_id, date_
     print(f"Generated UserID: {user_id}")
 
     try:
-        # Debugging: Print all arguments passed to the query
         print(f"Inserting user with UserID: {user_id}, FirstName: {first_name}, LastName: {last_name}, Email: {email}, Password: {password}, Phone: {phone}, DateOfBirth: {date_of_birth}, AddressID: {address_id}, MembershipID: {membership_id}")
 
-        # Updated query with DateOfBirth
         cursor.execute("""
             INSERT INTO gym_user (UserID, FirstName, LastName, Email, Password, PhoneNumber, AddressID, MembershipID, DateOfBirth)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (user_id, first_name, last_name, email, password, phone, address_id, membership_id, date_of_birth))
 
         print(f"Query executed. Rows affected: {cursor.rowcount}")
-
-        db.commit()  # Commit the changes to the database
+        db.commit()
         print(f"User {first_name} {last_name} inserted successfully!")
 
     except mysql.connector.Error as err:
@@ -94,6 +91,7 @@ def insert_user(first_name, last_name, email, password, phone, address_id, date_
     finally:
         cursor.close()
         db.close()
+
 
 def check_user_by_email(email):
     """
@@ -110,15 +108,27 @@ def check_user_by_email(email):
 
 def generate_unique_user_id():
     """
-    Generate a unique UserID by counting the current number of users in the database.
+    Generate a unique UserID by finding the highest existing GMUK ID and incrementing it.
     """
     db = get_db_connection()
     cursor = db.cursor()
 
-    cursor.execute("SELECT COUNT(*) FROM gym_user")
-    user_count = cursor.fetchone()[0]  # Get the total count of users
+    cursor.execute("""
+        SELECT UserID 
+        FROM gym_user 
+        WHERE UserID LIKE 'GMUK%' 
+        ORDER BY CAST(SUBSTRING(UserID, 5) AS UNSIGNED) DESC 
+        LIMIT 1
+    """)
+    result = cursor.fetchone()
     cursor.close()
     db.close()
 
-    # Generate the next available ID (e.g., GMUK1001, GMUK1002, etc.)
-    return user_count + 1
+    if result:
+        last_id = result[0]  # e.g., "GMUK1006"
+        next_number = int(last_id[4:]) + 1
+    else:
+        next_number = 1001  # Starting point if no users exist
+
+    return next_number
+

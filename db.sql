@@ -8,6 +8,14 @@ USE `gym_app`;
 SELECT * 
 FROM gym_user;
 
+DELETE FROM gym_user 
+WHERE UserID IN ('GMUK0007', 'GMUK0008', 'GMUK0009', 'GMUK0010', 'GMUK0011');
+
+SELECT UserID 
+FROM gym_user 
+ORDER BY CAST(SUBSTRING(UserID, 5) AS UNSIGNED) DESC 
+LIMIT 1;
+
 SELECT * FROM gym_user WHERE Email = 'ShineShetty@email.com';
 
 SELECT * 

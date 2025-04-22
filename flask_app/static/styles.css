@@ -1,22 +1,19 @@
 /* General Styles */
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Poppins', 'Roboto', sans-serif;
   background-color: #fff0f5; /* light pink */
-  font-family: 'Poppins', sans-serif;
-  color: #333; /* Dark text for readability */
+  color: #333;
   margin: 0;
   padding: 0;
 }
 
 /* Header Section */
 header.jumbotron {
-  /*background-color: #fff0f5;*/
-  text-align: center;
-  height: 100vh; /* Full-screen height */
-  background-image: url('../static/images/gymhomepage.png'); /* Path to your image */
+  height: 100vh;
+  background-image: url('../static/images/gymhomepage.png');
   background-size: cover;
   background-position: center;
-  position: relative; /* Enables overlay */
+  position: relative;
 }
 
 header.jumbotron::before {
@@ -26,23 +23,23 @@ header.jumbotron::before {
   left: 0;
   width: 100%;
   height: 100%;
-  /*background-color: rgba(0, 0, 0, 0.5); /* Adds a semi-transparent overlay for better text contrast */
+  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay */
   z-index: 1;
 }
 
 header.jumbotron .container {
   position: relative;
-  z-index: 2; /* Ensures content is above the overlay */
+  z-index: 2;
   display: flex;
-  flex-direction: column; /* Allows vertical stacking */
-  justify-content: flex-end; /* Positions content at the bottom */
+  flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  height: 100%; /* Centers content vertically */
-  padding-bottom: 2rem; /* Adds spacing below the image quote */
+  height: 100%;
+  padding-bottom: 2rem;
 }
 
 header.jumbotron a.btn {
-  background-color: #d63384; /* Vibrant pink for visibility */
+  background-color: #d63384;
   border: none;
   font-weight: bold;
   padding: 10px 20px;
@@ -51,14 +48,14 @@ header.jumbotron a.btn {
 }
 
 header.jumbotron a.btn:hover {
-  background-color: #a72463; /* Slightly darker pink for hover */
+  background-color: #a72463;
 }
 
 /* Navbar Styles */
 .custom-navbar {
-  background-color: fff0f5; /* light pink that matches your aesthetic */
-  backdrop-filter: blur(6px); /* optional: frosted effect */
-  border-bottom: 1px solid #f5c6da; /* optional: subtle bottom border */
+  background-color: #fff0f5;
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid #f5c6da;
 }
 
 .navbar {
@@ -67,7 +64,6 @@ header.jumbotron a.btn:hover {
 }
 
 .navbar-brand {
-  /*margin-right: 30px; /* Pushes everything else to the right */
   display: flex;
   align-items: center;
   margin-right: 60px;
@@ -80,6 +76,7 @@ header.jumbotron a.btn:hover {
   object-fit: contain;
   display: flex;
 }
+
 .navbar-nav .nav-link {
   color: #333;
   background-color: #fff0f5;
@@ -88,18 +85,18 @@ header.jumbotron a.btn:hover {
 }
 
 .navbar-nav .nav-link:hover {
-  color: #d63384; /* Accent color */
-    background-color: #ffc0cb;
+  color: #d63384;
+  background-color: #ffc0cb;
 }
 
-/* Hero */
+/* Hero Section */
 .hero {
   position: absolute;
   top: 50%;
   left: 10%;
   transform: translateY(-50%);
   color: #fff;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .hero-heading {
@@ -116,16 +113,19 @@ header.jumbotron a.btn:hover {
 
 /* Buttons */
 .btn-primary {
-  background-color: #d63384; /* Vibrant pink for attention */
+  background-color: #d63384;
   border: none;
   transition: background-color 0.3s ease;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .btn-primary:hover {
-  background-color: #a72463; /* Slightly darker pink for hover */
+  background-color: #a72463;
 }
 
-/* Outline Buttons */
 .btn-outline-primary {
   color: #d63384;
   border: 2px solid #d63384;
@@ -139,40 +139,40 @@ header.jumbotron a.btn:hover {
 
 /* Features Section */
 .features-section {
-  background-color: #ffffff; /* Neutral background */
+  background-color: #ffffff;
   padding: 3rem 0;
-  color: #333; /* Dark text */
+  color: #333;
 }
 
 .features-section h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #d63384; /* Accent color for headings */
+  color: #d63384;
   margin-bottom: 1.5rem;
 }
 
 .features-section .card {
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   transition: box-shadow 0.3s ease;
 }
 
 .features-section .card:hover {
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Adds hover depth */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .features-section .card h3 {
-  color: #333; /* Consistent text color */
+  color: #333;
 }
 
 .features-section .card p {
-  color: #555; /* Slightly lighter text for descriptions */
+  color: #555;
 }
 
-/* Footer Styles */
+/* Footer */
 footer {
-  background-color: #f8f9fa; /* Light gray for a clean footer */
+  background-color: #f8f9fa;
   padding: 1.5rem 0;
   color: #666;
 }
@@ -183,74 +183,39 @@ footer p {
 }
 
 footer p small {
-  color: #333; /* Ensures small text is readable */
+  color: #333;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  header.jumbotron {
-    height: 300px; /* Adjust for smaller screens */
-    background-size: cover;
-  }
-
-  .features-section h2 {
-    font-size: 2rem; /* Smaller heading size for mobile */
-  }
-
-  .features-section .card {
-    margin-bottom: 1rem; /* Adds spacing for stacked cards */
-  }
-}
-
-/* Additional Styling for Links */
-a {
-  color: #d63384; /* Matching accent color */
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: #a72463; /* Darker hover color */
-}
-
-.social-icon {
-  font-size: 1.75rem;
-  color: #d63384; /* Vibrant pink */
-  transition: color 0.3s ease, transform 0.3s ease;
-  text-decoration: none;
-}
-
-.social-icon:hover {
-  color: #a72463; /* Slightly darker on hover */
-  transform: scale(1.15); /* Grows slightly on hover */
-}
-
-/* Register/Login Form Container */
+/* Form Container (Register/Login) */
 .form-container {
-
-  background-color: #ffffff; /* White background for clarity */
+  background-color: #ffffff;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(214, 51, 132, 0.2); /* Subtle pinkish shadow */
+  box-shadow: 0 4px 12px rgba(214, 51, 132, 0.2);
   max-width: 500px;
-  margin: 2rem auto; /* Center on page */
+  margin: 2rem auto;
 }
 
-/* Form Field Styles */
+/* Form Inputs */
 .form-control {
-  border: 1px solid #d63384; /* Pink border */
+  border: 1px solid #d63384;
   border-radius: 8px;
   padding: 0.75rem;
   font-size: 1rem;
-  background-color: #fff0f5; /* light pink fill */
+  background-color: #fff0f5;
   color: #333;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-control:focus {
   border-color: #a72463;
-  box-shadow: 0 0 0 0.2rem rgba(214, 51, 132, 0.25); /* Pink glow */
+  box-shadow: 0 0 0 0.2rem rgba(214, 51, 132, 0.25);
   background-color: #fff8fb;
   outline: none;
+}
+
+.form-control:hover {
+  border-color: #d63384;
 }
 
 /* Label Styling */
@@ -259,15 +224,47 @@ a:hover {
   color: #d63384;
 }
 
-/* Button consistency */
-.btn-primary {
-  background-color: #d63384;
-  border-radius: 8px;
-  padding: 0.6rem 1.2rem;
-  font-weight: bold;
-  text-transform: uppercase;
+/* Custom Border for Select */
+.pink-border {
+  border: 2px solid #e83e8c !important;
+  border-radius: 0.375rem;
 }
 
-.btn-primary:hover {
-  background-color: #a72463;
+/* Responsive Design */
+@media (max-width: 768px) {
+  header.jumbotron {
+    height: 300px;
+    background-size: cover;
+  }
+
+  .features-section h2 {
+    font-size: 2rem;
+  }
+
+  .features-section .card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Links & Icons */
+a {
+  color: #d63384;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #a72463;
+}
+
+.social-icon {
+  font-size: 1.75rem;
+  color: #d63384;
+  transition: color 0.3s ease, transform 0.3s ease;
+  text-decoration: none;
+}
+
+.social-icon:hover {
+  color: #a72463;
+  transform: scale(1.15);
 }

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from wtforms.fields import DateField
 
@@ -17,6 +17,10 @@ class RegisterForm(FlaskForm):
     city = StringField('City', validators=[DataRequired(), Length(max=100)])
     state_region = StringField('State/Region', validators=[DataRequired(), Length(max=100)])
     postal_code = StringField('Postal Code', validators=[DataRequired(), Length(max=20)])
-    country = StringField('Country', validators=[DataRequired(), Length(max=100)])
-
+    country = SelectField('Country', choices=[
+        ('UK', 'United Kingdom'),
+        ('US', 'United States'),
+        ('CA', 'Canada'),
+        ('AU', 'Australia')
+    ], default='UK')
     submit = SubmitField('Register')
