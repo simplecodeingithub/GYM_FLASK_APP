@@ -76,6 +76,96 @@ INSERT INTO `admin` VALUES (1,'Sarah','Williams','sarah.williams@gym.com','07720
 UNLOCK TABLES;
 
 --
+-- Table structure for table `class_schedule`
+--
+
+DROP TABLE IF EXISTS `class_schedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `class_schedule` (
+  `ScheduleID` int NOT NULL,
+  `class_id` int DEFAULT NULL,
+  `ScheduleDate` date DEFAULT NULL,
+  `StartTime` time DEFAULT NULL,
+  `EndTime` time DEFAULT NULL,
+  `Location` varchar(50) DEFAULT NULL,
+  `AvailableSeats` int DEFAULT NULL,
+  PRIMARY KEY (`ScheduleID`),
+  KEY `class_id` (`class_id`),
+  CONSTRAINT `class_schedule_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `fitness_class` (`class_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `class_schedule`
+--
+
+LOCK TABLES `class_schedule` WRITE;
+/*!40000 ALTER TABLE `class_schedule` DISABLE KEYS */;
+INSERT INTO `class_schedule` VALUES (101,1,'2025-04-20','09:00:00','10:00:00','Studio A',20),(102,1,'2025-04-22','09:00:00','10:00:00','Studio A',20),(103,1,'2025-04-24','18:00:00','19:00:00','Studio A',20),(104,2,'2025-04-20','10:30:00','11:30:00','Studio B',15),(105,2,'2025-04-22','10:30:00','11:30:00','Studio B',15),(106,2,'2025-04-25','17:00:00','18:00:00','Studio B',15),(107,3,'2025-04-21','08:00:00','09:00:00','Studio C',12),(108,3,'2025-04-23','08:00:00','09:00:00','Studio C',12),(109,4,'2025-04-20','12:00:00','13:00:00','Studio C',10),(110,4,'2025-04-24','12:00:00','13:00:00','Studio C',10),(111,5,'2025-04-22','17:00:00','18:00:00','Studio D',18),(112,5,'2025-04-26','10:00:00','11:00:00','Studio D',18),(113,6,'2025-04-23','19:00:00','20:00:00','Studio E',16),(114,6,'2025-04-25','19:00:00','20:00:00','Studio E',16),(115,1,'2025-04-26','10:00:00','11:00:00','Studio A',20),(116,1,'2025-04-27','14:00:00','15:00:00','Studio A',20),(117,2,'2025-04-26','12:00:00','13:00:00','Studio B',15),(118,2,'2025-04-27','16:00:00','17:00:00','Studio B',15),(119,1,'2025-04-27','09:00:00','10:00:00','Studio A',20),(120,1,'2025-04-29','09:00:00','10:00:00','Studio A',20),(121,1,'2025-05-01','18:00:00','19:00:00','Studio A',20),(122,2,'2025-04-27','10:30:00','11:30:00','Studio B',15),(123,2,'2025-04-29','10:30:00','11:30:00','Studio B',15),(124,2,'2025-05-02','17:00:00','18:00:00','Studio B',15),(125,3,'2025-04-30','08:00:00','09:00:00','Studio C',12),(126,3,'2025-05-02','08:00:00','09:00:00','Studio C',12),(127,4,'2025-04-30','12:00:00','13:00:00','Studio C',10),(128,4,'2025-05-01','12:00:00','13:00:00','Studio C',10),(129,5,'2025-04-29','17:00:00','18:00:00','Studio D',18),(130,5,'2025-05-03','10:00:00','11:00:00','Studio D',18),(131,6,'2025-04-30','19:00:00','20:00:00','Studio E',16),(132,6,'2025-05-02','19:00:00','20:00:00','Studio E',16),(133,1,'2025-05-03','10:00:00','11:00:00','Studio A',20),(134,1,'2025-05-04','14:00:00','15:00:00','Studio A',20),(135,2,'2025-05-03','12:00:00','13:00:00','Studio B',15),(136,2,'2025-05-04','16:00:00','17:00:00','Studio B',15),(137,1,'2025-05-04','09:00:00','10:00:00','Studio A',20),(138,1,'2025-05-06','09:00:00','10:00:00','Studio A',20),(139,1,'2025-05-08','18:00:00','19:00:00','Studio A',20),(140,2,'2025-05-04','10:30:00','11:30:00','Studio B',15),(141,2,'2025-05-06','10:30:00','11:30:00','Studio B',15),(142,2,'2025-05-09','17:00:00','18:00:00','Studio B',15),(143,3,'2025-05-05','08:00:00','09:00:00','Studio C',12),(144,3,'2025-05-07','08:00:00','09:00:00','Studio C',12),(145,4,'2025-05-05','12:00:00','13:00:00','Studio C',10),(146,4,'2025-05-08','12:00:00','13:00:00','Studio C',10),(147,5,'2025-05-06','17:00:00','18:00:00','Studio D',18),(148,5,'2025-05-10','10:00:00','11:00:00','Studio D',18),(149,6,'2025-05-07','19:00:00','20:00:00','Studio E',16),(150,6,'2025-05-09','19:00:00','20:00:00','Studio E',16),(151,1,'2025-05-10','10:00:00','11:00:00','Studio A',20),(152,1,'2025-05-11','14:00:00','15:00:00','Studio A',20),(153,2,'2025-05-10','12:00:00','13:00:00','Studio B',15),(154,2,'2025-05-11','16:00:00','17:00:00','Studio B',15);
+/*!40000 ALTER TABLE `class_schedule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `classbooking`
+--
+
+DROP TABLE IF EXISTS `classbooking`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `classbooking` (
+  `BookingID` int NOT NULL,
+  `UserID` varchar(10) DEFAULT NULL,
+  `ScheduleID` int DEFAULT NULL,
+  `BookingDate` datetime DEFAULT NULL,
+  `BookingStatus` enum('Booked','Cancelled','Attended') DEFAULT NULL,
+  PRIMARY KEY (`BookingID`),
+  KEY `UserID` (`UserID`),
+  KEY `ScheduleID` (`ScheduleID`),
+  CONSTRAINT `classbooking_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `gym_user` (`UserID`),
+  CONSTRAINT `classbooking_ibfk_2` FOREIGN KEY (`ScheduleID`) REFERENCES `class_schedule` (`ScheduleID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `classbooking`
+--
+
+LOCK TABLES `classbooking` WRITE;
+/*!40000 ALTER TABLE `classbooking` DISABLE KEYS */;
+INSERT INTO `classbooking` VALUES (1,'GMUK1001',101,'2025-04-20 08:00:00','Booked'),(2,'GMUK1002',102,'2025-04-20 09:30:00','Booked'),(3,'GMUK1003',105,'2025-04-21 10:00:00','Cancelled'),(4,'GMUK1004',106,'2025-04-21 11:00:00','Booked');
+/*!40000 ALTER TABLE `classbooking` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `fitness_class`
+--
+
+DROP TABLE IF EXISTS `fitness_class`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `fitness_class` (
+  `class_id` int NOT NULL AUTO_INCREMENT,
+  `class_name` varchar(50) NOT NULL,
+  `description` text,
+  `Price` decimal(6,2) DEFAULT NULL,
+  `MaxParticipants` int DEFAULT NULL,
+  PRIMARY KEY (`class_id`),
+  UNIQUE KEY `class_name` (`class_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `fitness_class`
+--
+
+LOCK TABLES `fitness_class` WRITE;
+/*!40000 ALTER TABLE `fitness_class` DISABLE KEYS */;
+INSERT INTO `fitness_class` VALUES (1,'Yoga','A peaceful yoga session to start your day. Relax and stretch your body with guided meditation and poses.',10.00,25),(2,'Strength Training','Build strength and endurance through full-body training with weights and resistance exercises.',12.00,20),(3,'Pilates','Improve flexibility and core strength with Pilates exercises that focus on posture and balance.',11.00,18),(4,'Weight Lifting','Introductory class focused on learning weight lifting techniques and proper form for strength training.',13.00,15),(5,'Aerobics','High-energy aerobic workout to improve cardiovascular health and stamina with a mix of dance moves and music.',8.00,30),(6,'Kickboxing','Fast-paced kickboxing workout that combines punches, kicks, and cardio exercises to build strength and endurance.',10.50,16);
+/*!40000 ALTER TABLE `fitness_class` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `gym_user`
 --
 
@@ -171,6 +261,35 @@ INSERT INTO `membership_subscription` VALUES (1,'GMUK1001',201,'2025-04-01','202
 UNLOCK TABLES;
 
 --
+-- Table structure for table `payment`
+--
+
+DROP TABLE IF EXISTS `payment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payment` (
+  `PaymentID` int NOT NULL,
+  `BookingID` int DEFAULT NULL,
+  `PaymentDate` datetime DEFAULT NULL,
+  `Amount` decimal(6,2) DEFAULT NULL,
+  `Status` enum('Paid','Pending','Failed') DEFAULT NULL,
+  PRIMARY KEY (`PaymentID`),
+  KEY `BookingID` (`BookingID`),
+  CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`BookingID`) REFERENCES `classbooking` (`BookingID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `payment`
+--
+
+LOCK TABLES `payment` WRITE;
+/*!40000 ALTER TABLE `payment` DISABLE KEYS */;
+INSERT INTO `payment` VALUES (501,1,'2025-04-20 08:05:00',12.00,'Paid'),(502,2,'2025-04-20 09:35:00',12.00,'Pending'),(503,3,'2025-04-21 10:05:00',13.50,'Failed'),(504,4,'2025-04-21 11:10:00',14.00,'Paid');
+/*!40000 ALTER TABLE `payment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `trainer`
 --
 
@@ -213,4 +332,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-16 20:59:40
+-- Dump completed on 2025-04-21 22:10:33
