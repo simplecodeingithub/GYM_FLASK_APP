@@ -132,3 +132,32 @@ def generate_unique_user_id():
 
     return next_number
 
+
+def get_fitness_classes():
+    """
+    Fetches all fitness classes from the database, including class name, description, and image URL.
+    """
+    try:
+        # Establish a database connection
+        connection = get_db_connection()
+        if connection is None:
+            print("Failed to connect to the database.")
+            return []
+
+        # Create a cursor object to execute SQL queries
+        cursor = connection.cursor()
+        query = "SELECT class_name, description, image_url FROM fitness_class"
+
+        # Execute the query
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        # Close the connection
+        cursor.close()
+        connection.close()
+
+        # Return the fetched results
+        return results
+    except Error as e:
+        print(f"Error fetching data from database: {e}")
+        return []

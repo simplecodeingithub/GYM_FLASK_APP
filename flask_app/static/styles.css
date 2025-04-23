@@ -268,3 +268,47 @@ a:hover {
   color: #a72463;
   transform: scale(1.15);
 }
+
+/*.class-image {
+  width: 100%; *//* Ensures the image takes the full width of its container *//*
+  height: auto; *//* Maintains the aspect ratio *//*
+  border-radius: 10px; *//* Adds rounded corners (optional) *//*
+  object-fit: cover; *//* Ensures the image fills its container nicely *//*
+  max-height: 200px; *//* Restricts the image height to ensure consistency *//*
+}*/
+
+.card-img-top {
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px; /* Optional rounded corners */
+}
+
+.card-title {
+  font-size: 1.6rem;
+  color: #772063;
+  font-weight: bold;
+}
+
+.card-subtitle {
+  font-size: 1.2rem;
+  color: #555; /* Muted gray for description */
+}
+
+.card-body {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.btn-primary {
+  background-color: #772063;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background-color: #5a1849; /* Darker hover effect */
+}
+

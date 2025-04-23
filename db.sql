@@ -27,6 +27,53 @@ SELECT *
 FROM class_schedule;
 
 SELECT * 
+FROM fitness_class;
+--
+ALTER TABLE fitness_class
+ADD COLUMN image_url VARCHAR(255);
+
+UPDATE fitness_class
+SET image_url = '/images/yoga.webp'
+WHERE class_name = 'Yoga';
+
+UPDATE fitness_class
+SET image_url = '/images/strength_training.webp'
+WHERE class_name = 'Strength Training';
+
+UPDATE fitness_class
+SET image_url = '/images/pilates.webp'
+WHERE class_name = 'Pilates';
+
+UPDATE fitness_class
+SET image_url = '/images/weight_lifting.jpeg'
+WHERE class_name = 'Weight Lifting';
+
+UPDATE fitness_class
+SET image_url = '/images/aerobics.webp'
+WHERE class_name = 'Aerobics';
+
+UPDATE fitness_class
+SET image_url = '/images/kick_boxing.webp'
+WHERE class_name = 'Kickboxing';
+--
+UPDATE fitness_class SET image_url = '/static/images/yoga.webp' WHERE class_name = 'Yoga';
+UPDATE fitness_class SET image_url = '/static/images/strength_training.webp' WHERE class_name = 'Strength Training';
+UPDATE fitness_class SET image_url = '/static/images/pilates.webp' WHERE class_name = 'Pilates';
+UPDATE fitness_class SET image_url = '/static/images/weight_lifting.jpeg' WHERE class_name = 'Weight Lifting';
+UPDATE fitness_class SET image_url = '/static/images/aerobics.webp' WHERE class_name = 'Aerobics';
+UPDATE fitness_class SET image_url = '/static/images/kick_boxing.webp' WHERE class_name = 'Kickboxing';
+
+--
+
+UPDATE fitness_class SET image_url = 'yoga.webp' WHERE class_name = 'Yoga';
+UPDATE fitness_class SET image_url = 'strength_training.webp' WHERE class_name = 'Strength Training';
+UPDATE fitness_class SET image_url = 'pilates.webp' WHERE class_name = 'Pilates';
+UPDATE fitness_class SET image_url = 'weight_lifting.jpeg' WHERE class_name = 'Weight Lifting';
+UPDATE fitness_class SET image_url = 'aerobics.webp' WHERE class_name = 'Aerobics';
+UPDATE fitness_class SET image_url = 'kick_boxing.webp' WHERE class_name = 'Kickboxing';
+
+
+SELECT * 
 FROM membership_subscription;
 
 

@@ -8,7 +8,7 @@ from flask_app.models import User
 from flask_app.forms.register_form import RegisterForm
 from flask_app.forms.login_form import LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address
+from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes
 import os
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
@@ -29,42 +29,57 @@ def about():
 def services():
     return render_template('services.html')
 
+
 @app.route('/classes')
 def classes():
-    selected_date_str = request.args.get('date')
-    selected_date = None
-    filtered_classes = []
+    classes = get_fitness_classes()
+    return render_template('classes.html', classes=classes)
 
-    if selected_date_str:
-        selected_date = datetime.strptime(selected_date_str, '%Y-%m-%d').date()
-        for cls in mock_classes:
-            filtered_schedule = [
-                s for s in cls['schedule'] if s['ScheduleDate'] == selected_date
-            ]
-            if filtered_schedule:
-                filtered_classes.append({
-                    **cls,
-                    "schedule": filtered_schedule
-                })
+# @app.route('/classes')
+# def classes():
+#     selected_date_str = request.args.get('date')
+#     selected_date = None
+#     filtered_classes = []
+#
+#     if selected_date_str:
+#         selected_date = datetime.strptime(selected_date_str, '%Y-%m-%d').date()
+#         for cls in mock_classes:
+#             filtered_schedule = [
+#                 s for s in cls['schedule'] if s['ScheduleDate'] == selected_date
+#             ]
+#             if filtered_schedule:
+#                 filtered_classes.append({
+#                     **cls,
+#                     "schedule": filtered_schedule
+#                 })
+#     else:
+#         filtered_classes = mock_classes
+#
+#     return render_template('classes.html', classes=filtered_classes, selected_date=selected_date_str)
+#
+# @app.route('/book_class/<int:schedule_id>')
+# def book_class(schedule_id):
+#     for cls in mock_classes:
+#         for schedule in cls["schedule"]:
+#             if schedule["ScheduleID"] == schedule_id:
+#                 if schedule["AvailableSeats"] > 0:
+#                     schedule["AvailableSeats"] -= 1
+#                     flash("Successfully booked!", "success")
+#                 else:
+#                     flash("Sorry, no seats available!", "danger")
+#                 break
+#     return redirect(url_for('classes'))
+#
+
+@app.route('/join/<class_name>')
+def join_class(class_name):
+    # Check if the user is logged in
+    if 'user_id' in session:
+        # Redirect to booking page for the specific class
+        return redirect(url_for('book_class', class_name=class_name))
     else:
-        filtered_classes = mock_classes
-
-    return render_template('classes.html', classes=filtered_classes, selected_date=selected_date_str)
-
-@app.route('/book_class/<int:schedule_id>')
-def book_class(schedule_id):
-    for cls in mock_classes:
-        for schedule in cls["schedule"]:
-            if schedule["ScheduleID"] == schedule_id:
-                if schedule["AvailableSeats"] > 0:
-                    schedule["AvailableSeats"] -= 1
-                    flash("Successfully booked!", "success")
-                else:
-                    flash("Sorry, no seats available!", "danger")
-                break
-    return redirect(url_for('classes'))
-
-
+        # Redirect to login page if not logged in
+        return redirect(url_for('login'))
 
 @app.route('/membership_plans')
 def membership_plans():
