@@ -470,3 +470,19 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2025-04-21 22:10:33
+-- UNLOCK TABLES;
+SHOW COLUMNS FROM gym_user;
+
+ALTER TABLE gym_user
+ADD COLUMN LastLogin DATETIME NULL;
+
+select * from classbooking;
+
+ALTER TABLE classbooking
+MODIFY COLUMN BookingID INT NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE payment DROP FOREIGN KEY payment_ibfk_1;
+
+ALTER TABLE payment
+ADD CONSTRAINT payment_ibfk_1
+FOREIGN KEY (BookingID) REFERENCES classbooking (BookingID);
