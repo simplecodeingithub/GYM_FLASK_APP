@@ -3,7 +3,7 @@ from app import app  # This pulls in the app instance
 from flask import render_template, request, url_for, flash,redirect ,session
 from flask_app import app,login_manager
 from flask_app.fake_data import mock_classes
-from datetime import datetime, date
+from datetime import datetime, date,time, timedelta
 from flask_app.models import User
 from flask_app.forms.register_form import RegisterForm
 from flask_app.forms.login_form import LoginForm
@@ -36,27 +36,70 @@ def classes():
     classes = get_fitness_classes()
     return render_template('classes.html', classes=classes)
 
+from datetime import datetime
 
 @app.route('/view_schedule/<int:class_id>', methods=['GET'])
 def view_schedule(class_id):
-    """Displays schedules grouped by DayOfWeek and ScheduleDate."""
+    """Displays schedules grouped by DayOfWeek and formatted datetime."""
+    # Get class information and schedule data (replace with your DB functions)
     class_info = get_class_info(class_id)
     schedules = get_schedule_by_days(class_id)  # Fetch schedules
 
-    # Group schedules by DayOfWeek and ScheduleDate
+    # Group and format schedules
     grouped_schedules = {}
     for schedule in schedules:
-        # Use both DayOfWeek and ScheduleDate as grouping keys
-        day_date_key = f"{schedule['DayOfWeek']} ({schedule['ScheduleDate']})"
+        # Format the date and time
+        schedule_date = schedule['ScheduleDate']  # Assuming it's a date object
+        start_time = (datetime.min + schedule['StartTime']).time()  # Convert timedelta to time
+        end_time = (datetime.min + schedule['EndTime']).time()      # Convert timedelta to time
+
+        formatted_date = schedule_date.strftime('%Y-%m-%d')
+        formatted_start_time = start_time.strftime('%I:%M %p')  # 12-hour format with AM/PM
+        formatted_end_time = end_time.strftime('%I:%M %p')
+
+        # Group by DayOfWeek and ScheduleDate
+        day_date_key = f"{schedule['DayOfWeek']} ({formatted_date})"
         if day_date_key not in grouped_schedules:
             grouped_schedules[day_date_key] = []
-        grouped_schedules[day_date_key].append(schedule)
 
+        grouped_schedules[day_date_key].append({
+            'ScheduleDate': formatted_date,
+            'StartTime': formatted_start_time,
+            'EndTime': formatted_end_time,
+            'Location': schedule['Location'],
+            'AvailableSeats': schedule['AvailableSeats'],
+            'ScheduleID': schedule['ScheduleID'],  # Required for booking
+        })
+
+    # Render the grouped schedules in the template
     return render_template(
         'class_schedule.html',
         class_info=class_info,
         grouped_schedules=grouped_schedules
     )
+
+
+
+# @app.route('/view_schedule/<int:class_id>', methods=['GET'])
+# def view_schedule(class_id):
+#     """Displays schedules grouped by DayOfWeek and ScheduleDate."""
+#     class_info = get_class_info(class_id)
+#     schedules = get_schedule_by_days(class_id)  # Fetch schedules
+#
+#     # Group schedules by DayOfWeek and ScheduleDate
+#     grouped_schedules = {}
+#     for schedule in schedules:
+#         # Use both DayOfWeek and ScheduleDate as grouping keys
+#         day_date_key = f"{schedule['DayOfWeek']} ({schedule['ScheduleDate']})"
+#         if day_date_key not in grouped_schedules:
+#             grouped_schedules[day_date_key] = []
+#         grouped_schedules[day_date_key].append(schedule)
+#
+#     return render_template(
+#         'class_schedule.html',
+#         class_info=class_info,
+#         grouped_schedules=grouped_schedules
+#     )
 
 
 

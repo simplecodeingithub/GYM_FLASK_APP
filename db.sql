@@ -248,7 +248,7 @@ CREATE TABLE `classbooking` (
 ALTER TABLE gym_user
 ADD COLUMN LastLogin DATETIME NULL;
 
-
+SELECT * FROM classbooking;
 SELECT * FROM classbooking WHERE UserID = 'GMUK1009';
 
 SELECT * FROM classbooking WHERE ScheduleID = 102 AND UserID = 'GMUK1009';

@@ -1,19 +1,23 @@
+
 /* General Styles */
 body {
-  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: #fff0f5; /* light pink */
-  color: #333;
+  font-family: 'Poppins', sans-serif;
+  color: #333; /* Dark text for readability */
   margin: 0;
   padding: 0;
 }
 
 /* Header Section */
 header.jumbotron {
-  height: 100vh;
-  background-image: url('../static/images/gymhomepage.png');
+  /*background-color: #fff0f5;*/
+  text-align: center;
+  height: 100vh; /* Full-screen height */
+  background-image: url('../static/images/gymhomepage.png'); /* Path to your image */
   background-size: cover;
   background-position: center;
-  position: relative;
+  position: relative; /* Enables overlay */
 }
 
 header.jumbotron::before {
@@ -23,23 +27,23 @@ header.jumbotron::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay */
+  /*background-color: rgba(0, 0, 0, 0.5); /* Adds a semi-transparent overlay for better text contrast */
   z-index: 1;
 }
 
 header.jumbotron .container {
   position: relative;
-  z-index: 2;
+  z-index: 2; /* Ensures content is above the overlay */
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  flex-direction: column; /* Allows vertical stacking */
+  justify-content: flex-end; /* Positions content at the bottom */
   align-items: center;
-  height: 100%;
-  padding-bottom: 2rem;
+  height: 100%; /* Centers content vertically */
+  padding-bottom: 2rem; /* Adds spacing below the image quote */
 }
 
 header.jumbotron a.btn {
-  background-color: #d63384;
+  background-color: #d63384; /* Vibrant pink for visibility */
   border: none;
   font-weight: bold;
   padding: 10px 20px;
@@ -48,14 +52,14 @@ header.jumbotron a.btn {
 }
 
 header.jumbotron a.btn:hover {
-  background-color: #a72463;
+  background-color: #a72463; /* Slightly darker pink for hover */
 }
 
 /* Navbar Styles */
 .custom-navbar {
-  background-color: #fff0f5;
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid #f5c6da;
+  background-color: fff0f5; /* light pink that matches your aesthetic */
+  backdrop-filter: blur(6px); /* optional: frosted effect */
+  border-bottom: 1px solid #f5c6da; /* optional: subtle bottom border */
 }
 
 .navbar {
@@ -64,6 +68,7 @@ header.jumbotron a.btn:hover {
 }
 
 .navbar-brand {
+  /*margin-right: 30px; /* Pushes everything else to the right */
   display: flex;
   align-items: center;
   margin-right: 60px;
@@ -76,7 +81,6 @@ header.jumbotron a.btn:hover {
   object-fit: contain;
   display: flex;
 }
-
 .navbar-nav .nav-link {
   color: #333;
   background-color: #fff0f5;
@@ -85,18 +89,18 @@ header.jumbotron a.btn:hover {
 }
 
 .navbar-nav .nav-link:hover {
-  color: #d63384;
-  background-color: #ffc0cb;
+  color: #d63384; /* Accent color */
+    background-color: #ffc0cb;
 }
 
-/* Hero Section */
+/* Hero */
 .hero {
   position: absolute;
   top: 50%;
   left: 10%;
   transform: translateY(-50%);
   color: #fff;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.2);
 }
 
 .hero-heading {
@@ -113,19 +117,16 @@ header.jumbotron a.btn:hover {
 
 /* Buttons */
 .btn-primary {
-  background-color: #d63384;
+  background-color: #d63384; /* Vibrant pink for attention */
   border: none;
   transition: background-color 0.3s ease;
-  border-radius: 8px;
-  padding: 0.6rem 1.2rem;
-  font-weight: bold;
-  text-transform: uppercase;
 }
 
 .btn-primary:hover {
-  background-color: #a72463;
+  background-color: #a72463; /* Slightly darker pink for hover */
 }
 
+/* Outline Buttons */
 .btn-outline-primary {
   color: #d63384;
   border: 2px solid #d63384;
@@ -139,40 +140,40 @@ header.jumbotron a.btn:hover {
 
 /* Features Section */
 .features-section {
-  background-color: #ffffff;
+  background-color: #ffffff; /* Neutral background */
   padding: 3rem 0;
-  color: #333;
+  color: #333; /* Dark text */
 }
 
 .features-section h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #d63384;
+  color: #d63384; /* Accent color for headings */
   margin-bottom: 1.5rem;
 }
 
 .features-section .card {
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
   border-radius: 10px;
   transition: box-shadow 0.3s ease;
 }
 
 .features-section .card:hover {
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Adds hover depth */
 }
 
 .features-section .card h3 {
-  color: #333;
+  color: #333; /* Consistent text color */
 }
 
 .features-section .card p {
-  color: #555;
+  color: #555; /* Slightly lighter text for descriptions */
 }
 
-/* Footer */
+/* Footer Styles */
 footer {
-  background-color: #f8f9fa;
+  background-color: #f8f9fa; /* Light gray for a clean footer */
   padding: 1.5rem 0;
   color: #666;
 }
@@ -183,7 +184,7 @@ footer p {
 }
 
 footer p small {
-  color: #333;
+  color: #333; /* Ensures small text is readable */
 }
 
 /* Form Container (Register/Login) */
@@ -269,6 +270,64 @@ a:hover {
   transform: scale(1.15);
 }
 
+.card-img-top {
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px; /* Optional rounded corners */
+}
+
+.card-title {
+  font-size: 1.6rem;
+  color: #d63384; /* Updated to the desired pink color */
+  font-weight: bold;
+}
+
+.card-subtitle {
+  font-size: 1.2rem;
+  color: #555; /* Muted gray for description */
+}
+
+.card-body {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.btn-primary {
+  background-color: #d63384; /* Updated button color */
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background-color: #a02467; /* Slightly darker hover effect for the pink color */
+}
+
+/* General Styles */
+.container h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #d63384; /* Updated heading color */
+}
+
+.card {
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #d63384; /* Updated to match the pink theme */
+}
+
+.row {
+    margin-top: 10px;
+}
+
+
 /*.class-image {
   width: 100%; *//* Ensures the image takes the full width of its container *//*
   height: auto; *//* Maintains the aspect ratio *//*
@@ -277,10 +336,13 @@ a:hover {
   max-height: 200px; *//* Restricts the image height to ensure consistency *//*
 }*/
 
+/*
 .card-img-top {
   max-height: 300px;
   object-fit: cover;
-  border-radius: 8px; /* Optional rounded corners */
+  border-radius: 8px; */
+/* Optional rounded corners *//*
+
 }
 
 .card-title {
@@ -291,7 +353,9 @@ a:hover {
 
 .card-subtitle {
   font-size: 1.2rem;
-  color: #555; /* Muted gray for description */
+  color: #555; */
+/* Muted gray for description *//*
+
 }
 
 .card-body {
@@ -309,10 +373,14 @@ a:hover {
 }
 
 .btn-primary:hover {
-  background-color: #5a1849; /* Darker hover effect */
+  background-color: #5a1849; */
+/* Darker hover effect *//*
+
 }
 
-/* General Styles */
+*/
+/* General Styles *//*
+
 .container h1 {
     font-size: 2rem;
     font-weight: bold;
@@ -331,8 +399,9 @@ a:hover {
 .row {
     margin-top: 10px;
 }
+*/
 
-/* Buttons */
+/* Buttons *//*
 .btn-pink {
     background-color: #d63384;
     color: white;
@@ -341,7 +410,7 @@ a:hover {
     padding: 10px 20px;
     font-size: 1rem;
     transition: all 0.3s ease-in-out;
-}
+}*/
 
 .btn-pink:hover {
     background-color: #b82e6e;
