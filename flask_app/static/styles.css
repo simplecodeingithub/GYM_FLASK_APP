@@ -312,3 +312,37 @@ a:hover {
   background-color: #5a1849; /* Darker hover effect */
 }
 
+/* General Styles */
+.container h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.card {
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.row {
+    margin-top: 10px;
+}
+
+/* Buttons */
+.btn-pink {
+    background-color: #d63384;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-pink:hover {
+    background-color: #b82e6e;
+}

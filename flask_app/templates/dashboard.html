@@ -1,14 +1,60 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow p-4">
-        <h2 class="mb-4 text-center">Welcome to Your Dashboard</h2>
-        <p class="lead text-center">Hi {{ current_user.email }}, great to see you back!</p>
+<div class="container mt-4">
+    <h1 class="text-center" style="color: #d63384;">Welcome to Your Dashboard!</h1>
 
-        <div class="text-center mt-4">
-            <a href="{{ url_for('logout') }}" class="btn btn-outline-primary">Logout</a>
+    {% if first_time_login and not bookings %}
+        <!-- First-Time Login Section -->
+        <div class="alert alert-info text-center">
+            <h4>Welcome, {{ user_details.FirstName }}!</h4>
+            <p>It looks like you're logging in for the first time. Start your fitness journey by booking your first class or exploring membership options!</p>
+            <a href="{{ url_for('view_classes') }}" class="btn btn-pink">View Classes</a>
+            <a href="{{ url_for('membership') }}" class="btn btn-secondary">Membership Options</a>
         </div>
-    </div>
+    {% endif %}
+
+    {% if bookings %}
+        <!-- Regular Bookings Section -->
+        <div class="card my-4">
+            <div class="card-header text-white" style="background-color: #d63384;">
+                <h4>Your Bookings</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-dark">
+                            <tr class="text-center">
+                                <th>Class Name</th>
+                                <th>Schedule Date</th>
+                                <th>Start Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                                <tr>
+                                    <td>{{ booking.class_name }}</td>
+                                    <td>{{ booking.ScheduleDate }}</td>
+                                    <td>{{ booking.StartTime }}</td>
+                                    <td>
+                                        {% if booking.BookingStatus == 'Booked' %}
+                                            <span class="text-success">Booked</span>
+                                        {% elif booking.BookingStatus == 'Cancelled' %}
+                                            <span class="text-danger">Cancelled</span>
+                                        {% else %}
+                                            <span class="text-muted">Attended</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-center text-muted">You have no bookings at the moment.</p>
+    {% endif %}
 </div>
 {% endblock %}

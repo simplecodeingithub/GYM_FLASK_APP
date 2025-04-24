@@ -1,6 +1,6 @@
 # from flask import Flask,render_template
 from app import app  # This pulls in the app instance
-from flask import render_template, request, url_for, flash,redirect
+from flask import render_template, request, url_for, flash,redirect ,session
 from flask_app import app,login_manager
 from flask_app.fake_data import mock_classes
 from datetime import datetime, date
@@ -8,7 +8,8 @@ from flask_app.models import User
 from flask_app.forms.register_form import RegisterForm
 from flask_app.forms.login_form import LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes
+from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
+from flask_app.data_access import  book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedule,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
 import os
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
@@ -35,51 +36,49 @@ def classes():
     classes = get_fitness_classes()
     return render_template('classes.html', classes=classes)
 
-# @app.route('/classes')
-# def classes():
-#     selected_date_str = request.args.get('date')
-#     selected_date = None
-#     filtered_classes = []
-#
-#     if selected_date_str:
-#         selected_date = datetime.strptime(selected_date_str, '%Y-%m-%d').date()
-#         for cls in mock_classes:
-#             filtered_schedule = [
-#                 s for s in cls['schedule'] if s['ScheduleDate'] == selected_date
-#             ]
-#             if filtered_schedule:
-#                 filtered_classes.append({
-#                     **cls,
-#                     "schedule": filtered_schedule
-#                 })
-#     else:
-#         filtered_classes = mock_classes
-#
-#     return render_template('classes.html', classes=filtered_classes, selected_date=selected_date_str)
-#
-# @app.route('/book_class/<int:schedule_id>')
-# def book_class(schedule_id):
-#     for cls in mock_classes:
-#         for schedule in cls["schedule"]:
-#             if schedule["ScheduleID"] == schedule_id:
-#                 if schedule["AvailableSeats"] > 0:
-#                     schedule["AvailableSeats"] -= 1
-#                     flash("Successfully booked!", "success")
-#                 else:
-#                     flash("Sorry, no seats available!", "danger")
-#                 break
-#     return redirect(url_for('classes'))
-#
 
-@app.route('/join/<class_name>')
-def join_class(class_name):
-    # Check if the user is logged in
-    if 'user_id' in session:
-        # Redirect to booking page for the specific class
-        return redirect(url_for('book_class', class_name=class_name))
+@app.route('/view_schedule/<int:class_id>', methods=['GET'])
+def view_schedule(class_id):
+    """Displays schedules grouped by DayOfWeek and ScheduleDate."""
+    class_info = get_class_info(class_id)
+    schedules = get_schedule_by_days(class_id)  # Fetch schedules
+
+    # Group schedules by DayOfWeek and ScheduleDate
+    grouped_schedules = {}
+    for schedule in schedules:
+        # Use both DayOfWeek and ScheduleDate as grouping keys
+        day_date_key = f"{schedule['DayOfWeek']} ({schedule['ScheduleDate']})"
+        if day_date_key not in grouped_schedules:
+            grouped_schedules[day_date_key] = []
+        grouped_schedules[day_date_key].append(schedule)
+
+    return render_template(
+        'class_schedule.html',
+        class_info=class_info,
+        grouped_schedules=grouped_schedules
+    )
+
+
+
+@app.route('/book_class/<int:schedule_id>', methods=['POST'])
+def book_class(schedule_id):
+    """Allows logged-in users to book a class."""
+    if 'user_id' not in session:
+        flash('You need to log in to book a class.', 'danger')
+        return redirect(url_for('login', next=request.referrer))  # Redirect to login if user is not logged in
+
+    user_id = session['user_id']  # Retrieve logged-in user's ID
+    booking_success = book_class_for_user(user_id, schedule_id)  # Call booking logic
+
+    if booking_success:
+        flash('Class booked successfully!', 'success')
     else:
-        # Redirect to login page if not logged in
-        return redirect(url_for('login'))
+        flash('Unable to book the class. It may be full.', 'danger')
+
+    # Redirect back to the schedule page
+    return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
+
+
 
 @app.route('/membership_plans')
 def membership_plans():
@@ -155,41 +154,72 @@ def register():
 def login():
     form = LoginForm()
 
-    if form.validate_on_submit():  # Ensure this runs only on POST with valid data
-        email = form.email.data.strip().lower()  # Normalize email format
+    if form.validate_on_submit():  # Ensure form data is valid
+        email = form.email.data.strip().lower()  # Normalize email
         password = form.password.data
 
-        # Retrieve user data from the database
+        # Check if user exists in the database
         user_data = check_user_by_email(email)
         if user_data is None:
             flash('Email does not exist. Please register first.', 'danger')
             return redirect(url_for('login'))
 
-        # Check password validity
+        # Verify the password
         if check_password_hash(user_data['Password'], password):
-            user = User.get(user_data['UserID'])  # Load user via User model
-            login_user(user)
+            user = User.get(user_data['UserID'])  # Load user instance
+            login_user(user)  # Flask-Login's login function
+            session['user_id'] = user_data['UserID']  # Set user_id in session
             flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
+
+            # Redirect to the intended page
+            next_page = request.args.get('next')
+            if next_page:
+                return redirect(next_page)
+            return redirect(url_for('dashboard'))  # Default redirect
         else:
             flash('Incorrect password. Please try again.', 'danger')
 
-    return render_template('login.html', form=form)  # Pass the form to the template
+    return render_template('login.html', form=form)
 
-@app.route('/dashboard')
-@login_required  # Protect the dashboard route
+
+@app.route('/dashboard', methods=['GET'])
 def dashboard():
-    # Access the current user's information via `current_user`
-    email = current_user.email
-    return render_template('dashboard.html', email=email)
+    """Display user-specific dashboard content."""
+    if 'user_id' not in session:
+        flash('You need to log in to access your dashboard.', 'danger')
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    bookings = get_user_bookings(user_id)  # Fetch bookings for the logged-in user
+    user_details = get_user_details(user_id)  # Fetch personal details, including LastLogin
+
+    # Ensure user_details is not None
+    if user_details is None:
+        flash('Error fetching user details.', 'danger')
+        return redirect(url_for('login'))
+
+    # Check if the user is logging in for the first time
+    first_time_login = user_details.get('LastLogin') is None
+
+    # Update LastLogin timestamp (optional, to stop repeated first-time login logic)
+    update_last_login(user_id)
+
+    return render_template(
+        'dashboard.html',
+        bookings=bookings,
+        first_time_login=first_time_login,
+        user_details=user_details
+    )
 
 
-@app.route('/logout')
-@login_required
+@app.route('/logout', methods=['GET'])
 def logout():
-    logout_user()
-    flash("You've been logged out.", "info")
-    return redirect(url_for('login'))
+    """Logs out the user and clears session variables."""
+    session.pop('user_id', None)  # Remove user_id from the session
+    session.clear()  # Optional: Clear the entire session to prevent lingering data
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))  # Redirect to login page
+
 
 
 @app.route('/view-users')
@@ -202,8 +232,5 @@ def view_users():
     db.close()
     return str(users)  # or jsonify(users) if you import jsonify
 
-# @app.route('/book/<int:schedule_id>', methods=['POST'])
-# def book_class(schedule_id):
-#     # Do booking logic here...
-#     return render_template('book_class.html')
+
 

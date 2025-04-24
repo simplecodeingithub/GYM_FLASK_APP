@@ -184,6 +184,36 @@ CREATE TABLE `class_schedule` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+ALTER TABLE class_schedule
+ADD COLUMN DayOfWeek VARCHAR(10) NULL;  -- Example values: "Monday", "Tuesday", etc.
+
+ALTER TABLE class_schedule
+MODIFY COLUMN DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL DEFAULT 'Monday';
+
+select * from class_schedule;
+
+SELECT DISTINCT DayOfWeek FROM class_schedule;
+
+SELECT DayOfWeek, Location, StartTime, EndTime, AvailableSeats, ScheduleID
+FROM class_schedule
+WHERE class_id = 1
+ORDER BY FIELD(DayOfWeek, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'), StartTime;
+
+SELECT ScheduleDate, DayOfWeek, Location, StartTime, EndTime, AvailableSeats, ScheduleID
+FROM class_schedule
+WHERE class_id = 1
+ORDER BY ScheduleDate, FIELD(DayOfWeek, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'), StartTime;
+
+
+UPDATE class_schedule
+SET DayOfWeek = DAYNAME(ScheduleDate)
+WHERE ScheduleDate IS NOT NULL;
+
+SET SQL_SAFE_UPDATES = 0;
+
+SET SQL_SAFE_UPDATES = 1;
+
+
 --
 -- Dumping data for table `class_schedule`
 --
@@ -214,6 +244,25 @@ CREATE TABLE `classbooking` (
   CONSTRAINT `classbooking_ibfk_2` FOREIGN KEY (`ScheduleID`) REFERENCES `class_schedule` (`ScheduleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+ALTER TABLE gym_user
+ADD COLUMN LastLogin DATETIME NULL;
+
+
+SELECT * FROM classbooking WHERE UserID = 'GMUK1009';
+
+SELECT * FROM classbooking WHERE ScheduleID = 102 AND UserID = 'GMUK1009';
+
+SELECT AvailableSeats FROM class_schedule WHERE ScheduleID = 102;
+
+ALTER TABLE classbooking
+MODIFY COLUMN BookingID INT NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE payment DROP FOREIGN KEY payment_ibfk_1;
+
+ALTER TABLE payment
+ADD CONSTRAINT payment_ibfk_1
+FOREIGN KEY (BookingID) REFERENCES classbooking (BookingID);
 
 --
 -- Dumping data for table `classbooking`

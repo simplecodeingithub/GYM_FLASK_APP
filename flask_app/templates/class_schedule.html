@@ -1,8 +1,67 @@
 {% extends "layout.html" %}
+
 {% block content %}
-  <div class="container py-4">
-    <h3>✅ Booking Confirmed</h3>
-    <p>Thank you! Your spot has been reserved.</p>
-    <a href="{{ url_for('classes') }}" class="btn btn-primary mt-3">Back to Classes</a>
-  </div>
+<div class="container mt-4">
+    <h1 class="text-center" style="color: #d63384;">Weekly Timetable</h1>
+    <p class="text-center text-muted">Explore class schedules for the week below. Select a class and book your session!</p>
+
+    {% for day, schedules in grouped_schedules.items() %}
+        <!-- Day Cards -->
+        <div class="card my-3">
+            <div class="card-header text-white" style="background-color: #d63384;">
+                <h4>{{ day }}</h4>
+            </div>
+            <div class="card-body">
+                {% if schedules %}
+                    <!-- Iterate Through Classes -->
+                    {% for schedule in schedules %}
+                        <div class="row align-items-center my-2">
+                            <!-- Display Date -->
+                            <div class="col-md-2 text-center">
+                                <strong>{{ schedule.ScheduleDate }}</strong>
+                            </div>
+
+                            <!-- Display Time -->
+                            <div class="col-md-2 text-center">
+                                <strong>{{ schedule.StartTime }} - {{ schedule.EndTime }}</strong>
+                            </div>
+
+                            <!-- Display Location -->
+                            <div class="col-md-3 text-center">
+                                <span>Location: {{ schedule.Location }}</span>
+                            </div>
+
+                            <!-- Seats Availability -->
+                            <div class="col-md-3 text-center">
+                                {% if schedule.AvailableSeats > 0 %}
+                                    <span class="text-success">{{ schedule.AvailableSeats }} seats available</span>
+                                {% else %}
+                                    <span class="text-danger">Full</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Booking Section -->
+                            <div class="col-md-2 text-center">
+                                {% if schedule.AvailableSeats > 0 %}
+                                    {% if session.user_id %}
+                                        <form action="{{ url_for('book_class', schedule_id=schedule.ScheduleID) }}" method="POST">
+                                            <button type="submit" class="btn btn-pink">Book</button>
+                                        </form>
+                                    {% else %}
+                                        <a href="{{ url_for('login', next=request.url) }}" class="btn btn-pink">Log In to Book</a>
+                                    {% endif %}
+                                {% else %}
+                                    <button class="btn btn-pink" disabled>Unavailable</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center text-muted">No classes scheduled for this day.</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
 {% endblock %}

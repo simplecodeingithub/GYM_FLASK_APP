@@ -53,6 +53,17 @@
     </div>
   </nav>
 
+  <!-- Flash Messages -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-dismissible {{ messages[-1][0] }}" role="alert">
+                    {{ messages[-1][1] }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
   <!-- Content Block -->
   {% block content %}
   {% endblock %}
