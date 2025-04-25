@@ -387,3 +387,13 @@ def calculate_end_time(start_time, duration):
     start_time_obj = datetime.strptime(start_time, '%H:%M:%S')
     end_time_obj = start_time_obj + timedelta(hours=duration)
     return end_time_obj.strftime('%H:%M:%S')
+
+def get_trainers():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    query = "SELECT FirstName, LastName, Email, PhoneNumber, Specialization, ExperienceYears FROM Trainer"
+    cursor.execute(query)
+    trainers = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return trainers

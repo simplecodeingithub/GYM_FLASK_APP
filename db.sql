@@ -486,3 +486,7 @@ ALTER TABLE payment DROP FOREIGN KEY payment_ibfk_1;
 ALTER TABLE payment
 ADD CONSTRAINT payment_ibfk_1
 FOREIGN KEY (BookingID) REFERENCES classbooking (BookingID);
+
+select * from TRAINER;
+
+SELECT Specialization FROM Trainer;

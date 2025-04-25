@@ -1,5 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
-  <h2>Meet Our Trainers</h2>
-  <p>Certified pros who lift, teach, and code — ready to guide your growth.</p>
+   <div class="container mt-5">
+      <h1 class="text-center mb-4">Meet Our Trainers</h1>
+      <p class="text-center">Certified pros who lift, teach, and code — ready to guide your growth.</p>
+      <div class="row">
+          {% for trainer in trainers %}
+          <div class="col-md-4 mb-4">
+              <div class="card h-100 shadow-sm">
+               <div class="card-body text-center">
+                 <h5 class="card-title">{{ trainer['FirstName'] }} {{ trainer['LastName'] }}</h5>
+                 <h6 class="card-subtitle mb-2 text-muted">Specialization: {{ trainer['Specialization'] }}</h6>
+                 <p class="card-text">Experience: {{ trainer['Experience'] }} years</p>
+                 <p class="card-text">Email: {{ trainer['Email'] }}</p>
+                 <p class="card-text">Phone: {{ trainer['PhoneNumber'] }}</p>
+               </div>
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+   </div>
 {% endblock %}

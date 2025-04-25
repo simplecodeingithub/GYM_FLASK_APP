@@ -8,7 +8,7 @@ from flask_app.models import User
 from flask_app.forms.register_form import RegisterForm
 from flask_app.forms.login_form import LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
-from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
+from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login, get_trainers
 from flask_app.data_access import  book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedule,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
 import os
 from werkzeug.security import generate_password_hash
@@ -86,7 +86,8 @@ def membership_plans():
 
 @app.route('/trainers')
 def trainers():
-    return render_template('trainers.html')
+    trainers = get_trainers()
+    return render_template('trainers.html', trainers=trainers)
 
 @app.route('/contact')
 def contact():
