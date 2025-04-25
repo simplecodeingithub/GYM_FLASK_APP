@@ -391,7 +391,7 @@ def calculate_end_time(start_time, duration):
 def get_trainers():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    query = "SELECT FirstName, LastName, Email, PhoneNumber, Specialization, ExperienceYears FROM Trainer"
+    query = "SELECT FirstName, LastName, Email, PhoneNumber, Specialization FROM Trainer"
     cursor.execute(query)
     trainers = cursor.fetchall()
     cursor.close()
