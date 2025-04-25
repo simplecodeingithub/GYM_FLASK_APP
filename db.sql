@@ -213,6 +213,34 @@ SET SQL_SAFE_UPDATES = 0;
 
 SET SQL_SAFE_UPDATES = 1;
 
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek) VALUES
+-- Yoga Classes
+(155, 1, '2025-05-12', '09:00:00', '10:00:00', 'Studio A', 25, 'Monday'),
+(156, 1, '2025-05-12', '18:00:00', '19:00:00', 'Studio A', 25, 'Monday'),
+(157, 1, '2025-05-17', '07:30:00', '08:30:00', 'Studio A', 25, 'Saturday'),
+(158, 1, '2025-05-17', '18:00:00', '19:00:00', 'Studio A', 25, 'Saturday'),
+
+-- Strength Training Classes
+(159, 2, '2025-05-14', '07:00:00', '08:00:00', 'Studio B', 20, 'Wednesday'),
+(160, 2, '2025-05-14', '17:30:00', '18:30:00', 'Studio B', 20, 'Wednesday'),
+(161, 2, '2025-05-18', '08:30:00', '09:30:00', 'Studio B', 20, 'Sunday'),
+
+-- Pilates Classes
+(162, 3, '2025-05-13', '08:00:00', '09:00:00', 'Studio C', 18, 'Tuesday'),
+(163, 3, '2025-05-15', '12:00:00', '13:00:00', 'Studio C', 18, 'Thursday'),
+
+-- Weight Lifting Classes
+(164, 4, '2025-05-16', '11:00:00', '12:00:00', 'Studio D', 15, 'Friday'),
+(165, 4, '2025-05-18', '13:00:00', '14:00:00', 'Studio D', 15, 'Sunday'),
+
+-- Aerobics Classes
+(166, 5, '2025-05-12', '08:00:00', '09:00:00', 'Studio E', 30, 'Monday'),
+(167, 5, '2025-05-17', '18:00:00', '19:00:00', 'Studio E', 30, 'Saturday'),
+
+-- Kickboxing Classes
+(168, 6, '2025-05-16', '06:30:00', '07:30:00', 'Studio F', 16, 'Friday'),
+(169, 6, '2025-05-18', '19:00:00', '20:00:00', 'Studio F', 16, 'Sunday');
+
 
 --
 -- Dumping data for table `class_schedule`
@@ -302,6 +330,7 @@ INSERT INTO `fitness_class` VALUES (1,'Yoga','A peaceful yoga session to start y
 /*!40000 ALTER TABLE `fitness_class` ENABLE KEYS */;
 UNLOCK TABLES;
 
+select * from fitness_class;
 --
 -- Table structure for table `gym_user`
 --

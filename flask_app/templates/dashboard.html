@@ -17,13 +17,16 @@
     {% if bookings %}
         <!-- Regular Bookings Section -->
         <div class="card my-4">
-            <div class="card-header text-white" style="background-color: #d63384;">
-                <h4>Your Bookings</h4>
+            <div class="card my-4" style="background: linear-gradient(to right, #FFB6C1, #FF69B4); border: 1px solid #FF69B4; border-radius: 10px; box-shadow: 0px 4px 8px rgba(255, 105, 180, 0.3);">
+                <h4 style="text-align: center; color: #ffffff; font-weight: bold; padding: 15px; font-family: 'Poppins', sans-serif;">Your Bookings</h4>
             </div>
+
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
-                        <thead class="table-dark">
+                        <!-- Updated Table Header Colors -->
+                        <thead style="background: linear-gradient(to right, #FFB6C1, #FF69B4); color: #ffffff; text-align: center; border-radius: 5px;">
+                            <tr class="text-center">
                             <tr class="text-center">
                                 <th>Class Name</th>
                                 <th>Schedule Date</th>
@@ -39,7 +42,13 @@
                                     <td>{{ booking.StartTime }}</td>
                                     <td>
                                         {% if booking.BookingStatus == 'Booked' %}
-                                            <span class="text-success">Booked</span>
+                                            <!-- Flexbox for Positioning "Cancel" Button -->
+                                            <div style="display: flex; align-items: center;">
+                                                <span class="text-success">Booked</span>
+                                                <form action="{{ url_for('cancel_booking', schedule_id=booking.ScheduleID) }}" method="POST" style="margin-left: 10px;">
+                                                    <button type="submit" class="btn btn-danger btn-sm" style="border-radius: 5px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel</button>
+                                                </form>
+                                            </div>
                                         {% elif booking.BookingStatus == 'Cancelled' %}
                                             <span class="text-danger">Cancelled</span>
                                         {% else %}

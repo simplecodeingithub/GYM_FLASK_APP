@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <!-- Search Query Information -->
+  <h2 class="text-center">Search Results</h2>
+  <p class="text-muted text-center">
+    You searched for: <strong>{{ query or "Selected Option" }}</strong>
+  </p>
+
+  <hr>
+
+  <!-- Results Section -->
+  {% if results %}
+    <!-- Fitness Classes -->
+    {% if results.classes %}
+    <div class="mb-4">
+      <h3 class="text-primary">Fitness Classes</h3>
+      <ul class="list-group">
+        {% for class in results.classes %}
+        <li class="list-group-item">
+          <strong>{{ class[1] }}</strong> <!-- Assuming the class name is the second column -->
+          <p class="mb-0 text-muted">{{ class[2] or "No description available" }}</p>
+          <a href="{{ url_for('view_schedule', class_id=class[0]) }}" class="btn btn-sm btn-outline-primary mt-2">View Schedule</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Trainers -->
+    {% if results.trainers %}
+    <div class="mb-4">
+      <h3 class="text-primary">Trainers</h3>
+      <ul class="list-group">
+        {% for trainer in results.trainers %}
+        <li class="list-group-item">
+          <strong>{{ trainer[1] }}</strong> <!-- Assuming the trainer name is the second column -->
+          <p class="mb-0 text-muted">{{ trainer[2] or "Specialization not available" }}</p>
+          <a href="{{ url_for('trainer_details', trainer_id=trainer[0]) }}" class="btn btn-sm btn-outline-primary mt-2">View Profile</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+  {% else %}
+  <!-- Fallback for No Results -->
+  <div class="text-center">
+    <!--<img src="{{ url_for('static', filename='images/no_results.svg') }}" alt="No Results Found" style="max-width: 200px;">-->
+    <p class="text-muted mt-3">We couldn't find anything matching your selection. Please try exploring our categories below!</p>
+    <div class="mt-4">
+      <a href="{{ url_for('classes') }}" class="btn btn-primary me-2">Explore Fitness Classes</a>
+      <a href="{{ url_for('instructors') }}" class="btn btn-secondary">Meet Our Trainers</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

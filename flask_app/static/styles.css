@@ -55,20 +55,16 @@ header.jumbotron a.btn:hover {
   background-color: #a72463; /* Slightly darker pink for hover */
 }
 
-/* Navbar Styles */
+/* Custom Navbar */
 .custom-navbar {
-  background-color: fff0f5; /* light pink that matches your aesthetic */
-  backdrop-filter: blur(6px); /* optional: frosted effect */
-  border-bottom: 1px solid #f5c6da; /* optional: subtle bottom border */
+  background-color: #fff0f5; /* Matches the light pink aesthetic */
+  backdrop-filter: blur(6px); /* Frosted effect for modern look */
+  border-bottom: 1px solid #f5c6da; /* Subtle border for separation */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Adds slight depth */
 }
 
-.navbar {
-  padding-top: 0.2rem;
-  padding-bottom: 0.2rem;
-}
-
+/* Navbar Brand */
 .navbar-brand {
-  /*margin-right: 30px; /* Pushes everything else to the right */
   display: flex;
   align-items: center;
   margin-right: 60px;
@@ -77,21 +73,73 @@ header.jumbotron a.btn:hover {
 .navbar-brand img {
   height: 60px;
   width: auto;
-  max-height: 100%;
   object-fit: contain;
-  display: flex;
 }
+
+/* Navbar Links */
 .navbar-nav .nav-link {
   color: #333;
   background-color: #fff0f5;
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  padding: 8px 15px;
+  border-radius: 5px; /* Smooth corners for tabs */
 }
 
 .navbar-nav .nav-link:hover {
-  color: #d63384; /* Accent color */
-    background-color: #ffc0cb;
+  color: #d63384; /* Accent pink */
+  background-color: #ffc0cb; /* Light pink hover */
 }
+
+.navbar-nav .dropdown-menu {
+  background-color: #fff0f5; /* Pink dropdown background */
+  border: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  color: #333;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  color: #fff;
+  background-color: #d63384; /* Accent color for hover */
+}
+
+/* Active Tab Styling */
+.nav-item .active > .nav-link {
+  font-weight: bold;
+  color: #d63384; /* Accent color for active tab */
+}
+
+nav a {
+    text-decoration: none;
+    padding: 10px 15px;
+    color: #333;
+    transition: all 0.3s ease-in-out; /* Smooth effect */
+    font-family: 'Poppins', sans-serif; /* Modern and clean font */
+    font-size: 18px; /* Adjust size for better readability */
+    font-weight: 500; /* Balanced weight for elegance */
+}
+
+nav a:hover {
+    color: #FF69B4; /* Changes text color on hover */
+    background: linear-gradient(to right, #FFB6C1, #FF69B4); /* Gradient background */
+    border-radius: 5px; /* Slight rounded edges */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Adds a subtle glow */
+}
+
+
+
+.btn-danger:hover {
+    background: linear-gradient(to right, #FF69B4, #FFB6C1); /* Gradient for hover */
+    box-shadow: 0px 4px 6px rgba(255, 105, 180, 0.5); /* Glow effect */
+    border-color: #FF69B4;
+    color: #ffffff;
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
 
 /* Hero */
 .hero {
@@ -106,14 +154,27 @@ header.jumbotron a.btn:hover {
 .hero-heading {
   font-size: 3rem;
   font-weight: 700;
-  color: #333;
+  margin-bottom: 10px;
 }
+
 
 .hero-subtext {
   font-size: 1.5rem;
-  color: #555;
+  color: #333333; /* Dark gray */
   margin-top: 10px;
 }
+
+#search-box {
+    position: absolute; /* Allows precise placement relative to its parent */
+    top: 0; /* Aligns vertically with the "Register" button */
+    left: calc(100% + 2px); /* Places it just 5px to the right of the "Register" button */
+    margin: 0; /* Removes extra margins */
+}
+
+
+
+
+
 
 /* Buttons */
 .btn-primary {
@@ -231,6 +292,21 @@ footer p small {
   border-radius: 0.375rem;
 }
 
+.pink-box {
+    background-color: #FF69B4; /* Pink background */
+    color: #FFFFFF; /* White text for contrast */
+    padding: 10px; /* Adds spacing inside the box */
+    border-radius: 5px; /* Rounded corners for style */
+    text-align: center; /* Centers the text */
+    font-family: 'Poppins', sans-serif; /* Elegant and clean font */
+    font-size: 18px; /* Makes the text readable */
+    font-weight: bold; /* Ensures the text stands out */
+}
+
+.date-display {
+    margin: 0; /* Removes unnecessary space */
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   header.jumbotron {
@@ -293,6 +369,33 @@ a:hover {
   border-top: 1px solid #ddd;
 }
 
+
+
+.card-header-pink {
+    /*background: linear-gradient(to right, #FFB6C1, #FF69B4); *//* Gradient background *//*
+    color: #FFFFFF;  White text for contrast */
+    color: #FF69B4; /* Changes text color on hover */
+    background: linear-gradient(to right, #FFB6C1, #FF69B4); /* Gradient background */
+    text-align: center; /* Centers text */
+    padding: 15px; /* Adds padding inside the header */
+    border-radius: 5px 5px 0 0; /* Rounds top corners */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Adds a subtle glow */
+    font-family: 'Poppins', sans-serif; /* Clean font style */
+    font-weight: bold;
+}
+
+
+
+.card-body {
+    background-color: #FFFFFF; /* Keeps the card body in white */
+    padding: 15px; /* Adds spacing inside the body */
+    border-radius: 0 0 5px 5px; /* Matches header rounding */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Adds depth */
+}
+
+
+
+
 .btn-primary {
   background-color: #d63384; /* Updated button color */
   border: none;
@@ -325,6 +428,18 @@ a:hover {
 
 .row {
     margin-top: 10px;
+}
+
+.container h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Change the table header color */
+.table-dark {
+    background: linear-gradient(to right, #ffe6f0, #ffd1e6); /* Softer pink */
+    color: #333333; /* Dark gray text for contrast */
+    text-align: center; /* Center align header text */
 }
 
 

@@ -268,7 +268,7 @@ def get_user_bookings(user_id):
     try:
         cursor.execute("""
             SELECT 
-                cb.BookingStatus, cs.ScheduleDate, cs.StartTime, fc.class_name
+                cb.BookingStatus, cs.ScheduleDate, cs.StartTime, fc.class_name ,cs.ScheduleID
             FROM 
                 classbooking cb
             JOIN 
@@ -281,6 +281,35 @@ def get_user_bookings(user_id):
                 cs.ScheduleDate, cs.StartTime
         """, (user_id,))
         return cursor.fetchall()
+    finally:
+        cursor.close()
+        connection.close()
+
+
+def cancel_booking_for_user(user_id, schedule_id):
+    """Cancels a booking for the user and increases available seats."""
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    try:
+        # Delete booking record for the user and schedule
+        cursor.execute("""
+            DELETE FROM classbooking 
+            WHERE UserID = %s AND ScheduleID = %s
+        """, (user_id, schedule_id))
+
+        # Update available seats for the class
+        cursor.execute("""
+            UPDATE class_schedule
+            SET AvailableSeats = AvailableSeats + 1
+            WHERE ScheduleID = %s
+        """, (schedule_id,))
+        connection.commit()
+
+        print(f"Booking canceled for UserID: {user_id}, ScheduleID: {schedule_id}")  # Debug log
+        return True
+    except Exception as e:
+        print(f"Error during cancellation: {e}")  # Debug log
+        return False
     finally:
         cursor.close()
         connection.close()

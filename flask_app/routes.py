@@ -9,7 +9,8 @@ from flask_app.forms.register_form import RegisterForm
 from flask_app.forms.login_form import LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
-from flask_app.data_access import  book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedule,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
+from flask_app.data_access import book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedule,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
+from flask_app.data_access import cancel_booking_for_user
 import os
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
@@ -36,14 +37,17 @@ def classes():
     classes = get_fitness_classes()
     return render_template('classes.html', classes=classes)
 
+
+
 from datetime import datetime
 
 @app.route('/view_schedule/<int:class_id>', methods=['GET'])
 def view_schedule(class_id):
-    """Displays schedules grouped by DayOfWeek and formatted datetime."""
-    # Get class information and schedule data (replace with your DB functions)
+    """Displays schedules grouped by DayOfWeek with formatted datetime."""
+    # Fetch class and schedule information (replace with your DB functions)
     class_info = get_class_info(class_id)
     schedules = get_schedule_by_days(class_id)  # Fetch schedules
+
 
     # Group and format schedules
     grouped_schedules = {}
@@ -53,16 +57,16 @@ def view_schedule(class_id):
         start_time = (datetime.min + schedule['StartTime']).time()  # Convert timedelta to time
         end_time = (datetime.min + schedule['EndTime']).time()      # Convert timedelta to time
 
-        formatted_date = schedule_date.strftime('%Y-%m-%d')
+        # Add the month, day, and year to the day_of_week display
+        formatted_date = schedule_date.strftime('%B %d, %A %Y')  # Example: "April 24, Sunday 2025"
         formatted_start_time = start_time.strftime('%I:%M %p')  # 12-hour format with AM/PM
         formatted_end_time = end_time.strftime('%I:%M %p')
 
-        # Group by DayOfWeek and ScheduleDate
-        day_date_key = f"{schedule['DayOfWeek']} ({formatted_date})"
-        if day_date_key not in grouped_schedules:
-            grouped_schedules[day_date_key] = []
+        # Group by formatted date
+        if formatted_date not in grouped_schedules:
+            grouped_schedules[formatted_date] = []
 
-        grouped_schedules[day_date_key].append({
+        grouped_schedules[formatted_date].append({
             'ScheduleDate': formatted_date,
             'StartTime': formatted_start_time,
             'EndTime': formatted_end_time,
@@ -127,19 +131,39 @@ def book_class(schedule_id):
 def membership_plans():
     return render_template('membership_plans.html')
 
+
+@app.route('/instructors')
+def instructors():
+    return render_template('instructors.html')
+
 @app.route('/trainers')
-def trainers():
-    return render_template('trainers.html')
+def trainers_redirect():
+    return redirect(url_for('instructors'))
+
+
+# @app.route('/instructors')
+# def instructor():
+#     return render_template('instructors.html')
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
 
-@app.route('/search')
+
+@app.route('/search', methods=['GET'])
 def search():
     query = request.args.get('query')
-    # You can customize this later to actually do something
-    return f"<h2>Search Results for: <em>{query}</em></h2>"
+
+    # Redirect based on predefined options
+    if query == "classes":
+        return redirect(url_for('classes'))
+    elif query == "trainers":
+        return redirect(url_for('instructors'))
+    elif query == "membership":
+        return redirect(url_for('membership_plans'))
+
+    # Fallback for unexpected input
+    return render_template('search_results.html', message="Select an option from Search Suggestions!")
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -236,6 +260,9 @@ def dashboard():
     bookings = get_user_bookings(user_id)  # Fetch bookings for the logged-in user
     user_details = get_user_details(user_id)  # Fetch personal details, including LastLogin
 
+    # Debug: Print the bookings data
+    print(bookings)
+
     # Ensure user_details is not None
     if user_details is None:
         flash('Error fetching user details.', 'danger')
@@ -263,6 +290,26 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))  # Redirect to login page
 
+
+@app.route('/cancel_booking/<int:schedule_id>', methods=['POST'])
+def cancel_booking(schedule_id):
+    """Handles booking cancellation."""
+    if 'user_id' not in session:
+        flash('You need to log in to cancel a booking.', 'danger')
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    success = cancel_booking_for_user(user_id, schedule_id)
+
+    if success:
+        flash('Booking successfully canceled.', 'success')
+    else:
+        flash('Failed to cancel booking. Please try again.', 'danger')
+
+    return redirect(url_for('dashboard'))
+
+
+    # Replace 123 with a sample ID
 
 
 @app.route('/view-users')
