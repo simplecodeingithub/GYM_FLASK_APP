@@ -21,6 +21,7 @@ login_manager.login_view = 'login'  # Redirect unauthenticated users to the logi
 from flask_app import routes
 from flask_app.models import User
 from flask_app.data_access import get_db_connection
+from flask_app import errors
 
 @login_manager.user_loader
 def load_user(user_id):

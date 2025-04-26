@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="text-center" style="padding:50px;">
+    <h1 style="font-size: 5em;">500</h1>
+    <h2>Oops! Something went wrong on our end.</h2>
+    <p>We apologize for the inconvenience. Our team has been notified and will fix this as soon as possible.</p>
+
+    <div style="margin-top: 30px;">
+        <a href="{{ url_for('home') }}" class="btn btn-primary">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
