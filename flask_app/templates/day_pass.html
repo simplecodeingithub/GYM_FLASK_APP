@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center" style="color: #d63384;">Day Pass</h1>
+    <p class="text-center text-muted">
+        Enjoy unlimited access to all classes for a day with our Day Pass! Book as many sessions as you like and experience the best of our fitness offerings.
+    </p>
+    <div class="text-center mt-4">
+        <form action="{{ url_for('purchase_day_pass_route') }}" method="POST">
+            <button type="submit" class="btn btn-pink" style="background-color: #d63384; color: white; font-weight: bold; border-radius: 5px;">
+                Purchase Day Pass - £20
+            </button>
+        </form>
+        <p class="text-muted mt-2">Make today your healthiest day yet!</p>
+    </div>
+</div>
+{% endblock %}

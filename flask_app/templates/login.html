@@ -3,9 +3,9 @@
 {% block content %}
 <div class="container">
     <div class="form-container">
-        <h2 class="text-center mb-4">Login</h2>
+        <h2 class="text-center mb-4" style="color: #FF69B4;">Login</h2>
 
-        <!-- ✅ Flash messages here -->
+       <!-- &lt;!&ndash; ✅ Flash messages here &ndash;&gt;
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message in messages %}
@@ -15,7 +15,7 @@
               </div>
             {% endfor %}
           {% endif %}
-        {% endwith %}
+        {% endwith %}-->
 
         <form method="POST">
             {{ form.hidden_tag() }}

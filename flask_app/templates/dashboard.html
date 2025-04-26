@@ -14,8 +14,19 @@
         </div>
     {% endif %}
 
+    <!-- Active Day Pass Section -->
+    {% if active_day_pass %}
+    <div class="alert alert-success text-center">
+        <p>You have an <strong>Active Day Pass</strong> for {{ active_day_pass.PurchaseDate }}. Enjoy unlimited bookings today!</p>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <p>You don't have an active Day Pass. <a href="{{ url_for('day_pass') }}" class="btn btn-link">Get one now</a>.</p>
+    </div>
+    {% endif %}
+
+    <!-- Bookings Section -->
     {% if bookings %}
-        <!-- Regular Bookings Section -->
         <div class="card my-4">
             <div class="card my-4" style="background: linear-gradient(to right, #FFB6C1, #FF69B4); border: 1px solid #FF69B4; border-radius: 10px; box-shadow: 0px 4px 8px rgba(255, 105, 180, 0.3);">
                 <h4 style="text-align: center; color: #ffffff; font-weight: bold; padding: 15px; font-family: 'Poppins', sans-serif;">Your Bookings</h4>
@@ -24,13 +35,12 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
-                        <!-- Updated Table Header Colors -->
                         <thead style="background: linear-gradient(to right, #FFB6C1, #FF69B4); color: #ffffff; text-align: center; border-radius: 5px;">
-                            <tr class="text-center">
                             <tr class="text-center">
                                 <th>Class Name</th>
                                 <th>Schedule Date</th>
                                 <th>Start Time</th>
+                                <th>Trainer Name</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -40,9 +50,9 @@
                                     <td>{{ booking.class_name }}</td>
                                     <td>{{ booking.ScheduleDate }}</td>
                                     <td>{{ booking.StartTime }}</td>
+                                    <td>{{ booking.TrainerName }}</td>
                                     <td>
                                         {% if booking.BookingStatus == 'Booked' %}
-                                            <!-- Flexbox for Positioning "Cancel" Button -->
                                             <div style="display: flex; align-items: center;">
                                                 <span class="text-success">Booked</span>
                                                 <form action="{{ url_for('cancel_booking', schedule_id=booking.ScheduleID) }}" method="POST" style="margin-left: 10px;">
@@ -71,5 +81,39 @@
         </div>
         <p class="text-center text-muted">You have no bookings at the moment.</p>
     {% endif %}
+
+    <!-- Payment History Section -->
+    {% if payments %}
+    <div class="card my-4">
+        <div class="card-header text-center text-white" style="background: linear-gradient(to right, #FFB6C1, #FF69B4);">
+            <h4>Your Payment History</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead style="background-color: #FF69B4; color: #ffffff;">
+                    <tr>
+                        <th>Payment Date</th>
+                        <th>Amount (£)</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        <td>{{ payment.PaymentDate }}</td>
+                        <td>{{ payment.Amount }}</td>
+                        <td>{{ payment.PaymentType if payment.PaymentType else "N/A" }}</td>
+                        <td>{{ payment.Status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+        <p class="text-center text-muted">You haven't made any payments yet.</p>
+    {% endif %}
+
 </div>
 {% endblock %}

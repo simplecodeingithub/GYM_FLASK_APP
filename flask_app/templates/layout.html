@@ -29,6 +29,7 @@
             <!--<li><a class="dropdown-item" href="{{ url_for('services') }}">Our Services</a></li>-->
             <li><a class="dropdown-item" href="{{ url_for('classes') }}">Our Fitness Classes</a></li>
             <li><a class="dropdown-item" href="{{ url_for('membership_plans') }}">Membership Plans</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('day_pass') }}">Day Pass</a></li>
           </ul>
         </li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('instructors') }}">Instructors</a></li>
@@ -45,6 +46,7 @@
               <li><a class="dropdown-item" href="{{ url_for('classes') }}">Fitness Classes</a></li>
               <li><a class="dropdown-item" href="{{ url_for('instructors') }}">Trainers Info</a></li>
               <li><a class="dropdown-item" href="{{ url_for('membership_plans') }}">Membership Plans</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('day_pass') }}">Day Pass</a></li>
             </ul>
           </div>
         </form>
@@ -63,17 +65,18 @@
 </nav>
 
 
-  <!-- Flash Messages -->
-    <div class="container mt-3">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="alert alert-dismissible {{ messages[-1][0] }}" role="alert">
-                    {{ messages[-1][1] | safe }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endif %}
-        {% endwith %}
-    </div>
+  <!-- Flash Messages with Green Border -->
+  <div class="container mt-3">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+              <div class="alert alert-dismissible {{ messages[-1][0] }}" role="alert" style="border: 2px solid green; border-radius: 5px; padding: 10px;">
+                  {{ messages[-1][1] | safe }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+          {% endif %}
+      {% endwith %}
+  </div>
+
   <!-- Content Block -->
   {% block content %}
   {% endblock %}

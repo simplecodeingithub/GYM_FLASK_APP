@@ -3,8 +3,13 @@
 {% block content %}
 <div class="container mt-4">
     <h1 class="text-center" style="color: #d63384;">Weekly Timetable for {{ class_info['class_name'] }} classes.</h1>
-    <!--<p class="text-center text-muted">{{ class_info['class_description'] }}</p>
-    <img src="{{ url_for('static', filename=class_info['class_image']) }}" class="img-fluid mx-auto d-block">-->
+    <!--&lt;!&ndash; Add Day Pass Option &ndash;&gt;
+    <div class="text-center mb-4">
+        <a href="{{ url_for('purchase_day_pass') }}" class="btn btn-pink" style="background-color: #d63384; color: white; font-weight: bold; border-radius: 5px;">
+            Get a Day Pass - £20
+        </a>
+        <p class="text-muted mt-2">Enjoy unlimited access to all classes today with a Day Pass.</p>
+    </div>-->
 
     {% for week_label, days in grouped_schedules.items() %}
         <h2 class="text-center my-4" style="color: #ff6f91;">{{ week_label }}</h2> <!-- Week Label -->

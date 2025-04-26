@@ -345,6 +345,45 @@ SELECT
 FROM class_schedule
 WHERE ScheduleDate >= '2025-04-21' AND ScheduleDate <= '2025-04-27';  -- Limit to this week's schedules
 
+
+ALTER TABLE class_schedule
+ADD COLUMN TrainerID INT NOT NULL,
+ADD CONSTRAINT fk_class_schedule_trainer
+FOREIGN KEY (`TrainerID`) REFERENCES `trainer`(`TrainerID`);
+
+SELECT `TrainerID` FROM `trainer`;
+select * from class_schedule;
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+UPDATE `class_schedule`
+SET `TrainerID` = 1 -- Lucy Taylor (Yoga)
+WHERE `ScheduleID` IN (201, 202, 203, 204, 205, 206, 207, 208, 1201, 1202, 1203, 1204, 1205, 1206, 1207, 1208);
+
+UPDATE `class_schedule`
+SET `TrainerID` = 2 -- Mia Clarke (Strength Training)
+WHERE `ScheduleID` IN (301, 302, 303, 304, 305, 306, 1301, 1302, 1303, 1304, 1305, 1306);
+
+UPDATE `class_schedule`
+SET `TrainerID` = 3 -- Isabella White (Pilates)
+WHERE `ScheduleID` IN (401, 402, 403, 404, 405, 406, 1401, 1402, 1403, 1404, 1405, 1406);
+
+UPDATE `class_schedule`
+SET `TrainerID` = 4 -- Ava Collins (Weight Lifting)
+WHERE `ScheduleID` IN (503, 504, 1503, 1504);
+
+UPDATE `class_schedule`
+SET `TrainerID` = 5 -- Olivia Martin (Aerobics)
+WHERE `ScheduleID` IN (606, 607, 608, 609, 610, 1606, 1607, 1608, 1609, 1610);
+
+UPDATE `class_schedule`
+SET `TrainerID` = 6 -- Sophia Lee (Kickboxing)
+WHERE `ScheduleID` IN (704, 705, 706, 1704, 1705, 1706);
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+select * from trainer;
+
 --
 -- Dumping data for table `class_schedule`
 --
@@ -496,8 +535,57 @@ LOCK TABLES `membership` WRITE;
 INSERT INTO `membership` VALUES (201,'Monthly','Access to gym and 1 class per week',29.99,1),(202,'Quarterly','Full access + unlimited classes',79.99,3),(206,'Annual','Full access + unlimited classes + personal trainer sessions',249.99,12);
 /*!40000 ALTER TABLE `membership` ENABLE KEYS */;
 UNLOCK TABLES;
-
 --
+ALTER TABLE `membership`
+ADD COLUMN `Benefits` TEXT; -- Add a column to describe the benefits of each membership plan.
+
+UPDATE `membership`
+SET `Benefits` = 'Full access to gym facilities, 1 class per week'
+WHERE `MembershipID` = 201;
+
+UPDATE `membership`
+SET `Benefits` = 'Full access to gym facilities, unlimited classes'
+WHERE `MembershipID` = 202;
+
+UPDATE `membership`
+SET `Benefits` = 'Full access to gym facilities, unlimited classes, personal trainer sessions, nutrition classes'
+WHERE `MembershipID` = 206;
+--
+CREATE TABLE `day_pass` (
+  `PassID` INT NOT NULL AUTO_INCREMENT,
+  `UserID` VARCHAR(20) NOT NULL, -- Match the data type of gym_user.UserID
+  `PurchaseDate` DATE NOT NULL,
+  `PassStatus` ENUM('Active', 'Expired') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`PassID`),
+  FOREIGN KEY (`UserID`) REFERENCES `gym_user`(`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+select * from day_pass;
+
+select * from payment;
+
+SELECT UserID FROM day_pass;
+select * from gym_user;
+SHOW COLUMNS FROM payment;
+
+ALTER TABLE payment
+ADD COLUMN PaymentType VARCHAR(50) NOT NULL;
+
+ALTER TABLE payment
+ADD COLUMN UserID VARCHAR(20) NOT NULL;
+
+ALTER TABLE payment
+MODIFY COLUMN PaymentID INT NOT NULL AUTO_INCREMENT;
+
+SELECT * FROM day_pass
+WHERE UserID = 'GMUK1010' AND PurchaseDate = CURDATE() AND PassStatus = 'Active';
+
+
+
+ALTER TABLE day_pass
+MODIFY COLUMN UserID INT UNSIGNED NOT NULL;
+
+
 -- Table structure for table `membership_subscription`
 --
 
@@ -528,6 +616,8 @@ LOCK TABLES `membership_subscription` WRITE;
 INSERT INTO `membership_subscription` VALUES (1,'GMUK1001',201,'2025-04-01','2025-05-01'),(2,'GMUK1003',202,'2025-03-15','2025-06-15'),(3,'GMUK1005',206,'2025-01-01','2026-01-01');
 /*!40000 ALTER TABLE `membership_subscription` ENABLE KEYS */;
 UNLOCK TABLES;
+--
+
 
 --
 -- Table structure for table `payment`

@@ -275,13 +275,20 @@ def get_user_bookings(user_id):
     try:
         cursor.execute("""
             SELECT 
-                cb.BookingStatus, cs.ScheduleDate, cs.StartTime, fc.class_name ,cs.ScheduleID
+                cb.BookingStatus, 
+                cs.ScheduleDate, 
+                cs.StartTime, 
+                fc.class_name, 
+                cs.ScheduleID,
+                CONCAT(t.FirstName, ' ', t.LastName) AS TrainerName -- Added TrainerName
             FROM 
                 classbooking cb
             JOIN 
                 class_schedule cs ON cb.ScheduleID = cs.ScheduleID
             JOIN 
                 fitness_class fc ON cs.class_id = fc.class_id
+            JOIN 
+                trainer t ON cs.TrainerID = t.TrainerID -- Join with trainer table
             WHERE 
                 cb.UserID = %s
             ORDER BY 
@@ -399,3 +406,58 @@ def calculate_end_time(start_time, duration):
     start_time_obj = datetime.strptime(start_time, '%H:%M:%S')
     end_time_obj = start_time_obj + timedelta(hours=duration)
     return end_time_obj.strftime('%H:%M:%S')
+
+
+def purchase_day_pass(db, user_id):
+    """Process the purchase of a Day Pass for the user."""
+    if not user_id:
+        return {"status": "error", "message": "Invalid user ID provided."}
+
+    if not db.is_connected():
+        return {"status": "error", "message": "Database connection is not active."}
+
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        # Check if the user already has an active Day Pass for today
+        query_check = """
+            SELECT * FROM day_pass
+            WHERE UserID = %s AND PurchaseDate = CURDATE() AND PassStatus = 'Active';
+        """
+        cursor.execute(query_check, (user_id,))
+        existing_pass = cursor.fetchone()
+
+        if existing_pass:
+            return {"status": "info", "message": "You already have an active Day Pass for today."}
+
+        # Insert a new Day Pass record
+        query_insert = """
+            INSERT INTO day_pass (UserID, PurchaseDate, PassStatus)
+            VALUES (%s, %s, 'Active')
+        """
+        purchase_date = datetime.today().date()
+        cursor.execute(query_insert, (user_id, purchase_date))
+
+        # Add a payment record
+        query_payment = """
+            INSERT INTO payment (UserID, PaymentDate, Amount, Status, PaymentType)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        payment_date = datetime.now()
+        amount = 20.00  # Day Pass price
+        cursor.execute(query_payment, (user_id, payment_date, amount, 'Paid', 'DayPass'))
+
+        # Commit the transaction
+        db.commit()
+
+        return {"status": "success", "message": "Day Pass purchased successfully!"}
+
+    except Exception as e:
+        # Rollback the transaction in case of an error
+        print(f"Error processing Day Pass purchase: {str(e)}")  # Debug log
+        db.rollback()
+        return {"status": "error", "message": "Error processing Day Pass purchase. Please try again later."}
+
+    finally:
+        if cursor:
+            cursor.close()

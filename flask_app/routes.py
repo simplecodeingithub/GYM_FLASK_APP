@@ -10,7 +10,7 @@ from flask_app.forms.login_form import LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
 from flask_app.data_access import book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedules,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
-from flask_app.data_access import cancel_booking_for_user
+from flask_app.data_access import cancel_booking_for_user, purchase_day_pass
 import os
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
@@ -110,8 +110,6 @@ def view_schedule(class_id):
         grouped_schedules=grouped_schedules
     )
 
-
-
 @app.route('/book_class/<int:schedule_id>', methods=['POST'])
 def book_class(schedule_id):
     """Allows logged-in users to book a class."""
@@ -120,18 +118,79 @@ def book_class(schedule_id):
         return redirect(url_for('login', next=request.referrer))  # Redirect to login if user is not logged in
 
     user_id = session['user_id']  # Retrieve logged-in user's ID
-    booking_success = book_class_for_user(user_id, schedule_id)  # Call booking logic
+    db_connection = get_db_connection()
+    cursor = db_connection.cursor(dictionary=True)
 
-    if booking_success:
-        # Enhanced success message
-        flash('Class booked successfully! 🎉 You can view your booked classes in your '
-              '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>','success')
-    else:
-        flash('Unable to book the class. It may be full.', 'danger')
+    try:
+        # Check if user has an active Day Pass
+        query_check_day_pass = """
+            SELECT * FROM day_pass
+            WHERE UserID = %s AND PurchaseDate = CURDATE() AND PassStatus = 'Active';
+        """
+        cursor.execute(query_check_day_pass, (user_id,))
+        active_day_pass = cursor.fetchone()
+
+        if active_day_pass:
+            # Skip payment, just book the class
+            booking_success = book_class_for_user(user_id, schedule_id)
+            if booking_success:
+                flash('Class booked successfully! 🎉 Your active Day Pass covers this booking. View your classes in your '
+                      '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>', 'success')
+            else:
+                flash('Unable to book the class. It may be full.', 'danger')
+        else:
+            # No active Day Pass, process payment for the class
+            booking_success = book_class_for_user(user_id, schedule_id)
+            if booking_success:
+                try:
+                    # Add payment record
+                    query_payment = """
+                        INSERT INTO payment (UserID, PaymentDate, Amount, Status, PaymentType)
+                        VALUES (%s, %s, %s, %s, %s)
+                    """
+                    payment_date = datetime.now()
+                    class_fee = 12.00  # Fixed fee per class
+                    cursor.execute(query_payment, (user_id, payment_date, class_fee, 'Paid', 'PayPerClass'))
+                    db_connection.commit()
+                except Exception as e:
+                    db_connection.rollback()
+                    flash(f"Error processing payment: {str(e)}", 'danger')
+                    return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
+
+                # Enhanced success message with payment confirmation
+                flash('Class booked successfully! 🎉 Payment of £12 recorded. View your booked classes in your '
+                      '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>', 'success')
+            else:
+                flash('Unable to book the class. It may be full.', 'danger')
+
+    finally:
+        # Cleanup: Close the cursor
+        cursor.close()
 
     # Redirect back to the schedule page
     return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
 
+
+# @app.route('/book_class/<int:schedule_id>', methods=['POST'])
+# def book_class(schedule_id):
+#     """Allows logged-in users to book a class."""
+#     if 'user_id' not in session:
+#         flash('You need to log in to book a class.', 'danger')
+#         return redirect(url_for('login', next=request.referrer))  # Redirect to login if user is not logged in
+#
+#     user_id = session['user_id']  # Retrieve logged-in user's ID
+#     booking_success = book_class_for_user(user_id, schedule_id)  # Call booking logic
+#
+#     if booking_success:
+#         # Enhanced success message
+#         flash('Class booked successfully! 🎉 You can view your booked classes in your '
+#               '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>','success')
+#     else:
+#         flash('Unable to book the class. It may be full.', 'danger')
+#
+#     # Redirect back to the schedule page
+#     return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
+#
 
 
 @app.route('/membership_plans')
@@ -146,6 +205,33 @@ def instructors():
 @app.route('/trainers')
 def trainers_redirect():
     return redirect(url_for('instructors'))
+
+@app.route('/day_pass', methods=['GET'])
+def day_pass():
+    # Render the Day Pass page
+    return render_template('day_pass.html')
+
+@app.route('/purchase_day_pass', methods=['POST'], endpoint='purchase_day_pass')
+def purchase_day_pass_route():  # Renamed to avoid conflicts
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Please log in to purchase a Day Pass.", "danger")
+        return redirect(url_for('login', next=url_for('day_pass')))
+
+    # Initialize the database connection
+    db = get_db_connection()
+    if not db or not db.is_connected():
+        flash("Database connection failed. Please try again later.", "danger")
+        return redirect(url_for('dashboard'))
+
+    # Call the helper function
+    result = purchase_day_pass(db, user_id)
+
+    # Flash the result and redirect
+    flash(result["message"], result["status"])
+    return redirect(url_for('dashboard'))
+
+
 
 
 # @app.route('/instructors')
@@ -264,26 +350,52 @@ def dashboard():
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    bookings = get_user_bookings(user_id)  # Fetch bookings for the logged-in user
-    user_details = get_user_details(user_id)  # Fetch personal details, including LastLogin
 
-    # Debug: Print the bookings data
-    print(bookings)
+    try:
+        # Establish database connection
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
 
-    # Ensure user_details is not None
-    if user_details is None:
-        flash('Error fetching user details.', 'danger')
-        return redirect(url_for('login'))
+        # Fetch active day pass
+        query_day_pass = """
+            SELECT * FROM day_pass
+            WHERE UserID = %s AND PurchaseDate = CURDATE() AND PassStatus = 'Active'
+        """
+        cursor.execute(query_day_pass, (user_id,))
+        active_day_pass = cursor.fetchone()
 
-    # Check if the user is logging in for the first time
-    first_time_login = user_details.get('LastLogin') is None
+        # Fetch payment history
+        query_payments = """
+            SELECT PaymentDate, Amount, PaymentType, Status
+            FROM payment
+            WHERE UserID = %s
+        """
+        cursor.execute(query_payments, (user_id,))
+        payments = cursor.fetchall()
 
-    # Update LastLogin timestamp (optional, to stop repeated first-time login logic)
-    update_last_login(user_id)
+        # Debug: Print fetched payments
+        print("Payments fetched from database:", payments)
+
+        # Other logic (e.g., bookings, first-time login)
+        bookings = get_user_bookings(user_id)
+        user_details = get_user_details(user_id)
+
+        if user_details is None:
+            flash('Error fetching user details.', 'danger')
+            return redirect(url_for('login'))
+
+        first_time_login = user_details.get('LastLogin') is None
+        update_last_login(user_id)
+
+    finally:
+        cursor.close()
+        connection.close()
 
     return render_template(
         'dashboard.html',
         bookings=bookings,
+        active_day_pass=active_day_pass,
+        payments=payments,  # Ensure payments is defined here
         first_time_login=first_time_login,
         user_details=user_details
     )
