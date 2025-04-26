@@ -346,3 +346,10 @@ a:hover {
 .btn-pink:hover {
     background-color: #b82e6e;
 }
+
+.highlight-box {
+  background-color: #ffe3ec; /* Soft pink */
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  display: inline-block;
+}
