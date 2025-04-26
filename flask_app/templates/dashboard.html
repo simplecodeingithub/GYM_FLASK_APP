@@ -9,8 +9,8 @@
         <div class="alert alert-info text-center">
             <h4>Welcome, {{ user_details.FirstName }}!</h4>
             <p>It looks like you're logging in for the first time. Start your fitness journey by booking your first class or exploring membership options!</p>
-            <a href="{{ url_for('view_classes') }}" class="btn btn-pink">View Classes</a>
-            <a href="{{ url_for('membership') }}" class="btn btn-secondary">Membership Options</a>
+            <a href="{{ url_for('classes') }}" class="btn btn-pink">View Classes</a>
+            <a href="{{ url_for('membership_plans') }}" class="btn btn-secondary">Membership Options</a>
         </div>
     {% endif %}
 
@@ -63,6 +63,12 @@
             </div>
         </div>
     {% else %}
+        <div class="text-center">
+            <p>Would you like to book a class? You can revisit the schedule page to explore available classes.</p>
+            <a href="{{ url_for('view_schedule', class_id=None) }}" class="btn btn-pink" style="border-radius: 5px; font-weight: bold;">
+                View Class Schedule
+            </a>
+        </div>
         <p class="text-center text-muted">You have no bookings at the moment.</p>
     {% endif %}
 </div>

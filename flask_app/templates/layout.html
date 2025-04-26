@@ -68,7 +68,7 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="alert alert-dismissible {{ messages[-1][0] }}" role="alert">
-                    {{ messages[-1][1] }}
+                    {{ messages[-1][1] | safe }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             {% endif %}

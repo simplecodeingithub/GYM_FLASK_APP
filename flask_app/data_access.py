@@ -216,10 +216,17 @@ def get_class_info(class_id):
     cursor = connection.cursor(dictionary=True)
     try:
         cursor.execute("SELECT * FROM fitness_class WHERE class_id = %s", (class_id,))
-        return cursor.fetchone()
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError(f"No class found with class_id = {class_id}")
+        return result
+    except Exception as e:
+        print(f"Error fetching class info: {e}")  # Log the error
+        return None
     finally:
         cursor.close()
         connection.close()
+
 
 
 def book_class_for_user(user_id, schedule_id):
@@ -372,39 +379,15 @@ def get_user_details(user_id):
 
 
 
-def generate_recurring_schedule(class_id, start_date, end_date, recurring_days):
-    """
-    Generates a list of recurring schedules for a class.
-    :param class_id: ID of the class
-    :param start_date: Start date for the schedule (datetime object)
-    :param end_date: End date for the schedule (datetime object)
-    :param recurring_days: List of days with times (e.g., [{'day': 'Monday', 'time': '09:00:00'}, ...])
-    :return: List of schedules
-    """
-    current_date = start_date  # Initialize current_date with start_date
-    recurring_schedule = []  # List to store the generated schedule
-    schedule_id = 1  # Start with a mock ID for dynamically generated schedules
-
-    while current_date <= end_date:  # Loop through dates between start_date and end_date
-        day_name = current_date.strftime('%A')  # Get the name of the day (e.g., "Monday")
-
-        for schedule in recurring_days:
-            if day_name == schedule['day']:
-                recurring_schedule.append({
-                    'ScheduleID': schedule_id,  # Add a unique identifier
-                    'class_id': class_id,
-                    'ScheduleDate': current_date.strftime('%Y-%m-%d'),
-                    'StartTime': schedule['time'],
-                    'EndTime': calculate_end_time(schedule['time'], duration=1),
-                    'Location': 'Studio A',  # Adjust location as needed
-                    'AvailableSeats': 20  # Default seat availability
-                })
-                schedule_id += 1  # Increment the mock ID
-
-        current_date += timedelta(days=1)  # Increment the date by one day
-
-    return recurring_schedule
-
+def generate_recurring_schedules(schedules, weeks=4):
+    """Generate recurring schedules for the next `weeks` for the same days of the week."""
+    recurring_schedules = []
+    for schedule in schedules:
+        for week in range(weeks):
+            new_schedule = schedule.copy()
+            new_schedule['ScheduleDate'] += timedelta(days=7 * week)  # Repeat every 7 days
+            recurring_schedules.append(new_schedule)
+    return recurring_schedules
 
 def calculate_end_time(start_time, duration):
     """

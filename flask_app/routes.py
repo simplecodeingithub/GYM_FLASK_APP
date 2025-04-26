@@ -9,7 +9,7 @@ from flask_app.forms.register_form import RegisterForm
 from flask_app.forms.login_form import LoginForm
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
-from flask_app.data_access import book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedule,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
+from flask_app.data_access import book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedules,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
 from flask_app.data_access import cancel_booking_for_user
 import os
 from werkzeug.security import generate_password_hash
@@ -38,72 +38,77 @@ def classes():
     return render_template('classes.html', classes=classes)
 
 
+def get_week_label(schedule_date, start_date):
+    """Calculate the week number based on the start date."""
+    delta = schedule_date - start_date
+    return f"Week {delta.days // 7 + 1}"  # Determine week number
 
-from datetime import datetime
 
+@app.route('/view_schedule', defaults={'class_id': None}, methods=['GET'])
 @app.route('/view_schedule/<int:class_id>', methods=['GET'])
 def view_schedule(class_id):
-    """Displays schedules grouped by DayOfWeek with formatted datetime."""
-    # Fetch class and schedule information (replace with your DB functions)
+    """Displays schedules grouped by Week, Day, and Batch with recurrence."""
+    # Handle query parameter
+    if class_id is None:
+        class_id = request.args.get('class_id', type=int)
+    if not class_id:
+        return "class_id is missing", 400  # Return HTTP 400 Bad Request
+
+    # Fetch schedules and class info
     class_info = get_class_info(class_id)
-    schedules = get_schedule_by_days(class_id)  # Fetch schedules
+    schedules = get_schedule_by_days(class_id)
 
+    # Add recurrence for 4 weeks
+    recurring_schedules = generate_recurring_schedules(schedules, weeks=4)  # Generate future occurrences
 
-    # Group and format schedules
+    # Define the batch classification function
+    def get_batch_label(start_time):
+        """Classifies the start time into a batch (Morning, Afternoon, Evening)."""
+        if start_time.hour < 12:
+            return "Morning Batch"
+        elif 12 <= start_time.hour < 17:
+            return "Afternoon Batch"
+        else:
+            return "Evening Batch"
+
+    # Group schedules by Week and Day
+    def get_week_label(schedule_date, start_date):
+        """Calculate the week number based on the starting date."""
+        delta = schedule_date - start_date
+        return f"Week {delta.days // 7 + 1}"  # Determine week number
+
     grouped_schedules = {}
-    for schedule in schedules:
-        # Format the date and time
-        schedule_date = schedule['ScheduleDate']  # Assuming it's a date object
-        start_time = (datetime.min + schedule['StartTime']).time()  # Convert timedelta to time
-        end_time = (datetime.min + schedule['EndTime']).time()      # Convert timedelta to time
+    week_start_date = date(2025, 4, 21)  # Define the start of Week 1
 
-        # Add the month, day, and year to the day_of_week display
-        formatted_date = schedule_date.strftime('%B %d, %A %Y')  # Example: "April 24, Sunday 2025"
-        formatted_start_time = start_time.strftime('%I:%M %p')  # 12-hour format with AM/PM
-        formatted_end_time = end_time.strftime('%I:%M %p')
+    for schedule in recurring_schedules:
+        # Calculate week label
+        week_label = get_week_label(schedule['ScheduleDate'], week_start_date)
+        day_with_date = schedule['ScheduleDate'].strftime('%A, %B %d, %Y')
 
-        # Group by formatted date
-        if formatted_date not in grouped_schedules:
-            grouped_schedules[formatted_date] = []
+        # Format time and classify batch
+        start_time = (datetime.min + schedule['StartTime']).time().strftime('%I:%M %p')
+        end_time = (datetime.min + schedule['EndTime']).time().strftime('%I:%M %p')
+        batch_label = get_batch_label(datetime.min + schedule['StartTime'])
 
-        grouped_schedules[formatted_date].append({
-            'ScheduleDate': formatted_date,
-            'StartTime': formatted_start_time,
-            'EndTime': formatted_end_time,
+        if week_label not in grouped_schedules:
+            grouped_schedules[week_label] = {}
+        if day_with_date not in grouped_schedules[week_label]:
+            grouped_schedules[week_label][day_with_date] = []
+
+        grouped_schedules[week_label][day_with_date].append({
+            'Batch': batch_label,
+            'StartTime': start_time,
+            'EndTime': end_time,
             'Location': schedule['Location'],
             'AvailableSeats': schedule['AvailableSeats'],
-            'ScheduleID': schedule['ScheduleID'],  # Required for booking
+            'ScheduleID': schedule['ScheduleID']
         })
 
-    # Render the grouped schedules in the template
     return render_template(
         'class_schedule.html',
         class_info=class_info,
         grouped_schedules=grouped_schedules
     )
-
-
-
-# @app.route('/view_schedule/<int:class_id>', methods=['GET'])
-# def view_schedule(class_id):
-#     """Displays schedules grouped by DayOfWeek and ScheduleDate."""
-#     class_info = get_class_info(class_id)
-#     schedules = get_schedule_by_days(class_id)  # Fetch schedules
-#
-#     # Group schedules by DayOfWeek and ScheduleDate
-#     grouped_schedules = {}
-#     for schedule in schedules:
-#         # Use both DayOfWeek and ScheduleDate as grouping keys
-#         day_date_key = f"{schedule['DayOfWeek']} ({schedule['ScheduleDate']})"
-#         if day_date_key not in grouped_schedules:
-#             grouped_schedules[day_date_key] = []
-#         grouped_schedules[day_date_key].append(schedule)
-#
-#     return render_template(
-#         'class_schedule.html',
-#         class_info=class_info,
-#         grouped_schedules=grouped_schedules
-#     )
 
 
 
@@ -118,7 +123,9 @@ def book_class(schedule_id):
     booking_success = book_class_for_user(user_id, schedule_id)  # Call booking logic
 
     if booking_success:
-        flash('Class booked successfully!', 'success')
+        # Enhanced success message
+        flash('Class booked successfully! 🎉 You can view your booked classes in your '
+              '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>','success')
     else:
         flash('Unable to book the class. It may be full.', 'danger')
 

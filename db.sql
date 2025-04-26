@@ -241,6 +241,109 @@ INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTi
 (168, 6, '2025-05-16', '06:30:00', '07:30:00', 'Studio F', 16, 'Friday'),
 (169, 6, '2025-05-18', '19:00:00', '20:00:00', 'Studio F', 16, 'Sunday');
 
+--
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE class_schedule;
+SET FOREIGN_KEY_CHECKS = 1;
+
+select * from class_schedule;
+--
+-- Yoga (ClassID: 1)
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(201, 1, '2025-04-21', '09:00:00', '10:00:00', 'Studio A', 25, 'Monday'),
+(202, 1, '2025-04-21', '18:00:00', '19:00:00', 'Studio A', 25, 'Monday'),
+(203, 1, '2025-04-23', '09:00:00', '10:00:00', 'Studio A', 25, 'Wednesday'),
+(204, 1, '2025-04-23', '18:00:00', '19:00:00', 'Studio A', 25, 'Wednesday'),
+(205, 1, '2025-04-25', '09:00:00', '10:00:00', 'Studio A', 25, 'Friday'),
+(206, 1, '2025-04-25', '18:00:00', '19:00:00', 'Studio A', 25, 'Friday'),
+(207, 1, '2025-04-27', '09:00:00', '10:00:00', 'Studio A', 25, 'Sunday'),
+(208, 1, '2025-04-27', '18:00:00', '19:00:00', 'Studio A', 25, 'Sunday');
+
+-- Strength Training (ClassID: 2)
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(301, 2, '2025-04-22', '12:00:00', '13:00:00', 'Studio B', 20, 'Tuesday'),
+(302, 2, '2025-04-24', '12:00:00', '13:00:00', 'Studio B', 20, 'Thursday'),
+(303, 2, '2025-04-26', '12:00:00', '13:00:00', 'Studio B', 20, 'Saturday');
+
+-- Strength Training Evening Batches
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(304, 2, '2025-04-22', '18:00:00', '19:00:00', 'Studio B', 20, 'Tuesday'),
+(305, 2, '2025-04-24', '18:00:00', '19:00:00', 'Studio B', 20, 'Thursday'),
+(306, 2, '2025-04-26', '18:00:00', '19:00:00', 'Studio B', 20, 'Saturday');
+
+-- Pilates (ClassID: 3)
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(401, 3, '2025-04-21', '11:00:00', '12:00:00', 'Studio C', 18, 'Monday'),
+(402, 3, '2025-04-23', '11:00:00', '12:00:00', 'Studio C', 18, 'Wednesday'),
+(403, 3, '2025-04-26', '11:00:00', '12:00:00', 'Studio C', 18, 'Saturday');
+
+-- Pilates Evening Batches
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(404, 3, '2025-04-21', '17:00:00', '18:00:00', 'Studio C', 18, 'Monday'),
+(405, 3, '2025-04-23', '17:00:00', '18:00:00', 'Studio C', 18, 'Wednesday'),
+(406, 3, '2025-04-26', '17:00:00', '18:00:00', 'Studio C', 18, 'Saturday');
+
+-- Weight Lifting (ClassID: 4)
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(501, 4, '2025-04-22', '13:00:00', '14:00:00', 'Studio D', 15, 'Tuesday'),
+(502, 4, '2025-04-24', '13:00:00', '14:00:00', 'Studio D', 15, 'Thursday');
+
+-- Weight Lifting Evening Batches
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(503, 4, '2025-04-22', '18:00:00', '19:00:00', 'Studio D', 15, 'Tuesday'),
+(504, 4, '2025-04-24', '18:00:00', '19:00:00', 'Studio D', 15, 'Thursday');
+
+-- Aerobics (ClassID: 5)
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(601, 5, '2025-04-21', '08:00:00', '09:00:00', 'Studio E', 30, 'Monday'),
+(602, 5, '2025-04-22', '08:00:00', '09:00:00', 'Studio E', 30, 'Tuesday'),
+(603, 5, '2025-04-23', '08:00:00', '09:00:00', 'Studio E', 30, 'Wednesday'),
+(604, 5, '2025-04-24', '08:00:00', '09:00:00', 'Studio E', 30, 'Thursday'),
+(605, 5, '2025-04-25', '08:00:00', '09:00:00', 'Studio E', 30, 'Friday');
+
+-- Aerobics Evening Batches
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(606, 5, '2025-04-21', '17:30:00', '18:30:00', 'Studio E', 30, 'Monday'),
+(607, 5, '2025-04-22', '17:30:00', '18:30:00', 'Studio E', 30, 'Tuesday'),
+(608, 5, '2025-04-23', '17:30:00', '18:30:00', 'Studio E', 30, 'Wednesday'),
+(609, 5, '2025-04-24', '17:30:00', '18:30:00', 'Studio E', 30, 'Thursday'),
+(610, 5, '2025-04-25', '17:30:00', '18:30:00', 'Studio E', 30, 'Friday');
+
+-- Kickboxing (ClassID: 6)
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(701, 6, '2025-04-23', '10:30:00', '11:30:00', 'Studio F', 16, 'Wednesday'),
+(702, 6, '2025-04-25', '10:30:00', '11:30:00', 'Studio F', 16, 'Friday'),
+(703, 6, '2025-04-27', '10:30:00', '11:30:00', 'Studio F', 16, 'Sunday');
+
+-- Kickboxing Evening Batches
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+VALUES 
+(704, 6, '2025-04-23', '18:30:00', '19:30:00', 'Studio F', 16, 'Wednesday'),
+(705, 6, '2025-04-25', '18:30:00', '19:30:00', 'Studio F', 16, 'Friday'),
+(706, 6, '2025-04-27', '18:30:00', '19:30:00', 'Studio F', 16, 'Sunday');
+
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek)
+SELECT
+    ScheduleID + 1000,  -- Adjust for unique ScheduleID
+    class_id,
+    DATE_ADD(ScheduleDate, INTERVAL 7 DAY) AS NextWeekDate,  -- Repeat next week
+    StartTime,
+    EndTime,
+    Location,
+    AvailableSeats,
+    DayOfWeek
+FROM class_schedule
+WHERE ScheduleDate >= '2025-04-21' AND ScheduleDate <= '2025-04-27';  -- Limit to this week's schedules
 
 --
 -- Dumping data for table `class_schedule`
