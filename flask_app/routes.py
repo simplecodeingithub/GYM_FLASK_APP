@@ -11,7 +11,7 @@ from flask_app.forms.contact_form import ContactForm
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
 from flask_app.data_access import book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedules,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
-from flask_app.data_access import cancel_booking_for_user, purchase_day_pass,add_contact_submission
+from flask_app.data_access import cancel_booking_for_user, purchase_day_pass,add_contact_submission,get_trainers
 import os
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
@@ -206,7 +206,8 @@ def membership_plans():
 
 @app.route('/instructors')
 def instructors():
-    return render_template('instructors.html')
+    trainers = get_trainers()
+    return render_template('instructors.html', trainers=trainers)
 
 @app.route('/trainers')
 def trainers_redirect():

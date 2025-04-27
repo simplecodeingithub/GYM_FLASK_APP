@@ -1,5 +1,52 @@
 {% extends "layout.html" %}
 {% block content %}
-  <h2>Meet Our Trainers</h2>
-  <p>Certified pros who lift, teach, and code — ready to guide your growth.</p>
+<!-- Gym Image with Text Overlay -->
+<div style="position: relative; text-align: center; margin-bottom: 30px;">
+   <img src="/static/images/trainers_image.jpg" alt="Gym Image" style="width: 100%; border-radius: 10px; box-shadow: 0px 5px 10px rgba(214, 51, 132, 0.5);">
+   <div style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -10%); color: #d63384; font-size: 2.5rem; font-weight: bold; text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);">
+      Welcome to Our Gym<br><span style="font-size: 1.5rem;">Discover Passionate Classes Led by Experts</span>
+   </div>
+</div>
+
+<!-- Main Content -->
+<div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);">
+   <!-- Page Header -->
+   <h1 style="text-align: center; margin-bottom: 20px; font-size: 2.5rem; color: #d63384; font-weight: bold;">Meet Our Trainers</h1>
+   <p style="text-align: center; font-size: 1.25rem; color: #d63384; margin-bottom: 50px; font-weight: bold;">
+      Certified pros who <span style="color: #b71c1c; font-style: italic;">lift</span>, <span style="color: #b71c1c; font-style: italic;">teach</span>, and <span style="color: #b71c1c; font-style: italic;">code</span> — ready to guide your growth.
+   </p>
+
+   <!-- Trainers Section -->
+   <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      {% for trainer in trainers %}
+      <div style="flex: 1 1 calc(33.333% - 20px); border: 1px solid #d63384; border-radius: 10px; box-shadow: 0px 5px 10px rgba(214, 51, 132, 0.3); overflow: hidden; padding: 15px;">
+         <!-- FirstName and LastName -->
+         <h5 style="font-size: 1.5rem; color: #d63384; font-weight: bold; text-align: center; margin-bottom: 15px;">
+            {{ trainer['FirstName'] }} {{ trainer['LastName'] }}
+         </h5>
+         <!-- Specialization -->
+         <div style="padding: 10px; background: linear-gradient(to right, #ffe4e1, #f8bbd0); border-radius: 5px; margin-bottom: 10px;">
+            <h6 style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px;">Specialization</h6>
+            <p style="margin: 0; color: #d63384; font-weight: bold;">{{ trainer['Specialization'] }}</p>
+         </div>
+
+         <!-- Email -->
+         <div style="padding: 10px; background: linear-gradient(to right, #fce4ec, #ffd6da); border-radius: 5px; margin-bottom: 10px;">
+            <h6 style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px;">Email</h6>
+            <p style="margin: 0;">
+              <a href="mailto:{{ trainer.Email }}" style="color: #20c997; text-decoration: underline; font-weight: bold;">
+                  {{ trainer.Email }}
+              </a>
+            </p>
+         </div>
+
+         <!-- Phone -->
+         <div style="padding: 10px; background: linear-gradient(to right, #f8bbd0, #ffe4e1); border-radius: 5px;">
+            <h6 style="font-size: 0.9rem; color: #6c757d; margin-bottom: 5px;">Phone</h6>
+            <p style="margin: 0; color: #fd7e14; font-weight: bold;">{{ trainer['PhoneNumber'] }}</p>
+         </div>
+      </div>
+      {% endfor %}
+   </div>
+</div>
 {% endblock %}

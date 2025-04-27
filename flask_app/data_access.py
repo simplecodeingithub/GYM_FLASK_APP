@@ -512,3 +512,13 @@ def add_contact_submission(name, email, message):
     cursor.execute(query, values)
     db.commit()
     cursor.close()
+
+def get_trainers():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    query = "SELECT FirstName, LastName, Email, PhoneNumber, Specialization FROM Trainer"
+    cursor.execute(query)
+    trainers = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return trainers
