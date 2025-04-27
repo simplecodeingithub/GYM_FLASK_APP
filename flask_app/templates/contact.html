@@ -1,5 +1,46 @@
 {% extends "layout.html" %}
+
 {% block content %}
-  <h2>Contact Us</h2>
-  <p>We’d love to hear from you! Reach out with questions, suggestions, or just say hi 👋</p>
+<div class="container mt-5">
+    <h2 class="text-center" style="color: #d63384;">Contact Us</h2>
+    <p class="text-center">We'd love to hear from you! Please fill out the form below and we’ll get back to you shortly.</p>
+
+    {% if thank_message %}
+        <div class="alert alert-success text-center" role="alert">
+            {{ thank_message }}
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('contact') }}" class="mt-4">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Your Name</label>
+            {{ form.name(class="form-control", id="name", placeholder="Enter your name") }}
+            {% for error in form.name.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Your Email</label>
+            {{ form.email(class="form-control", id="email", placeholder="Enter your email") }}
+            {% for error in form.email.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            <label for="message" class="form-label">Your Message</label>
+            {{ form.message(class="form-control", id="message", rows="4", placeholder="Type your message") }}
+            {% for error in form.message.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="d-grid">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
 {% endblock %}

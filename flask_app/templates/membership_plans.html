@@ -1,19 +1,26 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h2>Membership Plans</h2>
-  <p>Choose from our various membership plans:</p>
-
-  <ul class="list-group">
-    <li class="list-group-item">
-      <h5>Basic Plan</h5>
-      <p>Access to all fitness classes with limited bookings per month.</p>
-      <button class="btn btn-primary">Sign Up</button>
-    </li>
-    <li class="list-group-item">
-      <h5>Premium Plan</h5>
-      <p>Unlimited access to all fitness classes and priority booking.</p>
-      <button class="btn btn-primary">Sign Up</button>
-    </li>
-  </ul>
+<div class="container mt-4">
+    <h1 class="text-center" style="color: #d63384;">Choose Your Membership Plan</h1>
+    <div class="row">
+        {% for plan in membership_plans %}
+        <div class="col-md-4">
+            <div class="card my-3">
+                <div class="card-header text-center" style="background-color: #d63384; color: white;">
+                    <h4>{{ plan.MembershipType }}</h4>
+                </div>
+                <div class="card-body text-center">
+                    <p><strong>Price:</strong> £{{ plan.Price }}</p>
+                    <p><strong>Duration:</strong> {{ plan.DurationMonths }} months</p>
+                    <p>{{ plan.Benefits }}</p>
+                    <form action="{{ url_for('purchase_membership', membership_id=plan.MembershipID) }}" method="POST">
+                        <button type="submit" class="btn btn-pink">Select Plan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

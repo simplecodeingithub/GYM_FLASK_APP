@@ -7,10 +7,11 @@ from datetime import datetime, date,time, timedelta
 from flask_app.models import User
 from flask_app.forms.register_form import RegisterForm
 from flask_app.forms.login_form import LoginForm
+from flask_app.forms.contact_form import ContactForm
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
 from flask_app.data_access import book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedules,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
-from flask_app.data_access import cancel_booking_for_user, purchase_day_pass
+from flask_app.data_access import cancel_booking_for_user, purchase_day_pass,add_contact_submission
 import os
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
@@ -57,7 +58,7 @@ def view_schedule(class_id):
     # Fetch schedules and class info
     class_info = get_class_info(class_id)
     schedules = get_schedule_by_days(class_id)
-
+    print(schedules)
     # Add recurrence for 4 weeks
     recurring_schedules = generate_recurring_schedules(schedules, weeks=4)  # Generate future occurrences
 
@@ -101,7 +102,8 @@ def view_schedule(class_id):
             'EndTime': end_time,
             'Location': schedule['Location'],
             'AvailableSeats': schedule['AvailableSeats'],
-            'ScheduleID': schedule['ScheduleID']
+            'ScheduleID': schedule['ScheduleID'],
+            'Price': schedule['Price']  # Add the price here
         })
 
     return render_template(
@@ -129,73 +131,77 @@ def book_class(schedule_id):
         """
         cursor.execute(query_check_day_pass, (user_id,))
         active_day_pass = cursor.fetchone()
+        print(f"Active Day Pass: {active_day_pass}")
 
+        # Fetch the class price dynamically
+        query_class_price = """
+            SELECT fc.Price
+            FROM fitness_class fc
+            JOIN class_schedule cs ON fc.class_id = cs.class_id
+            WHERE cs.ScheduleID = %s;
+        """
+        cursor.execute(query_class_price, (schedule_id,))
+        price_data = cursor.fetchone()
+        if not price_data:
+            flash('Error: Class price not found.', 'danger')
+            return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
+        class_fee = price_data['Price']
+        print(f"Class Fee: {class_fee}")
+
+        # Booking logic
         if active_day_pass:
-            # Skip payment, just book the class
-            booking_success = book_class_for_user(user_id, schedule_id)
-            if booking_success:
-                flash('Class booked successfully! 🎉 Your active Day Pass covers this booking. View your classes in your '
-                      '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>', 'success')
-            else:
-                flash('Unable to book the class. It may be full.', 'danger')
-        else:
-            # No active Day Pass, process payment for the class
-            booking_success = book_class_for_user(user_id, schedule_id)
-            if booking_success:
+            flash('You already have an active Day Pass. Booking your class now.', 'info')
+
+        booking_success = book_class_for_user(user_id, schedule_id)
+        if booking_success:
+            if not active_day_pass:
                 try:
-                    # Add payment record
                     query_payment = """
-                        INSERT INTO payment (UserID, PaymentDate, Amount, Status, PaymentType)
-                        VALUES (%s, %s, %s, %s, %s)
+                        INSERT INTO payment (UserID, PaymentDate, Amount, Status, PaymentType, ScheduleID)
+                        VALUES (%s, %s, %s, %s, %s, %s)
                     """
                     payment_date = datetime.now()
-                    class_fee = 12.00  # Fixed fee per class
-                    cursor.execute(query_payment, (user_id, payment_date, class_fee, 'Paid', 'PayPerClass'))
+                    cursor.execute(query_payment, (user_id, payment_date, class_fee, 'Paid', 'PayPerClass', schedule_id))
                     db_connection.commit()
+                    flash(f'Class booked successfully! 🎉 Payment of £{class_fee:.2f} recorded. View your classes in your '
+                          '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>', 'success')
                 except Exception as e:
                     db_connection.rollback()
                     flash(f"Error processing payment: {str(e)}", 'danger')
-                    return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
-
-                # Enhanced success message with payment confirmation
-                flash('Class booked successfully! 🎉 Payment of £12 recorded. View your booked classes in your '
-                      '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>', 'success')
             else:
-                flash('Unable to book the class. It may be full.', 'danger')
+                flash('Class booked successfully! 🎉 Your active Day Pass covers this booking.', 'success')
+        else:
+            flash('Unable to book the class. It may be full.', 'danger')
+
+    except Exception as e:
+        db_connection.rollback()
+        print(f"Booking error: {e}")
+        app.logger.error(f"Booking error: {str(e)}")
+        flash('Something went wrong while booking the class. Please try again later.', 'danger')
 
     finally:
-        # Cleanup: Close the cursor
         cursor.close()
 
-    # Redirect back to the schedule page
     return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
 
 
-# @app.route('/book_class/<int:schedule_id>', methods=['POST'])
-# def book_class(schedule_id):
-#     """Allows logged-in users to book a class."""
-#     if 'user_id' not in session:
-#         flash('You need to log in to book a class.', 'danger')
-#         return redirect(url_for('login', next=request.referrer))  # Redirect to login if user is not logged in
-#
-#     user_id = session['user_id']  # Retrieve logged-in user's ID
-#     booking_success = book_class_for_user(user_id, schedule_id)  # Call booking logic
-#
-#     if booking_success:
-#         # Enhanced success message
-#         flash('Class booked successfully! 🎉 You can view your booked classes in your '
-#               '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>','success')
-#     else:
-#         flash('Unable to book the class. It may be full.', 'danger')
-#
-#     # Redirect back to the schedule page
-#     return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
-#
-
-
-@app.route('/membership_plans')
+@app.route('/membership_plans', methods=['GET'])
 def membership_plans():
-    return render_template('membership_plans.html')
+    """Display available membership plans."""
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        # Fetch all membership plans
+        query = "SELECT * FROM membership;"
+        cursor.execute(query)
+        membership_plans = cursor.fetchall()
+    finally:
+        cursor.close()
+        db.close()
+
+    return render_template('membership_plans.html', membership_plans=membership_plans)
+
 
 
 @app.route('/instructors')
@@ -232,15 +238,29 @@ def purchase_day_pass_route():  # Renamed to avoid conflicts
     return redirect(url_for('dashboard'))
 
 
-
-
 # @app.route('/instructors')
 # def instructor():
 #     return render_template('instructors.html')
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('contact.html')
+    form = ContactForm()  # Create an instance of the ContactForm
+
+    if request.method == 'POST' and form.validate_on_submit():
+        # Access form data
+        name = form.name.data
+        email = form.email.data
+        message = form.message.data
+
+        # Save the data to the database
+        add_contact_submission(name, email, message)
+
+        # Render the form again with a success message
+        return render_template('contact.html', form=form, thank_message="Thank you for your message! We'll get back to you shortly.")
+
+    # Render the form for a GET request
+    return render_template('contact.html', form=form)
+
 
 
 @app.route('/search', methods=['GET'])
@@ -376,6 +396,15 @@ def dashboard():
         # Debug: Print fetched payments
         print("Payments fetched from database:", payments)
 
+        query_active_membership = """
+            SELECT ms.SubscriptionID, m.MembershipType, ms.JoinDate, ms.ExpiryDate
+            FROM membership_subscription ms
+            JOIN membership m ON ms.MembershipID = m.MembershipID
+            WHERE ms.UserID = %s AND ms.ExpiryDate > CURDATE();
+        """
+        cursor.execute(query_active_membership, (user_id,))
+        active_membership = cursor.fetchone()
+
         # Other logic (e.g., bookings, first-time login)
         bookings = get_user_bookings(user_id)
         user_details = get_user_details(user_id)
@@ -395,7 +424,8 @@ def dashboard():
         'dashboard.html',
         bookings=bookings,
         active_day_pass=active_day_pass,
-        payments=payments,  # Ensure payments is defined here
+        payments=payments,
+        active_membership=active_membership, # Ensure payments is defined here
         first_time_login=first_time_login,
         user_details=user_details
     )
@@ -429,6 +459,50 @@ def cancel_booking(schedule_id):
 
 
     # Replace 123 with a sample ID
+@app.route('/purchase_membership/<int:membership_id>', methods=['POST'])
+def purchase_membership(membership_id):
+    """Allows users to purchase a membership."""
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Please log in to purchase a membership.", "danger")
+        return redirect(url_for('login'))
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)  # Use dictionary=True to avoid tuple issues
+
+    try:
+        # Fetch membership details
+        query_membership = "SELECT * FROM membership WHERE MembershipID = %s;"
+        cursor.execute(query_membership, (membership_id,))
+        membership = cursor.fetchone()  # Result will now be a dictionary
+
+        if not membership:
+            flash("Invalid membership plan selected.", "danger")
+            return redirect(url_for('membership_plans'))
+
+        # Calculate subscription dates
+        join_date = datetime.today().date()
+        expiry_date = join_date + timedelta(days=membership['DurationMonths'] * 30)  # Assuming DurationMonths is a float
+
+        # Insert subscription into membership_subscription table
+        query_subscription = """
+            INSERT INTO membership_subscription (UserID, MembershipID, JoinDate, ExpiryDate)
+            VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(query_subscription, (user_id, membership_id, join_date, expiry_date))
+        db.commit()
+
+        flash(f"You have successfully purchased the {membership['MembershipType']} membership!", "success")
+        return redirect(url_for('dashboard'))
+
+    except Exception as e:
+        db.rollback()
+        flash(f"Error processing membership: {str(e)}", "danger")
+        return redirect(url_for('membership_plans'))
+
+    finally:
+        cursor.close()
+        db.close()
 
 
 @app.route('/view-users')

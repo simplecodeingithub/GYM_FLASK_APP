@@ -170,17 +170,30 @@ def get_class_schedule(class_id, date=None, start_time=None):
     """Fetch schedules for a specific fitness class, with optional filters."""
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    query = "SELECT * FROM class_schedule WHERE class_id = %s"
+    query = """
+        SELECT 
+            cs.ScheduleDate, 
+            cs.DayOfWeek, 
+            cs.Location, 
+            cs.StartTime, 
+            cs.EndTime, 
+            cs.AvailableSeats, 
+            cs.ScheduleID, 
+            fc.Price
+        FROM class_schedule cs
+        JOIN fitness_class fc ON cs.ClassID = fc.ClassID
+        WHERE cs.ClassID = %s
+    """
     params = [class_id]
 
     if date:
-        query += " AND ScheduleDate = %s"
+        query += " AND cs.ScheduleDate = %s"
         params.append(date)
     if start_time:
-        query += " AND StartTime >= %s"
+        query += " AND cs.StartTime >= %s"
         params.append(start_time)
 
-    query += " ORDER BY ScheduleDate, StartTime"
+    query += " ORDER BY cs.ScheduleDate, cs.StartTime"
 
     try:
         cursor.execute(query, params)
@@ -191,15 +204,19 @@ def get_class_schedule(class_id, date=None, start_time=None):
 
 
 def get_weekly_schedule(class_id):
-    """Fetch schedules for the current week, considering weekly recurrence."""
+    """Fetch schedules for the current week, including price."""
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     query = """
-        SELECT *, DATE_ADD(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) - WEEKDAY(ScheduleDate)) DAY) AS NextOccurrence
-        FROM class_schedule
-        WHERE class_id = %s
-        AND (DayOfWeek IS NULL OR DayOfWeek = DAYNAME(CURDATE()))
-        ORDER BY NextOccurrence, StartTime
+        SELECT 
+            cs.*, 
+            fc.Price, 
+            DATE_ADD(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) - WEEKDAY(cs.ScheduleDate)) DAY) AS NextOccurrence
+        FROM class_schedule cs
+        JOIN fitness_class fc ON cs.ClassID = fc.ClassID
+        WHERE cs.ClassID = %s
+        AND (cs.DayOfWeek IS NULL OR cs.DayOfWeek = DAYNAME(CURDATE()))
+        ORDER BY NextOccurrence, cs.StartTime
     """
     try:
         cursor.execute(query, (class_id,))
@@ -207,7 +224,6 @@ def get_weekly_schedule(class_id):
     finally:
         cursor.close()
         connection.close()
-
 
 
 def get_class_info(class_id):
@@ -328,32 +344,58 @@ def cancel_booking_for_user(user_id, schedule_id):
         cursor.close()
         connection.close()
 
-
 def get_schedule_by_days(class_id):
-    """Fetch schedules grouped by days of the week for a specific class."""
+    """Fetch schedules grouped by days of the week for a specific class, including price."""
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     try:
         query = """
             SELECT 
-                ScheduleDate, 
-                DayOfWeek, 
-                Location, 
-                StartTime, 
-                EndTime, 
-                AvailableSeats, 
-                ScheduleID
-            FROM class_schedule
-            WHERE class_id = %s
-            ORDER BY ScheduleDate, 
-                FIELD(DayOfWeek, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'), 
-                StartTime;
+                cs.ScheduleDate, 
+                cs.DayOfWeek, 
+                cs.Location, 
+                cs.StartTime, 
+                cs.EndTime, 
+                cs.AvailableSeats, 
+                cs.ScheduleID, 
+                fc.Price  -- Fetch Price from fitness_class table
+            FROM class_schedule cs
+            JOIN fitness_class fc ON cs.class_id = fc.class_id  -- Join on class_id
+            WHERE cs.class_id = %s
+            ORDER BY cs.ScheduleDate, cs.StartTime;
         """
         cursor.execute(query, (class_id,))
         return cursor.fetchall()
     finally:
         cursor.close()
         connection.close()
+
+
+# def get_schedule_by_days(class_id):
+#     """Fetch schedules grouped by days of the week for a specific class."""
+#     connection = get_db_connection()
+#     cursor = connection.cursor(dictionary=True)
+#     try:
+#         query = """
+#             SELECT
+#                 ScheduleDate,
+#                 DayOfWeek,
+#                 Location,
+#                 StartTime,
+#                 EndTime,
+#                 AvailableSeats,
+#                 ScheduleID
+#             FROM class_schedule
+#             WHERE class_id = %s
+#             ORDER BY ScheduleDate,
+#                 FIELD(DayOfWeek, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'),
+#                 StartTime;
+#         """
+#         cursor.execute(query, (class_id,))
+#         return cursor.fetchall()
+#     finally:
+#         cursor.close()
+#         connection.close()
 
 
 def update_last_login(user_id):
@@ -461,3 +503,12 @@ def purchase_day_pass(db, user_id):
     finally:
         if cursor:
             cursor.close()
+
+def add_contact_submission(name, email, message):
+    db = get_db_connection()
+    cursor = db.cursor()
+    query = "INSERT INTO contact_us (Name, Email, Message) VALUES (%s, %s, %s)"
+    values = (name, email, message)
+    cursor.execute(query, values)
+    db.commit()
+    cursor.close()

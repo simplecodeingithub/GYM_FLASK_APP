@@ -442,91 +442,33 @@ a:hover {
     text-align: center; /* Center align header text */
 }
 
-
-/*.class-image {
-  width: 100%; *//* Ensures the image takes the full width of its container *//*
-  height: auto; *//* Maintains the aspect ratio *//*
-  border-radius: 10px; *//* Adds rounded corners (optional) *//*
-  object-fit: cover; *//* Ensures the image fills its container nicely *//*
-  max-height: 200px; *//* Restricts the image height to ensure consistency *//*
-}*/
-
-/*
-.card-img-top {
-  max-height: 300px;
-  object-fit: cover;
-  border-radius: 8px; */
-/* Optional rounded corners *//*
-
-}
-
-.card-title {
-  font-size: 1.6rem;
-  color: #772063;
-  font-weight: bold;
-}
-
-.card-subtitle {
-  font-size: 1.2rem;
-  color: #555; */
-/* Muted gray for description *//*
-
-}
-
-.card-body {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-top: 1px solid #ddd;
-}
-
-.btn-primary {
-  background-color: #772063;
-  border: none;
-  padding: 10px 20px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.btn-primary:hover {
-  background-color: #5a1849; */
-/* Darker hover effect *//*
-
-}
-
-*/
-/* General Styles *//*
-
-.container h1 {
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.card {
-    margin-bottom: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card-header {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.row {
-    margin-top: 10px;
-}
-*/
-
-/* Buttons *//*
-.btn-pink {
-    background-color: #d63384;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    transition: all 0.3s ease-in-out;
-}*/
-
 .btn-pink:hover {
     background-color: #b82e6e;
 }
+
+.contact-form {
+    background-color: #f9f9f9; /* Light background for contrast */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.contact-form h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.contact-form p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #6c757d; /* Muted text color */
+}
+
+.contact-form .btn-primary {
+    background-color: #d63384; /* Matching your theme */
+    border-color: #d63384;
+}
+.contact-form .btn-primary:hover {
+    background-color: #c01f6f; /* Slightly darker on hover */
+}
+

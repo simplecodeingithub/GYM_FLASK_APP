@@ -39,6 +39,12 @@
                                     {% endif %}
                                 </div>
                                 <div class="col-md-2 text-center">
+                                    <p class="mb-0"><strong>Price:</strong> £{{ schedule.Price }}</p>
+                                    {% if active_day_pass %}
+                                        <p class="text-info"><small>Your Day Pass covers this booking.</small></p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-2 text-center">
                                     {% if schedule.AvailableSeats > 0 %}
                                         {% if session.user_id %}
                                             <form action="{{ url_for('book_class', schedule_id=schedule.ScheduleID) }}" method="POST">

@@ -526,6 +526,7 @@ CREATE TABLE `membership` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+select * from membership;
 --
 -- Dumping data for table `membership`
 --
@@ -539,17 +540,38 @@ UNLOCK TABLES;
 ALTER TABLE `membership`
 ADD COLUMN `Benefits` TEXT; -- Add a column to describe the benefits of each membership plan.
 
-UPDATE `membership`
-SET `Benefits` = 'Full access to gym facilities, 1 class per week'
-WHERE `MembershipID` = 201;
+SET SQL_SAFE_UPDATES = 1;
 
-UPDATE `membership`
-SET `Benefits` = 'Full access to gym facilities, unlimited classes'
-WHERE `MembershipID` = 202;
+DELETE FROM membership;
 
-UPDATE `membership`
-SET `Benefits` = 'Full access to gym facilities, unlimited classes, personal trainer sessions, nutrition classes'
-WHERE `MembershipID` = 206;
+UPDATE membership
+SET MembershipType = 'Basic',
+    Description = 'Limited access to gym facilities during off-peak hours and one group class per month',
+    Price = 25.00,
+    DurationMonths = 1,
+    Benefits = 'Access to gym facilities during off-peak hours and one group class per month'
+WHERE MembershipID = 201;
+
+UPDATE membership
+SET MembershipType = 'Gold',
+    Description = 'Full access to gym facilities, unlimited group classes, and nutrition workshops',
+    Price = 80.00,
+    DurationMonths = 3,
+    Benefits = 'Unlimited access to gym facilities, unlimited group classes, and nutrition workshops'
+WHERE MembershipID = 202;
+
+UPDATE membership
+SET MembershipType = 'Platinum',
+    Description = 'Full access to gym facilities, unlimited group classes, personal trainer sessions, exclusive nutrition and wellness programs, and priority customer support',
+    Price = 120.00,
+    DurationMonths = 6,
+    Benefits = 'Unlimited access to gym facilities, unlimited classes, personal trainer sessions, nutrition and wellness programs, and priority customer support'
+WHERE MembershipID = 206;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+select * from membership;
+
 --
 CREATE TABLE `day_pass` (
   `PassID` INT NOT NULL AUTO_INCREMENT,
@@ -618,6 +640,12 @@ INSERT INTO `membership_subscription` VALUES (1,'GMUK1001',201,'2025-04-01','202
 UNLOCK TABLES;
 --
 
+DESCRIBE membership;
+
+SELECT ms.SubscriptionID, m.MembershipType, ms.JoinDate, ms.ExpiryDate
+FROM membership_subscription ms
+JOIN membership m ON ms.MembershipID = m.MembershipID
+WHERE ms.UserID = 'GMUK1001' AND ms.ExpiryDate > CURDATE();
 
 --
 -- Table structure for table `payment`
@@ -637,6 +665,41 @@ CREATE TABLE `payment` (
   CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`BookingID`) REFERENCES `classbooking` (`BookingID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+select * from payment;
+
+select * from fitness_class;
+
+SELECT 
+    cs.ScheduleDate, 
+    cs.DayOfWeek, 
+    cs.Location, 
+    cs.StartTime, 
+    cs.EndTime, 
+    cs.AvailableSeats, 
+    cs.ScheduleID, 
+    fc.Price
+FROM class_schedule cs
+JOIN fitness_class fc ON cs.class_id = fc.class_id
+WHERE cs.class_id = 1
+ORDER BY cs.ScheduleDate, cs.StartTime;
+
+
+
+ -- Replace with valid ScheduleID
+
+select * from class_schedule;
+SELECT fc.Price
+FROM fitness_class fc
+JOIN class_schedule cs ON fc.class_id = cs.class_id
+WHERE cs.ScheduleID = 610;
+
+DESCRIBE payment;
+
+ALTER TABLE payment ADD ScheduleID INT;
+
+SHOW COLUMNS FROM class_schedule;
+SHOW COLUMNS FROM fitness_class;
 
 --
 -- Dumping data for table `payment`
@@ -690,5 +753,16 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+
+CREATE TABLE contact_us (
+    ContactID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) NOT NULL,
+    Message TEXT NOT NULL,
+    SubmissionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+select * from contact_us;
 
 -- Dump completed on 2025-04-21 22:10:33

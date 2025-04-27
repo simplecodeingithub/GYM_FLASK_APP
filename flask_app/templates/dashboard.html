@@ -2,96 +2,123 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center" style="color: #d63384;">Welcome to Your Dashboard!</h1>
 
-    {% if first_time_login and not bookings %}
-        <!-- First-Time Login Section -->
-        <div class="alert alert-info text-center">
-            <h4>Welcome, {{ user_details.FirstName }}!</h4>
-            <p>It looks like you're logging in for the first time. Start your fitness journey by booking your first class or exploring membership options!</p>
-            <a href="{{ url_for('classes') }}" class="btn btn-pink">View Classes</a>
-            <a href="{{ url_for('membership_plans') }}" class="btn btn-secondary">Membership Options</a>
+    <!-- Welcome Section -->
+    <div class="welcome-banner text-center text-white my-4" style="background: linear-gradient(to right, #FF69B4, #FFC0CB); border-radius: 15px; padding: 30px; box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);">
+        <h1 style="font-weight: bold; font-family: 'Poppins', sans-serif;">Welcome, {{ user_details.FirstName }}!</h1>
+        <p style="font-size: 1.2rem;">Your fitness journey starts here! Check out your memberships, bookings, and explore new classes.</p>
+        <div>
+            <a href="{{ url_for('classes') }}" class="btn btn-pink" style="border-radius: 5px; font-weight: bold; font-size: 1.1rem;">
+                Explore New Classes
+            </a>
         </div>
+    </div>
+
+    <!-- First-Time Login Section -->
+    {% if first_time_login and not bookings %}
+    <div class="alert alert-info text-center" style="border-radius: 10px;">
+        <h4 style="font-weight: bold;">Welcome to our platform!</h4>
+        <p>Start by booking your first class or exploring membership options tailored to you.</p>
+        <div>
+            <a href="{{ url_for('classes') }}" class="btn btn-primary" style="border-radius: 5px; font-weight: bold;">View Classes</a>
+            <a href="{{ url_for('membership_plans') }}" class="btn btn-secondary" style="border-radius: 5px; font-weight: bold;">Membership Options</a>
+        </div>
+    </div>
     {% endif %}
 
     <!-- Active Day Pass Section -->
     {% if active_day_pass %}
-    <div class="alert alert-success text-center">
-        <p>You have an <strong>Active Day Pass</strong> for {{ active_day_pass.PurchaseDate }}. Enjoy unlimited bookings today!</p>
+    <div class="alert alert-success text-center" style="border-radius: 10px;">
+        <p>You have an <strong>Active Day Pass</strong> for <strong>{{ active_day_pass.PurchaseDate }}</strong>. Enjoy unlimited bookings today!</p>
     </div>
     {% else %}
-    <div class="alert alert-info text-center">
-        <p>You don't have an active Day Pass. <a href="{{ url_for('day_pass') }}" class="btn btn-link">Get one now</a>.</p>
+    <div class="alert alert-info text-center" style="border-radius: 10px;">
+        <p>You don't have an active Day Pass. <a href="{{ url_for('day_pass') }}" class="btn btn-link" style="font-weight: bold;">Get one now</a>.</p>
+    </div>
+    {% endif %}
+
+    <!-- Active Membership Section -->
+    {% if active_membership %}
+    <div class="card my-4">
+        <div class="card-header text-center text-white" style="background-color: #d63384; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h4 style="font-weight: bold; font-family: 'Poppins', sans-serif;">Your Active Membership</h4>
+        </div>
+        <div class="card-body text-center">
+            <p><strong>Membership Type:</strong> {{ active_membership.MembershipType }}</p>
+            <p><strong>Start Date:</strong> {{ active_membership.JoinDate }}</p>
+            <p><strong>Expiry Date:</strong> {{ active_membership.ExpiryDate }}</p>
+        </div>
+    </div>
+    {% else %}
+    <div class="card my-4 text-center" style="background-color: #F8F9FA; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <div class="card-body">
+            <p>You don't have an active membership. <a href="{{ url_for('membership_plans') }}" class="btn btn-pink" style="border-radius: 5px; font-weight: bold;">Explore Membership Plans</a>.</p>
+        </div>
     </div>
     {% endif %}
 
     <!-- Bookings Section -->
     {% if bookings %}
-        <div class="card my-4">
-            <div class="card my-4" style="background: linear-gradient(to right, #FFB6C1, #FF69B4); border: 1px solid #FF69B4; border-radius: 10px; box-shadow: 0px 4px 8px rgba(255, 105, 180, 0.3);">
-                <h4 style="text-align: center; color: #ffffff; font-weight: bold; padding: 15px; font-family: 'Poppins', sans-serif;">Your Bookings</h4>
-            </div>
-
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead style="background: linear-gradient(to right, #FFB6C1, #FF69B4); color: #ffffff; text-align: center; border-radius: 5px;">
-                            <tr class="text-center">
-                                <th>Class Name</th>
-                                <th>Schedule Date</th>
-                                <th>Start Time</th>
-                                <th>Trainer Name</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for booking in bookings %}
-                                <tr>
-                                    <td>{{ booking.class_name }}</td>
-                                    <td>{{ booking.ScheduleDate }}</td>
-                                    <td>{{ booking.StartTime }}</td>
-                                    <td>{{ booking.TrainerName }}</td>
-                                    <td>
-                                        {% if booking.BookingStatus == 'Booked' %}
-                                            <div style="display: flex; align-items: center;">
-                                                <span class="text-success">Booked</span>
-                                                <form action="{{ url_for('cancel_booking', schedule_id=booking.ScheduleID) }}" method="POST" style="margin-left: 10px;">
-                                                    <button type="submit" class="btn btn-danger btn-sm" style="border-radius: 5px; font-weight: bold; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel</button>
-                                                </form>
-                                            </div>
-                                        {% elif booking.BookingStatus == 'Cancelled' %}
-                                            <span class="text-danger">Cancelled</span>
-                                        {% else %}
-                                            <span class="text-muted">Attended</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+    <div class="card my-4">
+        <div class="card-header text-center text-white" style="background-color: #f48fb1; border-radius: 8px; box-shadow: none;">
+            <h4 style="font-weight: 600; font-family: 'Poppins', sans-serif;">Your Bookings</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr class="text-center">
+                            <th>Class Name</th>
+                            <th>Schedule Date</th>
+                            <th>Start Time</th>
+                            <th>Trainer Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.class_name }}</td>
+                            <td>{{ booking.ScheduleDate }}</td>
+                            <td>{{ booking.StartTime }}</td>
+                            <td>{{ booking.TrainerName }}</td>
+                            <td>
+                                {% if booking.BookingStatus == 'Booked' %}
+                                <span class="text-success">Booked</span>
+                                <form action="{{ url_for('cancel_booking', schedule_id=booking.ScheduleID) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel</button>
+                                </form>
+                                {% elif booking.BookingStatus == 'Cancelled' %}
+                                <span class="text-danger">Cancelled</span>
+                                {% else %}
+                                <span class="text-muted">Attended</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
     {% else %}
-        <div class="text-center">
-            <p>Would you like to book a class? You can revisit the schedule page to explore available classes.</p>
-            <a href="{{ url_for('view_schedule', class_id=None) }}" class="btn btn-pink" style="border-radius: 5px; font-weight: bold;">
-                View Class Schedule
-            </a>
+    <div class="card my-4 text-center" style="background-color: #F8F9FA; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <div class="card-body">
+            <p>You have no bookings at the moment. <a href="{{ url_for('classes') }}" class="btn btn-pink" style="border-radius: 5px; font-weight: bold;">View Our Fitness Classes</a>.</p>
         </div>
-        <p class="text-center text-muted">You have no bookings at the moment.</p>
+    </div>
     {% endif %}
 
     <!-- Payment History Section -->
     {% if payments %}
     <div class="card my-4">
-        <div class="card-header text-center text-white" style="background: linear-gradient(to right, #FFB6C1, #FF69B4);">
-            <h4>Your Payment History</h4>
+        <div class="card-header text-center text-white" style="background-color: #e57373; border-radius: 8px; box-shadow: none;">
+            <h4 style="font-weight: 600; font-family: 'Poppins', sans-serif;">Your Payment History</h4>
         </div>
         <div class="card-body">
             <table class="table table-hover">
-                <thead style="background-color: #FF69B4; color: #ffffff;">
-                    <tr>
+                <thead class="thead-light">
+                    <tr class="text-center">
                         <th>Payment Date</th>
                         <th>Amount (£)</th>
                         <th>Type</th>
@@ -102,7 +129,7 @@
                     {% for payment in payments %}
                     <tr>
                         <td>{{ payment.PaymentDate }}</td>
-                        <td>{{ payment.Amount }}</td>
+                        <td>£{{ payment.Amount }}</td>
                         <td>{{ payment.PaymentType if payment.PaymentType else "N/A" }}</td>
                         <td>{{ payment.Status }}</td>
                     </tr>
@@ -112,8 +139,11 @@
         </div>
     </div>
     {% else %}
-        <p class="text-center text-muted">You haven't made any payments yet.</p>
+    <div class="card my-4 text-center" style="background-color: #F8F9FA; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <div class="card-body">
+            <p>You haven't made any payments yet.</p>
+        </div>
+    </div>
     {% endif %}
-
 </div>
 {% endblock %}
