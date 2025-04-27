@@ -11,12 +11,15 @@ from flask_app.forms.contact_form import ContactForm
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
 from flask_app.data_access import book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedules,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
-from flask_app.data_access import cancel_booking_for_user, purchase_day_pass,add_contact_submission,get_trainers
+from flask_app.data_access import cancel_booking_for_user, purchase_day_pass,add_contact_submission,get_trainers, get_admin_by_email
 import os
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 
-
+# Replace 'your_new_password' with the password you want to use
+plaintext_password = 'sarah@123'
+hashed_password = generate_password_hash(plaintext_password)
+print("New Hashed Password:", hashed_password)
 
 # define routes():
 @app.route('/')
@@ -298,6 +301,16 @@ def register():
         country = form.country.data
         date_of_birth = form.date_of_birth.data  # New field for DateOfBirth
 
+        today = datetime.today()
+        age = today.year - date_of_birth.year
+        if today.month < date_of_birth.month or (today.month == date_of_birth.month and today.day < date_of_birth.day):
+            age -= 1  # Adjust age if birthday hasn't occurred yet this year
+
+        # Check if age is below 18
+        if age < 18:
+            flash('You must be at least 18 years old to register.', 'danger')
+            return redirect(url_for('register'))
+
         # Ensure required fields are not empty
         if not first_name or not last_name or not email or not password or not confirm_password:
             flash('All fields are required!', 'danger')
@@ -339,28 +352,61 @@ def login():
         email = form.email.data.strip().lower()  # Normalize email
         password = form.password.data
 
-        # Check if user exists in the database
+        # Check if email exists in the user table
         user_data = check_user_by_email(email)
-        if user_data is None:
-            flash('Email does not exist. Please register first.', 'danger')
-            return redirect(url_for('login'))
+        # Call the function to fetch admin data
+        #email = 'sarah.williams@gym.com'
+        admin_data = get_admin_by_email(email)
+        print(admin_data)
 
-        # Verify the password
-        if check_password_hash(user_data['Password'], password):
-            user = User.get(user_data['UserID'])  # Load user instance
-            login_user(user)  # Flask-Login's login function
-            session['user_id'] = user_data['UserID']  # Set user_id in session
-            flash('Login successful!', 'success')
+        # if user_data is None:
+        #     flash('Email does not exist. Please register first.', 'danger')
+        #     return redirect(url_for('login'))# Handle user login
+            # Handle user login
+        if user_data:
+            if check_password_hash(user_data['Password'], password):
+                user = User.get(user_data['UserID'])  # Load user instance
+                login_user(user)  # Flask-Login's login function
+                session['user_id'] = user_data['UserID']  # Set user_id in session
+                flash('User login successful!', 'success')
 
-            # Redirect to the intended page
-            next_page = request.args.get('next')
-            if next_page:
-                return redirect(next_page)
-            return redirect(url_for('dashboard'))  # Default redirect
+                # Redirect to the intended page or user dashboard
+                next_page = request.args.get('next')
+                if next_page:
+                    return redirect(next_page)
+                return redirect(url_for('dashboard'))  # Default redirect for users
+            else:
+                flash('Incorrect password for user. Please try again.', 'danger')
+        elif admin_data:  # Handle admin login
+            print("Admin Data:", admin_data)  # Debugging: Confirm admin data is fetched
+            print("Entered Password:", password)  # Debugging: Show the entered password
+            print("Stored Hashed Password:", admin_data['Password'])
+            if check_password_hash(admin_data['Password'], password):
+                print("Password matches!")
+                session['admin_logged_in'] = True  # Set admin session
+                session['admin_email'] = admin_data['Email']   # Store admin email
+                flash('Admin login successful!', 'success')
+
+                # Redirect to the intended page or admin dashboard
+                next_page = request.args.get('next')
+                if next_page:
+                    return redirect(next_page)
+                return redirect(url_for('admin_dashboard'))  # Default redirect for admins
+            else:
+                print("Password does not match.")
+                flash('Incorrect password for admin. Please try again.', 'danger')
         else:
-            flash('Incorrect password. Please try again.', 'danger')
+            # Email not found in either table
+            flash('Email does not exist. Please register or contact admin.', 'danger')
 
     return render_template('login.html', form=form)
+
+
+@app.route('/admin-dashboard')
+def admin_dashboard():
+    # Add admin-specific functionality here
+    return render_template('admin_dashboard.html')
+
 
 
 @app.route('/dashboard', methods=['GET'])
@@ -516,5 +562,9 @@ def view_users():
     db.close()
     return str(users)  # or jsonify(users) if you import jsonify
 
+# Admin pages
 
-
+@app.route('/view-registered-users')
+def view_registered_users():
+    # Logic for displaying registered users
+    return render_template('view_registered_users.html')

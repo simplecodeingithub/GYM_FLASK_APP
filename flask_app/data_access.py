@@ -522,3 +522,23 @@ def get_trainers():
     cursor.close()
     connection.close()
     return trainers
+
+
+def get_admin_by_email(email):
+    """
+    Fetch admin details by email from the MySQL database using get_db_connection.
+    :param email: The admin's email to query.
+    :return: A dictionary containing admin details or None if not found.
+    """
+    # Use the existing get_db_connection function to connect to the database
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)  # Cursor returns results as dictionaries
+    try:
+        # Query the admin table for the given email
+        sql_query = "SELECT * FROM admin WHERE Email = %s"
+        cursor.execute(sql_query, (email,))
+        admin = cursor.fetchone()  # Fetch the first matching result
+        return admin  # Returns a dictionary or None
+    finally:
+        cursor.close()  # Ensure the cursor is closed
+        connection.close()  # Ensure the connection is closed after the query

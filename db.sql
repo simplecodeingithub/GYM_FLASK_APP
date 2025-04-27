@@ -162,6 +162,21 @@ LOCK TABLES `admin` WRITE;
 INSERT INTO `admin` VALUES (1,'Sarah','Williams','sarah.williams@gym.com','07720 334455','hashed/encrypted'),(2,'Emily','Johnson','emily.johnson@gym.com','07715 445566','hashed/encrypted'),(3,'Chloe','Thomas','chloe.thomas@gym.com','07800 667788','hashed/encrypted');
 /*!40000 ALTER TABLE `admin` ENABLE KEYS */;
 UNLOCK TABLES;
+ 
+UPDATE admin
+SET Password = 'pbkdf2:sha256:150000$abc123$123abc456def789'
+WHERE Email = 'sarah.williams@gym.com';
+
+SELECT * FROM admin WHERE Email = 'sarah.williams@gym.com';
+
+UPDATE admin
+SET Password = 'scrypt:32768:8:1$dKpPHAYzyHVwMm6B$d6d0cab11374621f7afb69969ae5dd5b01e81a2e217b200f0c8e2a903b047ac94ace60761f6e737ea369fca829cfa740a7b63f417984efaf22430139128defc1'
+WHERE Email = 'sarah.williams@gym.com';
+
+
+SELECT Password FROM admin WHERE Email = 'sarah.williams@gym.com';
+
+select * from admin;
 
 --
 -- Table structure for table `class_schedule`
@@ -473,6 +488,31 @@ INSERT INTO `fitness_class` VALUES (1,'Yoga','A peaceful yoga session to start y
 UNLOCK TABLES;
 
 select * from fitness_class;
+
+UPDATE fitness_class
+SET image_url = 'yoga.webp'
+WHERE class_name = 'Yoga';
+
+UPDATE fitness_class
+SET image_url = 'strength_training_new.jpeg'
+WHERE class_name = 'Strength Training';
+
+UPDATE fitness_class
+SET image_url = 'pilate_new.jpeg'
+WHERE class_name = 'Pilates';
+
+UPDATE fitness_class
+SET image_url = 'weight_lifting_new.jpeg'
+WHERE class_name = 'Weight Lifting';
+
+UPDATE fitness_class
+SET image_url = 'aerobics_new.jpeg'
+WHERE class_name = 'Aerobics';
+
+UPDATE fitness_class
+SET image_url = 'kick_boxing_new.png'
+WHERE class_name = 'Kickboxing';
+
 --
 -- Table structure for table `gym_user`
 --
