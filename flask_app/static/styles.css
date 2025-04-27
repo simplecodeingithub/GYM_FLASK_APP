@@ -23,7 +23,7 @@ header.jumbotron::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay */
+  /*background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay */
   z-index: 1;
 }
 
@@ -61,6 +61,7 @@ header.jumbotron a.btn:hover {
 .navbar {
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
+
 }
 
 .navbar-brand {
@@ -88,7 +89,6 @@ header.jumbotron a.btn:hover {
   color: #d63384;
   background-color: #ffc0cb;
 }
-
 /* Hero Section */
 .hero {
   position: absolute;

@@ -1,33 +1,55 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h2>Our Services</h2>
-  <p>At GirlsCoded Gym, we offer a variety of services to help you achieve your fitness goals. Below are the different options available:</p>
+  <h2 class="text-center mb-5">Our Services</h2>
+  <p class="lead text-center">At Girlscoded, we’re redefining fitness for women — creating a sanctuary where strength, wellness, and empowerment thrive together. Explore our curated offerings designed just for you:</p>
 
   <!-- Fitness Classes Section -->
-  <div class="card mb-4">
+  <div class="card mb-4 shadow-sm">
     <div class="card-body">
-      <h5 class="card-title">Fitness Classes</h5>
-      <p class="card-text">We offer a variety of fitness classes, from Yoga and Strength Training to Kickboxing and Pilates. No matter your fitness level, we have something for everyone!</p>
-      <a href="{{ url_for('classes') }}" class="btn btn-primary">Explore Classes</a>
+      <h5 class="card-title">Boutique Fitness Classes</h5>
+      <p class="card-text">From energizing yoga flows and strength conditioning to powerful kickboxing and sculpting Pilates — our signature classes are crafted to ignite your body and mind. Every class is tailored for women at every stage of their fitness journey.</p>
+      <a href="{{ url_for('classes') }}" class="btn btn-primary">Explore Our Classes</a>
     </div>
   </div>
 
   <!-- Membership Plans Section -->
-  <div class="card mb-4">
+  <div class="card mb-4 shadow-sm">
     <div class="card-body">
-      <h5 class="card-title">Membership Plans</h5>
-      <p class="card-text">Choose from our flexible membership plans to get access to our gym and classes. Whether you’re looking for a basic plan or the full premium experience, we have something to fit your needs.</p>
-      <a href="{{ url_for('membership_plans') }}" class="btn btn-primary">View Membership Plans</a>
+      <h5 class="card-title">Exclusive Memberships</h5>
+      <p class="card-text">Choose a membership that fits your lifestyle — whether you’re seeking unlimited classes, VIP amenities, or a boutique gym experience. Unlock access to everything The Girls Spot has to offer, and elevate your fitness in luxury.</p>
+      <a href="{{ url_for('membership_plans') }}" class="btn btn-primary">View Membership Options</a>
     </div>
   </div>
 
   <!-- Trainer Info Section -->
-  <div class="card mb-4">
+  <div class="card mb-4 shadow-sm">
     <div class="card-body">
-      <h5 class="card-title">Trainer Info</h5>
-      <p class="card-text">Meet our expert trainers who will guide you through your fitness journey. Our trainers are certified and passionate about helping you succeed!</p>
-      <a href="{{ url_for('trainers') }}" class="btn btn-primary">Meet Our Trainers</a>
+      <h5 class="card-title">Meet Your Coaches</h5>
+      <p class="card-text">Our team of elite, certified female trainers is here to empower you with personalized coaching, unwavering support, and expert guidance. Your fitness goals aren’t just possible — they’re inevitable.</p>
+      <a href="{{ url_for('trainers') }}" class="btn btn-primary">Meet Our Coaches</a>
+    </div>
+  </div>
+
+  <!-- NEW On-Demand Section -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Virtual Studio: Work Out Anywhere</h5>
+      <p class="card-text">Can't make it to the club? No problem. Access our exclusive library of On-Demand classes — streamed straight to your living room. Stay strong, stay motivated, and stay connected to The Girls Spot — anytime, anywhere.</p>
+
+      <!-- Dropdown for On-Demand Categories -->
+      <div class="dropdown mt-3">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="onDemandDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          Explore On-Demand Categories
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="on_demand">
+          <li><a class="dropdown-item" href="#">Yoga & Stretching</a></li>
+          <li><a class="dropdown-item" href="#">Strength Training</a></li>
+          <li><a class="dropdown-item" href="#">HIIT & Cardio Blasts</a></li>
+          <li><a class="dropdown-item" href="#">Core & Sculpting</a></li>
+          <li><a class="dropdown-item" href="#">Wellness & Recovery</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 

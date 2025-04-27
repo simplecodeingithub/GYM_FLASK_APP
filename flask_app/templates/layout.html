@@ -10,7 +10,7 @@
 </head>
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
     <div class="container">
       <a class="navbar-brand" href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/gymlogo.png') }}" alt="girlscoded.">
       </a>
@@ -29,6 +29,7 @@
               <li><a class="dropdown-item" href="{{ url_for('classes') }}">View Classes</a></li>
               <li><a class="dropdown-item" href="{{ url_for('membership_plans') }}">Membership Plans</a></li>
               <li><a class="dropdown-item" href="{{ url_for('trainers') }}">Trainer Info</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('on_demand') }}">On-Demand</a></li>
             </ul>
           </li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact Us</a></li>

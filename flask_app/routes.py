@@ -89,6 +89,10 @@ def membership_plans():
 def trainers():
     return render_template('trainers.html')
 
+@app.route('/on_demand')
+def on_demand():
+    return render_template('on_demand.html')
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
