@@ -13,7 +13,8 @@
 </head>
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <!--<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">-->
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
   <div class="container">
     <a class="navbar-brand" href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/new_gym_logo.jpeg') }}" alt="GirlCoded Gym"></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
@@ -31,6 +32,7 @@
             <li><a class="dropdown-item" href="{{ url_for('classes') }}">Our Fitness Classes</a></li>
             <li><a class="dropdown-item" href="{{ url_for('membership_plans') }}">Membership Plans</a></li>
             <li><a class="dropdown-item" href="{{ url_for('day_pass') }}">Day Pass</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('on_demand') }}">On Demand Video</a></li>
           </ul>
         </li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('instructors') }}">Instructors</a></li>
@@ -48,6 +50,7 @@
               <li><a class="dropdown-item" href="{{ url_for('instructors') }}">Trainers Info</a></li>
               <li><a class="dropdown-item" href="{{ url_for('membership_plans') }}">Membership Plans</a></li>
               <li><a class="dropdown-item" href="{{ url_for('day_pass') }}">Day Pass</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('on_demand') }}">On Demand Video</a></li>
             </ul>
           </div>
         </form>
@@ -92,7 +95,7 @@
   <!-- Footer -->
   <footer class="text-center py-4 shadow-sm border-top" style="background-color: #fff0f5; color: #333;">
   <div class="container">
-    <p class="mb-1">© 2025 GirlsCoded Gym. All rights reserved.</p>
+    <p class="mb-1">© 2025 GirlCoded Gym. All rights reserved.</p>
     <p class="small text-muted">Built with 💪, ☕, and Bootstrap magic.</p>
 
     <!-- Social Media Icons,,for users to visit our social media pages -->

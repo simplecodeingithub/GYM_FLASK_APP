@@ -3,6 +3,8 @@ import os
 from flask_login import LoginManager
 from datetime import timedelta
 
+
+
 app = Flask(__name__)
 
 # Generate a random secret key for sessions and CSRF protection

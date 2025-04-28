@@ -1,5 +1,230 @@
 {% extends "layout.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
+{% endblock %}
+
 {% block content %}
-  <h2>About GirlsCoded Gym</h2>
-  <p>We are a community-driven gym empowering women through strength, confidence, and code.</p>
+<main>
+   <!-- Carousel Start -->
+  <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+
+    <div class="carousel-inner">
+      <!-- Slide 1 -->
+      <div class="carousel-item active">
+        <img src="{{ url_for('static', filename='images/woman_gym_1.png') }}" class="d-block w-100" alt="First Slide">
+        <div class="carousel-overlay"></div>
+        <div class="container">
+          <div class="carousel-caption text-start fade-in">
+            <h1>About us.</h1>
+            <p class="opacity-75">We are more than a group — we are a collective built on a shared purpose: to revolutionise health and fitness for all women. Our mission is bold yet simple: to create spaces designed by women, for women — offering gyms, services, and support that empower every woman to thrive.
+At GirlCoded, we believe strength is more than physical — it's a movement. And it starts here.</p>
+            <p><a class="btn btn-lg btn-primary" href="{{ url_for('login') }}">Sign up today</a></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="carousel-item">
+        <img src="{{ url_for('static', filename='images/woman_in_gym_2.png') }}" class="d-block w-100" alt="Second Slide">
+        <div class="carousel-overlay"></div>
+        <div class="container">
+          <div class="carousel-caption fade-in">
+            <h1>Power On Demand. Strong. Anytime. Anywhere.</h1>
+            <p>Access a curated catalogue of on-demand workouts, designed by women, for women. Whether you're craving a quick burn or a full-body challenge, our tailored videos are here to fit your goals, your schedule, and your lifestyle — empowering you to move, your way.</p>
+            <p><a class="btn btn-lg btn-primary" href="{{ url_for('on_demand') }}">Watch videos</a></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="carousel-item">
+        <img src="{{ url_for('static', filename='images/girl_power.png') }}" class="d-block w-100" alt="Third Slide">
+        <div class="carousel-overlay"></div>
+        <div class="container">
+          <div class="carousel-caption text-end fade-in">
+            <h1>Train like a Queen.</h1>
+            <p>Train with expert female coaches who are here for you every step of the way. Explore our classes — from energising Pilates sessions to powerful full-body workouts — and find the perfect fit for your journey.</p>
+            <p><a class="btn btn-lg btn-primary" href="{{ url_for('classes') }}">View classes</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <div class="mb-5"></div>
+    <!-- Carousel End -->
+  <!-- Marketing messaging and featurettes
+  ================================================== -->
+  <!-- Wrap the rest of the page in another container to center all the content. -->
+
+  <div class="text-center mb-5">
+    <h2 class="display-4 fw-bold" style="color: #FF69B4; font-family: 'Playfair Display', serif; margin: 2rem 0;">
+      About the team behind <span style="color: #FF1493;">GirlCoded.</span>
+    </h2>
+    <div class="border-bottom border-3 w-25 mx-auto mb-5" style="border-color: #FF69B4 !important;"></div>
+  </div>
+
+  <div class="container marketing">
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row">
+  <div class="col-lg-4">
+    <img src="static/images/vision.png" class="rounded-circle img-fluid" width="120" height="120" alt="Data analysis illustration">
+    <h2 class="fw-normal">Our vision.</h2>
+    <p>GirlCoded isn't just a fitness platform — it's a movement. We're building a community where women feel strong, supported, and unstoppable.
+      Through smart technology, real connection, and a focus on total wellness, we're redefining what it means to show up — for yourself and for each other.</p>
+    <p><a class="btn btn-secondary" href="{{ url_for('home') }}">View Home</a></p>
+  </div><!-- /.col-lg-4 -->
+
+  <div class="col-lg-4">
+    <img src="static/images/planning.png" class="rounded-circle img-fluid" width="120" height="120" alt="Python programming">
+    <h2 class="fw-normal">The mission.</h2>
+    <p>Our mission is to empower women by combining smart fitness technology, real community, and a focus on complete wellness. GirlCoded is dedicated to creating a space where women feel seen, supported, and inspired to achieve their personal best — in fitness and beyond.
+    </p>
+    <p><a class="btn btn-secondary" href="{{ url_for('trainers_redirect') }}">Trainer Info</a></p>
+  </div><!-- /.col-lg-4 -->
+
+  <div class="col-lg-4">
+    <img src="static/images/collaboration.png" class="rounded-circle img-fluid" width="120" height="120" alt="AI market growth chart">
+    <h2 class="fw-normal">Our work.</h2>
+    <p>At GirlCoded, collaboration is at the heart of everything we do. Our team — a diverse group of women passionate about fitness, technology, and wellness — worked closely together to build a platform that truly reflects our community's needs. Through open communication, shared creativity, and a commitment to our mission, we've created a space where women can thrive, together.
+     .</p>
+    <p><a class="btn btn-secondary" href="{{ url_for('contact') }}">Contact Us</a></p>
+  </div><!-- /.col-lg-4 -->
+</div><!-- /.row -->
+
+<!-- Featurettes -->
+<hr class="featurette-divider">
+
+<div class="row featurette p-4 rounded shadow-lg mb-5" style="background-color: #FFF5F7;">
+  <div class="col-md-7">
+    <h2 class="featurette-heading fw-normal lh-1 mb-4">
+      Salma. 🎨
+      <span class="text-body-secondary">Website design and aesthetics guru.Frontend developer.</span>
+    </h2>
+    <p class="lead">
+      She brought the GirlCoded vision to life with flawless color coordination, a sleek, cohesive look across the site, and crafted the stunning On-Demand Videos page with passion and precision.
+    </p>
+  </div>
+  <div class="col-md-5">
+    <div class="position-relative">
+      <img src="static/images/salma_new.jpeg"
+           class="featurette-image img-fluid mx-auto rounded-3 shadow-lg border border-3"
+           style="max-width: 400px; height: 400px; object-fit: cover; border-color: #FFE4E1 !important;"
+           alt="Illustration of computer science concepts">
+    </div>
+  </div>
+</div>
+
+<hr class="featurette-divider">
+
+<div class="row featurette p-4 rounded shadow-lg mb-5" style="background-color: #FFF3E0;">
+  <div class="col-md-5">
+    <div class="position-relative">
+      <img src="static/images/monica.jpeg"
+           class="featurette-image img-fluid mx-auto rounded-3 shadow-lg border border-3"
+           style="max-width: 400px; height: 400px; object-fit: cover; border-color: #FFE4E1 !important;"
+           alt="AI concept graphic">
+    </div>
+  </div>
+  <div class="col-md-7">
+    <h2 class="featurette-heading fw-normal lh-1 mb-4">
+      Monica. 👩‍💼
+      <span class="text-body-secondary">Project management and website design creative. Frontend developer.</span>
+    </h2>
+    <p class="lead">
+      As Scrum Master, she kept the team moving with clear direction, organided meetings, and made sure every detail stayed on track. Beyond leading the workflow, Monica brought her creative touch to the website's frontend design, helping to build a site that's as dynamic and empowering as the women it's made for.
+    </p>
+  </div>
+</div>
+
+<hr class="featurette-divider">
+
+<div class="row featurette p-4 rounded shadow-lg mb-5" style="background-color: #FFF5F7;">
+  <div class="col-md-7">
+    <h2 class="featurette-heading fw-normal lh-1 mb-4">
+      Jhaap. 👩‍💻
+      <span class="text-body-secondary">Website design and Database Queen. Backend developer.</span>
+    </h2>
+    <p class="lead">
+      She built the foundation that powers everything behind GirlCoded. Her brilliant backend work keeps the platform running fast, smooth, and secure — making sure every user experience feels effortless. Without Jhaap's code, the magic on the front wouldn't be possible.
+    </p>
+  </div>
+  <div class="col-md-5">
+    <div class="position-relative">
+      <img src="static/images/jhaap_new.jpeg"
+           class="featurette-image img-fluid mx-auto rounded-3 shadow-lg border border-3"
+           style="max-width: 400px; height: 400px; object-fit: cover; border-color: #FFE4E1 !important;"
+           alt="Digital skills illustration">
+    </div>
+  </div>
+</div>
+
+<hr class="featurette-divider">
+
+<div class="row featurette p-4 rounded shadow-lg mb-5" style="background-color: #FFF3E0;">
+  <div class="col-md-5">
+    <div class="position-relative">
+      <img src="static/images/chaitra.jpeg"
+           class="featurette-image img-fluid mx-auto rounded-3 shadow-lg border border-3"
+           style="max-width: 400px; height: 400px; object-fit: cover; border-color: #FFE4E1 !important;"
+           alt="Fourth topic image">
+    </div>
+  </div>
+  <div class="col-md-7">
+    <h2 class="featurette-heading fw-normal lh-1 mb-4">
+      Chaitra. 👑
+      <span class="text-body-secondary">Jack of all trades. Full stack developer(frontend and backend).</span>
+    </h2>
+    <p class="lead">
+      She seamlessly bridged the gap between backend strength and frontend creativity, building a platform that's as functional as it is beautiful. Chaitra's skills ensured that every interaction feels smooth, fast, and empowering keeping our vision sharp and our message clear. A true architect of GirlCoded'ss digital experience.
+    </p>
+  </div>
+</div>
+
+<hr class="featurette-divider">
+
+<div class="row featurette p-4 rounded shadow-lg mb-5" style="background-color: #FFF5F7;">
+  <div class="col-md-7">
+    <h2 class="featurette-heading fw-normal lh-1 mb-4">
+      Fowsiya. ✨
+      <span class="text-body-secondary">Presentation orgainser and frontend developer.</span>
+    </h2>
+    <p class="lead">
+      With her frontend expertise, Fowsiya shaped a seamless and empowering user experience across the GirlCoded platform. As our presentation organiser, she kept every showcase polished, dynamic, and impactful, making sure our work always made a lasting impression.    </p>
+  </div>
+  <div class="col-md-5">
+    <div class="position-relative">
+      <img src="static/images/fowsiya.jpeg"
+           class="featurette-image img-fluid mx-auto rounded-3 shadow-lg border border-3"
+           style="max-width: 400px; height: 400px; object-fit: cover; border-color: #FFE4E1 !important;"
+           alt="Fifth topic image">
+    </div>
+  </div>
+</div>
+<hr class="featurette-divider">
+  </div><!-- /.container -->
+
+
+    <!-- /END FEATURETTES -->
+
+  </div><!-- /.container -->
+</main>
 {% endblock %}

@@ -9,6 +9,7 @@ from flask_app.utility import get_nutrition_for_plan, get_benefits_for_plan
 from flask_app.forms.register_form import RegisterForm
 from flask_app.forms.login_form import LoginForm
 from flask_app.forms.contact_form import ContactForm
+from flask_app.errors import internal_error,not_found_error
 
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
@@ -698,6 +699,12 @@ def nutrition_details(plan_type):
 @app.route('/on_demand')
 def on_demand():
     return render_template('on_demand.html')
+
+
+@app.route('/test-500')
+def test_500():
+    raise Exception("Intentional 500 error for testing")
+
 
 # @app.route('/edit-class-form', methods=['GET'])
 # def edit_class_form():

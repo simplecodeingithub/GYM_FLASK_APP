@@ -2,76 +2,128 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h2 class="text-center mb-4" style="font-weight: 700;">On-Demand Studio</h2>
-  <p class="lead text-center mb-5" style="color: #666;">Move with freedom. Our curated selection of at-home workouts are designed for women who want strength, grace, and results — anytime, anywhere.</p>
+  <h2 class="text-center mb-4" style="font-weight: 700; color: rgb(214, 51, 132);">On-Demand Studio</h2>
 
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 
-    <!-- Classical Pilates -->
-    <div class="col">
-      <div class="card shadow-sm h-100 border-0">
-        <div class="ratio ratio-16x9">
-          <iframe src="{{ url_for('static', filename='videos/pilates.mp4') }}" title="Classical Pilates Full Body Workout" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <div class="card-body text-center">
-          <h5 class="card-title">Classical Pilates</h5>
-          <p class="card-text">Elevate your posture, strength, and control with signature Pilates flow. Perfect for all levels.</p>
-        </div>
-      </div>
-    </div>
+  <p class="lead text-center mb-5" style="color: #666;">Stream your strength. Target your goals. Our curated workouts are crafted for the strong, radiant woman you are — anytime, anywhere.</p>
 
-    <!-- Abs & Core Sculpt -->
-    <div class="col">
-      <div class="card shadow-sm h-100 border-0">
-        <div class="ratio ratio-16x9">
-          <iframe src="{{ url_for('static', filename='videos/abs_core.mp4') }}" title="10 Min Core Sculpt Workout" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <div class="card-body text-center">
-          <h5 class="card-title">Abs & Core Sculpt</h5>
-          <p class="card-text">Sculpt a strong, defined core with fast, targeted ab workouts you can do anytime.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Full Body Toning -->
-    <div class="col">
-      <div class="card shadow-sm h-100 border-0">
-        <div class="ratio ratio-16x9">
-          <iframe src="{{ url_for('static', filename='videos/fullbody.mp4') }}" title="Low Impact Full Body Toning Workout" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <div class="card-body text-center">
-          <h5 class="card-title">Full Body Tone</h5>
-          <p class="card-text">Strengthen, lengthen, and tone — without the heavy jumping. Elegant, effective moves for strong results.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Glutes burn -->
-    <div class="col">
-      <div class="card shadow-sm h-100 border-0">
-        <div class="ratio ratio-16x9">
-          <iframe src="{{ url_for('static', filename='videos/glute.mp4') }}" title="Glute & Lower Body Burn" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <div class="card-body text-center">
-          <h5 class="card-title">Glute Burn & Sculpt</h5>
-          <p class="card-text">Activate and sculpt your glutes with this high-energy workout. Targeting your lower body, this session will help you tone, strengthen, and lift your glutes, ensuring you feel the burn and see results.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Cardio Blast -->
-<div class="col">
-  <div class="card shadow-sm h-100 border-0">
+<!-- Upper Body Blast -->
+<h3 class="mb-3">Upper Body Blast</h3>
+<div class="d-flex overflow-auto align-items-stretch mb-5">
+<!--  video 1-->
+  <div class="card mx-2" style="min-width: 18rem;">
     <div class="ratio ratio-16x9">
-      <iframe src="{{ url_for('static', filename='videos/cardio.mp4') }}" title="Intense Cardio Blast" frameborder="0" allowfullscreen></iframe>
+<!--      <iframe src="{{ url_for('static', filename='videos/upper3.mp4') }}" title="Upper Body" frameborder="0" allowfullscreen></iframe>-->
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/bEesWO3qFKU?si=b8uSCeHt8hEm5s3q&amp;start=20" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
     <div class="card-body text-center">
-      <h5 class="card-title">Cardio Blast</h5>
-      <p class="card-text">Push your limits with this high-intensity cardio workout. Designed to boost endurance, burn fat, and improve cardiovascular health, this session will leave you feeling energized and accomplished.</p>
+      <h5 class="card-title"> Upper Body Ignite</h5>
+      <p class="card-text">Fire up every muscle from shoulders to core with this energizing full upper body session.</p>
     </div>
+    </div>
+<!--  video 2-->
+    <div class="card mx-2" style="min-width: 18rem;">
+      <div class="ratio ratio-16x9">
+<!--        <iframe src="{{ url_for('static', filename='videos/upper2.mp4') }}" title="Low Impact Full Body Toning Workout" frameborder="0" allowfullscreen></iframe>-->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/tW7tHDTzEGk?si=UOqOnmYfYy0-1rao&amp;start=20" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="card-body text-center">
+        <h5 class="card-title">Bi's & Tri's Burn</h5>
+        <p class="card-text">Sculpt sleek strength across your whole body — with a graceful, lower-body focus.</p>
+      </div>
+      </div>
+<!--  video 3-->
+    <div class="card mx-2" style="min-width: 18rem;">
+      <div class="ratio ratio-16x9">
+<!--        <iframe src="{{ url_for('static', filename='videos/upper1.mp4') }}" title="Upper Body" frameborder="0" allowfullscreen></iframe>-->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/pEySXZAszcY?si=yhb7tpXNK7MBts3Z" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="card-body text-center">
+        <h5 class="card-title">Dumbbell Arm Sculpt</h5>
+        <p class="card-text">No weights? No problem. Build strength and definition with just your body — anytime, anywhere!</p>
+      </div>
   </div>
 </div>
 
+
+  <!-- Core & Abs -->
+  <h3 class="mb-3">Core & Abs Burn </h3>
+  <div class="d-flex overflow-auto align-items-stretch mb-5">
+    <!-- video 1 -->
+    <div class="card mx-2" style="min-width: 18rem;">
+      <div class="ratio ratio-16x9">
+<!--        <iframe src="https://www.youtube.com/embed/Sc_ZVqnPRLcUouZs" title="Classical Pilates Full Body Workout" frameborder="0" allowfullscreen></iframe>-->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/-CSltO87FgY?si=xCR5QseDsLy0k5vZ&amp;start=21" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="card-body text-center">
+        <h5 class="card-title">Classical Pilates</h5>
+        <p class="card-text">Elevate your posture and sculpt deep core strength with this timeless Pilates flow.</p>
+      </div>
+    </div>
+
+    <!-- video 2 -->
+    <div class="card mx-2" style="min-width: 18rem;">
+      <div class="ratio ratio-16x9">
+<!--        <iframe src="{{ url_for('static', filename='videos/abs_core.mp4') }}" title="10 Min Core Sculpt Workout" frameborder="0" allowfullscreen></iframe>-->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/zbQE-UQL9ig?si=dhVj2j7gexwGU7T_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="card-body text-center">
+        <h5 class="card-title">Abs & Core Sculpt</h5>
+        <p class="card-text">Ignite your center with this quick, fiery core blast designed to define and empower.</p>
+      </div>
+    </div>
+  <!-- video 3-->
+    <div class="card mx-2" style="min-width: 18rem;">
+      <div class="ratio ratio-16x9">
+<!--        <iframe src="{{ url_for('static', filename='videos/ab3.mp4') }}" title="10 Min Core Sculpt Workout" frameborder="0" allowfullscreen></iframe>-->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/yaMCQa4i5Yw?si=H-tlSm4fTqAk8mNt&amp;start=20" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="card-body text-center">
+        <h5 class="card-title">Intense Ab Blast</h5>
+        <p class="card-text">Ignite your center with this quick, fiery core blast designed to define and empower.</p>
+      </div>
+    </div>
   </div>
+
+  <!-- Glutes & Lower Body -->
+  <h3 class="mb-3">Glutes & Lower Body 🍑</h3>
+  <div class="d-flex overflow-auto align-items-stretch mb-5">
+    <!-- video 1 -->
+    <div class="card mx-2" style="min-width: 18rem;">
+      <div class="ratio ratio-16x9">
+<!--        <iframe src="{{ url_for('static', filename='videos/glute.mp4') }}" title="Glute & Lower Body Burn" frameborder="0" allowfullscreen></iframe>-->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/DU8q18kM0KY?si=9Pu_hGbfzPHZJ7Ei&amp;start=20" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="card-body text-center">
+        <h5 class="card-title">Booty Sculpt</h5>
+        <p class="card-text">Activate, lift, and sculpt with targeted glute work that brings strength and power.</p>
+      </div>
+    </div>
+
+    <!-- video 2 -->
+    <div class="card mx-2" style="min-width: 18rem;">
+      <div class="ratio ratio-16x9">
+<!--        <iframe src="{{ url_for('static', filename='videos/fullbody.mp4') }}" title="Low Impact Full Body Toning Workout" frameborder="0" allowfullscreen></iframe>-->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/AXUeKoElIn4?si=mud_59zDzJhFXmlL&amp;start=20" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="card-body text-center">
+        <h5 class="card-title">Full Body Tone</h5>
+        <p class="card-text">Sculpt sleek strength across your whole body — with a graceful, lower-body focus.</p>
+      </div>
+    </div>
+
+<!--    video 3-->
+    <div class="card mx-2" style="min-width: 18rem;">
+      <div class="ratio ratio-16x9">
+<!--        <iframe src="{{ url_for('static', filename='videos/glute3.mp4') }}" title="Low Impact Full Body Toning Workout" frameborder="0" allowfullscreen></iframe>-->
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/6hOAGDbkLOw?si=cUMS_6rUaK6N93Qt&amp;start=20" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="card-body text-center">
+        <h5 class="card-title">Glute Attacker</h5>
+        <p class="card-text">Equipment free lower body workout that will have your booty popping.</p>
+      </div>
+    </div>
+  </div>
+
 </div>
 {% endblock %}
