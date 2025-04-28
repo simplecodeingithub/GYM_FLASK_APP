@@ -52,15 +52,22 @@
           </div>
         </form>
 
-      <ul class="navbar-nav ms-auto">
-        {% if session.get('user_id') %}
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
-        {% else %}
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
-        {% endif %}
-      </ul>
+        <ul class="navbar-nav ms-auto">
+            {% if session.get('user_role') == 'user' %}
+                <!-- For both admin and regular users -->
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+            {% elif session.get('user_role') == 'admin' %}
+                <!-- For admin-specific options -->
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+                <!-- For guests -->
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+        </ul>
+
     </div>
   </div>
 </nav>

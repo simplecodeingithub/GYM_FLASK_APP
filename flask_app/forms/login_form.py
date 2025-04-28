@@ -5,10 +5,10 @@ from wtforms.validators import DataRequired, Email ,Length, Regexp
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[
-        DataRequired(),
-        Length(min=8, max=128),
+        DataRequired(message="Password is required."),
+        Length(min=8, message="Password must be at least 8 characters long."),
         Regexp(r'^[A-Za-z0-9@._!*#$%^&()]+$',
-               message="Password must contain only letters, numbers, and special characters.")
+               message="Use only letters, numbers, or special characters.")
     ])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')

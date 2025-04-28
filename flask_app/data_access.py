@@ -65,7 +65,7 @@ def insert_address(street, city, state_region, postal_code, country):
         cursor.close()
         db.close()
 
-def insert_user(first_name, last_name, email, password, phone, address_id, date_of_birth, membership_id=None):
+def insert_user(first_name, last_name, email, hashed_password, phone, address_id, date_of_birth, membership_id=None):
     """
     Insert a new user into the gym_user table using the AddressID obtained after inserting the user's address.
     """
@@ -76,13 +76,14 @@ def insert_user(first_name, last_name, email, password, phone, address_id, date_
     print(f"Generated UserID: {user_id}")
 
     try:
-        print(f"Inserting user with UserID: {user_id}, FirstName: {first_name}, LastName: {last_name}, Email: {email}, Password: {password}, Phone: {phone}, DateOfBirth: {date_of_birth}, AddressID: {address_id}, MembershipID: {membership_id}")
+        print(f"Inserting user with UserID: {user_id}, FirstName: {first_name}, LastName: {last_name}, Email: {email}, Password: {hashed_password}, Phone: {phone}, DateOfBirth: {date_of_birth}, AddressID: {address_id}, MembershipID: {membership_id}")
 
         cursor.execute("""
-            INSERT INTO gym_user (UserID, FirstName, LastName, Email, Password, PhoneNumber, AddressID, MembershipID, DateOfBirth)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (user_id, first_name, last_name, email, password, phone, address_id, membership_id, date_of_birth))
+                   INSERT INTO gym_user (UserID, FirstName, LastName, Email, Password, PhoneNumber, AddressID, MembershipID, DateOfBirth, RegisteredDate)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, CURRENT_DATE)
+               """, (user_id, first_name, last_name, email, hashed_password, phone, address_id, membership_id, date_of_birth))
 
+        print(f"Query executed. Rows affected: {cursor.rowcount}")
         print(f"Query executed. Rows affected: {cursor.rowcount}")
         db.commit()
         print(f"User {first_name} {last_name} inserted successfully!")
@@ -523,7 +524,7 @@ def get_trainers():
     connection.close()
     return trainers
 
-
+#Admin
 def get_admin_by_email(email):
     """
     Fetch admin details by email from the MySQL database using get_db_connection.
@@ -542,3 +543,72 @@ def get_admin_by_email(email):
     finally:
         cursor.close()  # Ensure the cursor is closed
         connection.close()  # Ensure the connection is closed after the query
+
+def fetch_registered_users():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    try:
+        query = "SELECT FirstName, LastName, Email, DateOfBirth, RegisteredDate FROM gym_user"
+        cursor.execute(query)
+        registered_users = cursor.fetchall()
+        return registered_users
+    finally:
+        cursor.close()
+        connection.close()
+
+# Fetch All Fitness Classes for Admin
+def fetch_fitness_classes():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    try:
+        query = "SELECT class_id, class_name, description, price, MaxParticipants, image_url FROM fitness_class"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        print(results)  # Debugging: Check the data retrieved from the database
+        return results
+    finally:
+        cursor.close()
+        connection.close()
+
+# Add a New Fitness Class
+def add_fitness_class(class_name, description, price, MaxParticipants, image_url):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    try:
+        query = """
+        INSERT INTO fitness_class (class_name, description, price, max_participants, image_url)
+        VALUES (%s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, (class_name, description, price, max_participants, image_url))
+        connection.commit()
+    finally:
+        cursor.close()
+        connection.close()
+
+# Edit an Existing Fitness Class
+def edit_fitness_class(class_id, class_name, description, price, MaxParticipants, image_url):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    try:
+        query = """
+        UPDATE fitness_class
+        SET class_name = %s, description = %s, price = %s, max_participants = %s, image_url = %s
+        WHERE class_id = %s
+        """
+        cursor.execute(query, (class_name, description, price, max_participants, image_url, class_id))
+        connection.commit()
+    finally:
+        cursor.close()
+        connection.close()
+
+# Delete a Fitness Class
+def delete_fitness_class(class_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    try:
+        query = "DELETE FROM fitness_class WHERE class_id = %s"
+        cursor.execute(query, (class_id,))
+        connection.commit()
+    finally:
+        cursor.close()
+        connection.close()

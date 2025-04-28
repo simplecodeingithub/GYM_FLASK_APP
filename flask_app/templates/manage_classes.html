@@ -1,10 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layout.html' %}
 
-</body>
-</html>
+{% block content %}
+<!-- Header Section -->
+<div class="text-center my-4">
+    <h1 style="color: #FF1493; font-size: 2.5rem; font-weight: bold;">Fitness Classes</h1> <!-- Pink Heading -->
+    <p style="font-size: 1.2rem; color: #555;">Browse through the available fitness classes and add new ones.</p>
+    <a href="{{ url_for('add_class_form') }}" class="btn btn-success">Add New Class</a>
+</div>
+
+<!-- Table Section -->
+<div class="container my-5">
+    {% if classes %}
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Class Name</th>
+                <th>Description</th>
+                <th>Price (£)</th>
+                <th>Max Participants</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for class in classes %}
+            <tr>
+                <td>{{ class['class_name'] }}</td> <!-- Use dictionary keys -->
+                <td>{{ class['description'] }}</td>
+                <td>{{ class['price'] }}</td>
+                <td>{{ class['MaxParticipants'] }}</td>
+                <td>
+                    <img src="/static/images/{{ class['image_url'] or 'default.jpg' }}" alt="Image of {{ class['class_name'] }}" style="width: 100px; height: auto; object-fit: cover;">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-center text-muted">No fitness classes available. Please add new ones!</p>
+    {% endif %}
+</div>
+{% endblock %}

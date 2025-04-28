@@ -1,21 +1,42 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="text-center" style="color: #d63384;">Choose Your Membership Plan</h1>
+<div class="container mt-5">
+    <!-- Hero Section -->
+    <div class="hero-section text-center mb-4">
+        <h1 style="color: #d63384; font-weight: bold;">Choose Your Membership Plan</h1>
+        <p style="font-size: 1.2rem; color: #555;">
+            Unlock access to state-of-the-art facilities, unlimited classes, and exclusive benefits with our membership plans.
+        </p>
+        <img src="{{ url_for('static', filename='images/gym_image6.png') }}"
+             alt="Gym Membership" class="img-fluid rounded my-3"
+             style="max-height: 300px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    </div>
+
+    <!-- Membership Plans -->
     <div class="row">
         {% for plan in membership_plans %}
-        <div class="col-md-4">
-            <div class="card my-3">
-                <div class="card-header text-center" style="background-color: #d63384; color: white;">
-                    <h4>{{ plan.MembershipType }}</h4>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="card my-3 shadow-sm">
+                <!-- Plan Header -->
+                <div class="card-header text-center"
+                     style="background: linear-gradient(to right, #d63384, #e9498f); color: #fff;">
+                    <h4 style="font-weight: bold;">{{ plan.MembershipType }}</h4>
                 </div>
+                <!-- Plan Details -->
                 <div class="card-body text-center">
-                    <p><strong>Price:</strong> £{{ plan.Price }}</p>
-                    <p><strong>Duration:</strong> {{ plan.DurationMonths }} months</p>
+                    <p style="font-size: 1.1rem;"><strong>Price:</strong> £{{ plan.Price }}</p>
+                    <p style="font-size: 1.1rem;"><strong>Duration:</strong> {{ plan.DurationMonths }} months</p>
                     <p>{{ plan.Benefits }}</p>
+                </div>
+                <!-- Plan Footer -->
+                <div class="card-footer text-center">
                     <form action="{{ url_for('purchase_membership', membership_id=plan.MembershipID) }}" method="POST">
-                        <button type="submit" class="btn btn-pink">Select Plan</button>
+                        <button type="submit"
+                                class="btn"
+                                style="background-color: #d63384; color: #fff; font-weight: bold; padding: 10px 20px; border-radius: 5px; transition: 0.3s;">
+                            Select Plan
+                        </button>
                     </form>
                 </div>
             </div>

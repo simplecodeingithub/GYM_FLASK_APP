@@ -173,10 +173,31 @@ UPDATE admin
 SET Password = 'scrypt:32768:8:1$dKpPHAYzyHVwMm6B$d6d0cab11374621f7afb69969ae5dd5b01e81a2e217b200f0c8e2a903b047ac94ace60761f6e737ea369fca829cfa740a7b63f417984efaf22430139128defc1'
 WHERE Email = 'sarah.williams@gym.com';
 
-
 SELECT Password FROM admin WHERE Email = 'sarah.williams@gym.com';
 
+INSERT INTO admin (AdminID, FirstName, LastName, Email, PhoneNumber, Password)
+VALUES (4, 'Admin', 'GirlCoded', 'admin@girlcoded.com', '07700 567890', 'scrypt:32768:8:1$zL6LZOmjkR1PoHk8$3e7ffac9158a1fcd6ccbd4e2673e59e6ca864e40558c1fb63a01bf7943055b03489fa671e9ad1dc44642fc8bb6fc3b0d42867788a7c763165fd06897883881fc');
+
+SELECT Password FROM admin WHERE Email = 'admin@girlcoded.com';
+
 select * from admin;
+
+ALTER TABLE gym_user
+ADD RegisteredDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+UPDATE gym_user
+SET RegisteredDate = NOW()
+WHERE RegisteredDate IS NULL;
+
+select * from gym_user;
+
+DESCRIBE gym_user;
+
+select * from fitness_class;
+
+DESCRIBE fitness_class;
+
+SELECT class_id, class_name, description, price, MaxParticipants, image_url FROM fitness_class;
 
 --
 -- Table structure for table `class_schedule`
@@ -206,7 +227,7 @@ ALTER TABLE class_schedule
 MODIFY COLUMN DayOfWeek ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL DEFAULT 'Monday';
 
 select * from class_schedule;
-
+select * from membership;
 SELECT DISTINCT DayOfWeek FROM class_schedule;
 
 SELECT DayOfWeek, Location, StartTime, EndTime, AvailableSeats, ScheduleID

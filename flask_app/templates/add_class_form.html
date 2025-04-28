@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center" style="color: #d63384;">Add New Class</h1>
+    <form action="{{ url_for('add_class_route') }}" method="POST" class="mt-4">
+        <div class="mb-3">
+            <label for="class_name" class="form-label">Class Name</label>
+            <input type="text" name="class_name" id="class_name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" rows="4" class="form-control"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price (£)</label>
+            <input type="number" name="price" id="price" step="0.01" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="max_participants" class="form-label">Max Participants</label>
+            <input type="number" name="max_participants" id="max_participants" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="image_url" class="form-label">Image URL</label>
+            <input type="text" name="image_url" id="image_url" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Class</button>
+    </form>
+</div>
+{% endblock %}

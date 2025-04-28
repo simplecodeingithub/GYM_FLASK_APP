@@ -3,6 +3,16 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center">Admin Dashboard</h1>
-
+    <div class="mt-4">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="{{ url_for('view_registered_users') }}">View Registered Users</a>
+            </li>
+            <li class="list-group-item">
+                <a href="{{ url_for('manage_classes') }}">Manage Classes</a>
+            </li>
+        </ul>
+    </div>
 </div>
 {% endblock %}
+

@@ -5,21 +5,27 @@ from flask_app import app,login_manager
 from flask_app.fake_data import mock_classes
 from datetime import datetime, date,time, timedelta
 from flask_app.models import User
+from flask_app.utility import get_nutrition_for_plan, get_benefits_for_plan
 from flask_app.forms.register_form import RegisterForm
 from flask_app.forms.login_form import LoginForm
 from flask_app.forms.contact_form import ContactForm
+
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_app.data_access import get_db_connection,insert_user, check_user_by_email, generate_unique_user_id,insert_address,get_fitness_classes,get_weekly_schedule,update_last_login
 from flask_app.data_access import book_class_for_user,get_class_schedule,get_class_info,generate_recurring_schedules,calculate_end_time,get_user_bookings,get_schedule_by_days,get_user_details
-from flask_app.data_access import cancel_booking_for_user, purchase_day_pass,add_contact_submission,get_trainers, get_admin_by_email
+from flask_app.data_access import cancel_booking_for_user, purchase_day_pass,add_contact_submission,get_trainers, get_admin_by_email,fetch_registered_users,fetch_fitness_classes,add_fitness_class,delete_fitness_class,edit_fitness_class
 import os
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 
 # Replace 'your_new_password' with the password you want to use
-plaintext_password = 'sarah@123'
-hashed_password = generate_password_hash(plaintext_password)
-print("New Hashed Password:", hashed_password)
+# plaintext_password = 'sarah@123'
+# hashed_password = generate_password_hash(plaintext_password)
+# print("New Hashed Password:", hashed_password)
+
+# plaintext_password = 'admin@123'
+# hashed_password = generate_password_hash(plaintext_password)
+# print("Hashed Password:", hashed_password)
 
 # define routes():
 @app.route('/')
@@ -120,7 +126,7 @@ def book_class(schedule_id):
     """Allows logged-in users to book a class."""
     if 'user_id' not in session:
         flash('You need to log in to book a class.', 'danger')
-        return redirect(url_for('login', next=request.referrer))  # Redirect to login if user is not logged in
+        return redirect(url_for('login', next=request.referrer))
 
     user_id = session['user_id']  # Retrieve logged-in user's ID
     db_connection = get_db_connection()
@@ -312,7 +318,7 @@ def register():
             return redirect(url_for('register'))
 
         # Ensure required fields are not empty
-        if not first_name or not last_name or not email or not password or not confirm_password:
+        if not all([first_name, last_name, email, password, confirm_password]):
             flash('All fields are required!', 'danger')
             return redirect(url_for('register'))
 
@@ -367,13 +373,15 @@ def login():
             if check_password_hash(user_data['Password'], password):
                 user = User.get(user_data['UserID'])  # Load user instance
                 login_user(user)  # Flask-Login's login function
-                session['user_id'] = user_data['UserID']  # Set user_id in session
+                session['user_id'] = user_data['UserID']
+                session['user_role'] = 'user'  # Mark as regular user# Set user_id in session
                 flash('User login successful!', 'success')
 
                 # Redirect to the intended page or user dashboard
                 next_page = request.args.get('next')
                 if next_page:
                     return redirect(next_page)
+                print("Session Data:", session)
                 return redirect(url_for('dashboard'))  # Default redirect for users
             else:
                 flash('Incorrect password for user. Please try again.', 'danger')
@@ -384,9 +392,11 @@ def login():
             if check_password_hash(admin_data['Password'], password):
                 print("Password matches!")
                 session['admin_logged_in'] = True  # Set admin session
+                session['user_role'] = 'admin'
                 session['admin_email'] = admin_data['Email']   # Store admin email
                 flash('Admin login successful!', 'success')
 
+                print("Session Data:", session)
                 # Redirect to the intended page or admin dashboard
                 next_page = request.args.get('next')
                 if next_page:
@@ -418,18 +428,30 @@ def dashboard():
 
     user_id = session['user_id']
 
+    # Initialize variables
+    active_day_pass = None
+    payments = []
+    active_membership = None
+    bookings = []
+    user_details = None
+    first_time_login = False
+
+    cursor = None
+
     try:
         # Establish database connection
-        connection = get_db_connection()
-        cursor = connection.cursor(dictionary=True)
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
 
         # Fetch active day pass
         query_day_pass = """
             SELECT * FROM day_pass
             WHERE UserID = %s AND PurchaseDate = CURDATE() AND PassStatus = 'Active'
         """
+        print("Executing query: ", query_day_pass)
         cursor.execute(query_day_pass, (user_id,))
-        active_day_pass = cursor.fetchone()
+        active_day_pass = cursor.fetchone()  # Ensure result is fetched
+        print("Active Day Pass: ", active_day_pass)
 
         # Fetch payment history
         query_payments = """
@@ -437,22 +459,24 @@ def dashboard():
             FROM payment
             WHERE UserID = %s
         """
+        print("Executing query: ", query_payments)
         cursor.execute(query_payments, (user_id,))
-        payments = cursor.fetchall()
+        payments = cursor.fetchall()  # Fetch all results
+        print("Payments: ", payments)
 
-        # Debug: Print fetched payments
-        print("Payments fetched from database:", payments)
-
+        # Fetch active membership details
         query_active_membership = """
             SELECT ms.SubscriptionID, m.MembershipType, ms.JoinDate, ms.ExpiryDate
             FROM membership_subscription ms
             JOIN membership m ON ms.MembershipID = m.MembershipID
             WHERE ms.UserID = %s AND ms.ExpiryDate > CURDATE();
         """
+        print("Executing query: ", query_active_membership)
         cursor.execute(query_active_membership, (user_id,))
-        active_membership = cursor.fetchone()
+        active_membership = cursor.fetchone()  # Ensure result is fetched
+        print("Active Membership: ", active_membership)
 
-        # Other logic (e.g., bookings, first-time login)
+        # Fetch bookings and user details
         bookings = get_user_bookings(user_id)
         user_details = get_user_details(user_id)
 
@@ -460,28 +484,52 @@ def dashboard():
             flash('Error fetching user details.', 'danger')
             return redirect(url_for('login'))
 
+        # Check for first-time login
         first_time_login = user_details.get('LastLogin') is None
         update_last_login(user_id)
 
+    except Exception as e:
+        print("Error occurred during database operation: ", e)
+        flash('A database error occurred. Please try again later.', 'danger')
+        return redirect(url_for('login'))
+
+    except Exception as e:
+        print("Unexpected error: ", e)
+        flash('An unexpected error occurred. Please try again later.', 'danger')
+        return redirect(url_for('login'))
+
     finally:
-        cursor.close()
-        connection.close()
+        # Safely close cursor
+        if cursor:
+            try:
+                cursor.close()
+            except Exception as e:
+                print("Error closing cursor:", e)
+        # Close connection explicitly
+        if db:
+            try:
+                db.close()
+            except Exception as e:
+                print("Error closing connection:", e)
 
     return render_template(
         'dashboard.html',
         bookings=bookings,
         active_day_pass=active_day_pass,
         payments=payments,
-        active_membership=active_membership, # Ensure payments is defined here
+        active_membership=active_membership,
         first_time_login=first_time_login,
         user_details=user_details
     )
+
 
 
 @app.route('/logout', methods=['GET'])
 def logout():
     """Logs out the user and clears session variables."""
     session.pop('user_id', None)  # Remove user_id from the session
+    session.pop('admin_logged_in', None)
+    session.pop('user_role', None)  # Clear role
     session.clear()  # Optional: Clear the entire session to prevent lingering data
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))  # Redirect to login page
@@ -552,19 +600,70 @@ def purchase_membership(membership_id):
         db.close()
 
 
-@app.route('/view-users')
-def view_users():
-    db = get_db_connection()
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM gym_user")
-    users = cursor.fetchall()
-    cursor.close()
-    db.close()
-    return str(users)  # or jsonify(users) if you import jsonify
-
 # Admin pages
 
 @app.route('/view-registered-users')
 def view_registered_users():
-    # Logic for displaying registered users
-    return render_template('view_registered_users.html')
+    users = fetch_registered_users()  # Fetch data from the database
+    return render_template('view_registered_users.html', users=users)
+
+
+@app.route('/manage-classes', methods=['GET'])
+def manage_classes():
+    classes = fetch_fitness_classes()
+    return render_template('manage_classes.html', classes=classes)
+
+# Admin Routes for Fitness Classes
+
+@app.route('/add-class-form', methods=['GET'])
+def add_class_form():
+    return render_template('add_class_form.html')  # HTML form for adding a class
+
+
+@app.route('/add-class', methods=['POST'])
+def add_class_route():
+    class_name = request.form['class_name']
+    description = request.form['description']
+    price = float(request.form['price']) if request.form['price'] else None
+    max_participants = int(request.form['max_participants']) if request.form['max_participants'] else None
+    image_url = request.form['image_url']
+    add_fitness_class(class_name, description, price, max_participants, image_url)
+    return redirect(url_for('manage_classes'))
+
+
+
+@app.route('/nutrition_details/<plan_type>')
+def nutrition_details(plan_type):
+    # Example meal plans (replace with database query logic)
+    nutrition_plans = {
+        'Basic': {'Breakfast': 'Scrambled eggs', 'Lunch': 'Grilled chicken salad', 'Dinner': 'Steamed broccoli and salmon'},
+        'Gold': {'Breakfast': 'Oatmeal with berries', 'Lunch': 'Grilled fish tacos', 'Dinner': 'Vegetarian stir-fry'},
+        'Platinum': {'Breakfast': 'Custom smoothie', 'Lunch': 'Quinoa salad with avocado', 'Dinner': 'Personalized based on consultation'}
+    }
+    plan = nutrition_plans.get(plan_type, {})
+    return render_template('nutrition_details.html', plan_type=plan_type, **plan)
+
+# @app.route('/edit-class-form', methods=['GET'])
+# def edit_class_form():
+#     return render_template('edit_class_form.html')  # HTML form for adding a class
+#
+# @app.route('/edit-class/<int:class_id>', methods=['POST'])
+# def edit_class_route(class_id):
+#     class_name = request.form['class_name']
+#     description = request.form['description']
+#     price = float(request.form['price']) if request.form['price'] else None
+#     max_participants = int(request.form['max_participants']) if request.form['max_participants'] else None
+#     image_url = request.form['image_url']
+#     edit_fitness_class(class_id, class_name, description, price, max_participants, image_url)
+#     return redirect(url_for('manage_classes'))
+#
+# @app.route('/delete-class-form', methods=['GET'])
+# def delete_class_form():
+#     return render_template('delete_class_form.html')  # HTML form for adding a class
+#
+# @app.route('/delete-class/<int:class_id>', methods=['POST'])
+# def delete_class_route(class_id):
+#     delete_fitness_class(class_id)
+#     return redirect(url_for('manage_classes'))
+#
+

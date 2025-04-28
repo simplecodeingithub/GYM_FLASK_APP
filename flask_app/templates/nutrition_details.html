@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Nutrition Plan Details</h1>
+    <div class="card mt-4" style="border-radius: 15px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);">
+        <div class="card-body">
+            <h3>{{ plan_type }} Plan</h3>
+            <p>Here are your recommended meals:</p>
+            <ul>
+                <li>Breakfast: {{ breakfast }}</li>
+                <li>Lunch: {{ lunch }}</li>
+                <li>Dinner: {{ dinner }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
