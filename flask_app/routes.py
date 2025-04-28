@@ -453,6 +453,7 @@ def dashboard():
         active_day_pass = cursor.fetchone()  # Ensure result is fetched
         print("Active Day Pass: ", active_day_pass)
 
+
         # Fetch payment history
         query_payments = """
             SELECT PaymentDate, Amount, PaymentType, Status
@@ -469,11 +470,12 @@ def dashboard():
             SELECT ms.SubscriptionID, m.MembershipType, ms.JoinDate, ms.ExpiryDate
             FROM membership_subscription ms
             JOIN membership m ON ms.MembershipID = m.MembershipID
-            WHERE ms.UserID = %s AND ms.ExpiryDate > CURDATE();
+            WHERE ms.UserID = %s AND ms.ExpiryDate > CURDATE()
+            ORDER BY ms.ExpiryDate DESC
+            LIMIT 1;
         """
-        print("Executing query: ", query_active_membership)
         cursor.execute(query_active_membership, (user_id,))
-        active_membership = cursor.fetchone()  # Ensure result is fetched
+        active_membership = cursor.fetchone()
         print("Active Membership: ", active_membership)
 
         # Fetch bookings and user details
@@ -563,36 +565,85 @@ def purchase_membership(membership_id):
         return redirect(url_for('login'))
 
     db = get_db_connection()
-    cursor = db.cursor(dictionary=True)  # Use dictionary=True to avoid tuple issues
+    cursor = db.cursor(dictionary=True)
 
     try:
+        # Fetch user details to check for first-time login and update LastLogin
+        query_user = "SELECT * FROM gym_user WHERE UserID = %s"
+        cursor.execute(query_user, (user_id,))
+        user_details = cursor.fetchone()
+
+        if not user_details:
+            flash("User not found.", "danger")
+            return redirect(url_for('login'))
+
+        # First-time login check and update LastLogin
+        first_time_login = user_details.get('LastLogin') is None
+        if first_time_login:
+            flash("Welcome! This is your first login. Let's get started!", "success")
+        update_last_login(user_id)
+
         # Fetch membership details
-        query_membership = "SELECT * FROM membership WHERE MembershipID = %s;"
+        query_membership = "SELECT MembershipType, DurationMonths, Price FROM membership WHERE MembershipID = %s;"
         cursor.execute(query_membership, (membership_id,))
-        membership = cursor.fetchone()  # Result will now be a dictionary
+        membership = cursor.fetchone()
 
         if not membership:
             flash("Invalid membership plan selected.", "danger")
             return redirect(url_for('membership_plans'))
 
-        # Calculate subscription dates
+        # Check for active membership
+        query_active_membership = """
+            SELECT ms.*, m.MembershipType
+            FROM membership_subscription ms
+            JOIN membership m ON ms.MembershipID = m.MembershipID
+            WHERE ms.UserID = %s AND ms.ExpiryDate >= %s
+            ORDER BY ms.ExpiryDate DESC
+            LIMIT 1;
+        """
         join_date = datetime.today().date()
-        expiry_date = join_date + timedelta(days=membership['DurationMonths'] * 30)  # Assuming DurationMonths is a float
+        cursor.execute(query_active_membership, (user_id, join_date))
+        active_membership = cursor.fetchone()
 
-        # Insert subscription into membership_subscription table
+        if active_membership:
+            flash(f"You already have an active {active_membership['MembershipType']} membership until {active_membership['ExpiryDate']}.", "info")
+            return redirect(url_for('dashboard'))
+
+        # Calculate expiry date for new subscription
+        expiry_date = join_date + timedelta(days=membership['DurationMonths'] * 30)
+
+        # Insert new subscription
         query_subscription = """
             INSERT INTO membership_subscription (UserID, MembershipID, JoinDate, ExpiryDate)
             VALUES (%s, %s, %s, %s)
         """
         cursor.execute(query_subscription, (user_id, membership_id, join_date, expiry_date))
-        db.commit()
 
+        query_payment = """
+                    INSERT INTO payment (PaymentDate, Amount, Status, PaymentType, UserID)
+                    VALUES (%s, %s, %s, %s, %s)
+                """
+        payment_date = datetime.now()
+        payment_status = 'Paid'
+        cursor.execute(query_payment,
+                       (payment_date, membership['Price'], payment_status, 'Membership Purchase', user_id))
+
+        # Update user's MembershipID in the gym_user table
+        query_update_user = """
+            UPDATE gym_user
+            SET MembershipID = %s
+            WHERE UserID = %s
+        """
+        cursor.execute(query_update_user, (membership_id, user_id))
+
+        db.commit()
         flash(f"You have successfully purchased the {membership['MembershipType']} membership!", "success")
         return redirect(url_for('dashboard'))
 
     except Exception as e:
         db.rollback()
-        flash(f"Error processing membership: {str(e)}", "danger")
+        print(f"Error occurred: {e}")  # Debugging purposes
+        flash("An error occurred while processing your membership. Please try again later.", "danger")
         return redirect(url_for('membership_plans'))
 
     finally:
@@ -642,6 +693,11 @@ def nutrition_details(plan_type):
     }
     plan = nutrition_plans.get(plan_type, {})
     return render_template('nutrition_details.html', plan_type=plan_type, **plan)
+
+
+@app.route('/on_demand')
+def on_demand():
+    return render_template('on_demand.html')
 
 # @app.route('/edit-class-form', methods=['GET'])
 # def edit_class_form():

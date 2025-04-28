@@ -1,18 +1,40 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center" style="color: #d63384;">Day Pass</h1>
-    <p class="text-center text-muted">
-        Enjoy unlimited access to all classes for a day with our Day Pass! Book as many sessions as you like and experience the best of our fitness offerings.
-    </p>
-    <div class="text-center mt-4">
+<!-- Full-Screen Background Image Section -->
+<div class="image-section" style="position: relative; height: 100vh; background-image: url('{{ url_for('static', filename='images/img.png') }}'); background-size: cover; background-position: center;">
+    <!-- Overlay Content -->
+    <div style="position: absolute; top: 20%; left: 10%; color: white; text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);">
+        <h1 style="font-size: 3rem; font-weight: bold;">Day Pass</h1>
+        <p style="font-size: 1.2rem; margin-top: 10px;">
+            Enjoy unlimited access to all classes for a day with our Day Pass! Book as many sessions as you like and experience the best of our fitness offerings. Whether you're trying out our gym for the first time or just need a one-day boost, the Day Pass is perfect for you!
+        </p>
+    </div>
+
+    <!-- Purchase Button -->
+    <div style="position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); text-align: center;">
         <form action="{{ url_for('purchase_day_pass') }}" method="POST">
-            <button type="submit" class="btn btn-pink" style="background-color: #d63384; color: white; font-weight: bold; border-radius: 5px;">
+            <button type="submit" class="btn btn-pink day-pass-btn"
+                    style="background-color: #d63384; color: white; font-weight: bold; padding: 15px 30px; border-radius: 5px; transition: transform 0.3s, box-shadow 0.3s;">
                 Purchase Day Pass - £20
             </button>
         </form>
-        <p class="text-muted mt-2">Make today your healthiest day yet!</p>
+        <p class="text-muted mt-2" style="color: white; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);">Make today your healthiest day yet!</p>
     </div>
 </div>
+
+<!-- Custom CSS -->
+<style>
+    /* Full-Screen Image Section Styling */
+    .image-section {
+        width: 100%;
+    }
+
+    /* Button Hover Effect */
+    .day-pass-btn:hover {
+        transform: scale(1.1); /* Slightly enlarge the button */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+        background-color: #e9498f; /* Change to lighter pink on hover */
+    }
+</style>
 {% endblock %}

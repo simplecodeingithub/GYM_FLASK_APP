@@ -406,9 +406,13 @@ def update_last_login(user_id):
     try:
         cursor.execute("UPDATE gym_user SET LastLogin = NOW() WHERE UserID = %s", (user_id,))
         connection.commit()
+    except Exception as e:
+        print(f"Error updating LastLogin: {e}")
+        connection.rollback()
     finally:
         cursor.close()
         connection.close()
+
 
 def get_user_details(user_id):
     """Fetch personal details for the user."""

@@ -26,47 +26,61 @@
     </div>
     {% endif %}
 
-    <!-- Active Day Pass Section -->
-    {% if active_day_pass %}
-    <div class="alert alert-success text-center" style="border-radius: 10px;">
-        <p>You have an <strong>Active Day Pass</strong> for <strong>{{ active_day_pass.PurchaseDate }}</strong>. Enjoy unlimited bookings today!</p>
-    </div>
-    {% else %}
-    <div class="alert alert-info text-center" style="border-radius: 10px;">
-        <p>You don't have an active Day Pass. <a href="{{ url_for('day_pass') }}" class="btn btn-link" style="font-weight: bold;">Get one now</a>.</p>
-    </div>
-    {% endif %}
+    <!-- Active Day Pass and Membership Plans Side by Side -->
+    <div class="row">
+        <!-- Active Day Pass -->
+        {% if active_day_pass %}
+        <div class="col-md-6 mb-4">
+            <div class="alert alert-success text-center" style="border-radius: 10px; padding: 30px;">
+                <h4 style="font-weight: bold;">Active Day Pass</h4>
+                <p>You have an <strong>Active Day Pass</strong> for <strong>{{ active_day_pass.PurchaseDate }}</strong>. Enjoy unlimited bookings today!</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-md-6 mb-4">
+            <div class="alert alert-info text-center" style="border-radius: 10px; padding: 30px;">
+                <h4 style="font-weight: bold;">No Active Day Pass</h4>
+                <p>You don't have an active Day Pass.</p>
+                <a href="{{ url_for('day_pass') }}" class="btn btn-link" style="font-weight: bold;">Get one now</a>
+            </div>
+        </div>
+        {% endif %}
 
-    <!-- Active Membership Section -->
-    {% if active_membership %}
-    <div class="card my-4">
-        <div class="card-header text-center text-white" style="background-color: #d63384; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <h4 style="font-weight: bold; font-family: 'Poppins', sans-serif;">Your Active Membership</h4>
+        <!-- Active Membership -->
+        {% if active_membership %}
+        <div class="col-md-6 mb-4">
+            <div class="card text-center" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <div class="card-header text-white" style="background: linear-gradient(to right, #d63384, #e57373); font-weight: bold;">
+                    Your Active Membership
+                </div>
+                <div class="card-body">
+                    <p><strong>Membership Type:</strong> {{ active_membership.MembershipType }}</p>
+                    <p><strong>Start Date:</strong> {{ active_membership.JoinDate }}</p>
+                    <p><strong>Expiry Date:</strong> {{ active_membership.ExpiryDate }}</p>
+                </div>
+            </div>
         </div>
-        <div class="card-body text-center">
-            <p><strong>Membership Type:</strong> {{ active_membership.MembershipType }}</p>
-            <p><strong>Start Date:</strong> {{ active_membership.JoinDate }}</p>
-            <p><strong>Expiry Date:</strong> {{ active_membership.ExpiryDate }}</p>
+        {% else %}
+        <div class="col-md-6 mb-4">
+            <div class="alert alert-warning text-center" style="border-radius: 10px; padding: 30px;">
+                <h4 style="font-weight: bold;">No Active Membership</h4>
+                <p>You don't have an active membership.</p>
+                <a href="{{ url_for('membership_plans') }}" class="btn btn-pink" style="font-weight: bold;">Explore Membership Plans</a>
+            </div>
         </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="card my-4 text-center" style="background-color: #F8F9FA; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-        <div class="card-body">
-            <p>You don't have an active membership. <a href="{{ url_for('membership_plans') }}" class="btn btn-pink" style="border-radius: 5px; font-weight: bold;">Explore Membership Plans</a>.</p>
-        </div>
-    </div>
-    {% endif %}
 
     <!-- Bookings Section -->
     {% if bookings %}
     <div class="card my-4">
-        <div class="card-header text-center text-white" style="background-color: #f48fb1; border-radius: 8px; box-shadow: none;">
-            <h4 style="font-weight: 600; font-family: 'Poppins', sans-serif;">Your Bookings</h4>
+        <div class="card-header text-center text-white" style="background-color: #f48fb1; border-radius: 8px;">
+            <h4 style="font-weight: bold;">Your Bookings</h4>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="thead-light">
+                <table class="table table-striped">
+                    <thead>
                         <tr class="text-center">
                             <th>Class Name</th>
                             <th>Schedule Date</th>
@@ -104,7 +118,7 @@
     {% else %}
     <div class="card my-4 text-center" style="background-color: #F8F9FA; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <div class="card-body">
-            <p>You have no bookings at the moment. <a href="{{ url_for('classes') }}" class="btn btn-pink" style="border-radius: 5px; font-weight: bold;">View Our Fitness Classes</a>.</p>
+            <p>No bookings yet. <a href="{{ url_for('classes') }}" class="btn btn-pink" style="font-weight: bold;">View Classes</a></p>
         </div>
     </div>
     {% endif %}
@@ -112,37 +126,37 @@
     <!-- Payment History Section -->
     {% if payments %}
     <div class="card my-4">
-        <div class="card-header text-center text-white" style="background-color: #e57373; border-radius: 8px; box-shadow: none;">
-            <h4 style="font-weight: 600; font-family: 'Poppins', sans-serif;">Your Payment History</h4>
+        <div class="card-header text-center text-white" style="background-color: #e57373; border-radius: 8px;">
+            <h4 style="font-weight: bold;">Your Payment History</h4>
         </div>
         <div class="card-body">
-            <table class="table table-hover">
-                <thead class="thead-light">
-                    <tr class="text-center">
-                        <th>Payment Date</th>
-                        <th>Amount (£)</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for payment in payments %}
-                    <tr>
-                        <td>{{ payment.PaymentDate }}</td>
-                        <td>£{{ payment.Amount }}</td>
-                        <td>{{ payment.PaymentType if payment.PaymentType else "N/A" }}</td>
-                        <td>{{ payment.Status }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Payment Date</th>
+                            <th>Amount (£)</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.PaymentDate }}</td>
+                            <td>£{{ payment.Amount }}</td>
+                            <td>{{ payment.PaymentType if payment.PaymentType else "N/A" }}</td>
+                            <td>{{ payment.Status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     {% else %}
-    <div class="card my-4 text-center" style="background-color: #F8F9FA; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-        <div class="card-body">
-            <p>You haven't made any payments yet.</p>
-        </div>
+    <div class="alert alert-secondary text-center" style="border-radius: 10px; padding: 30px;">
+        <p>No payments recorded.</p>
     </div>
     {% endif %}
 </div>

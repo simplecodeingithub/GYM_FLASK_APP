@@ -700,8 +700,31 @@ INSERT INTO `membership_subscription` VALUES (1,'GMUK1001',201,'2025-04-01','202
 /*!40000 ALTER TABLE `membership_subscription` ENABLE KEYS */;
 UNLOCK TABLES;
 --
+SELECT * FROM membership WHERE MembershipID = 202;
+SELECT * FROM membership;
+SELECT * FROM membership_subscription;
+
+DELETE FROM membership_subscription
+WHERE SubscriptionID NOT IN (
+    SELECT SubscriptionID FROM temp_membership_subscription
+);
+
+SET SQL_SAFE_UPDATES = 0;
+
+CREATE TEMPORARY TABLE temp_membership_subscription AS
+SELECT MIN(SubscriptionID) AS SubscriptionID
+FROM membership_subscription
+GROUP BY UserID, MembershipID, ExpiryDate;
+
+DROP TEMPORARY TABLE temp_membership_subscription;
+
+SELECT * FROM membership_subscription;
+
+ALTER TABLE membership_subscription
+ADD CONSTRAINT unique_user_membership UNIQUE (UserID, MembershipID);
 
 DESCRIBE membership;
+DESCRIBE membership_subscription;
 
 SELECT ms.SubscriptionID, m.MembershipType, ms.JoinDate, ms.ExpiryDate
 FROM membership_subscription ms
