@@ -5,6 +5,8 @@ from werkzeug.security import check_password_hash
 from datetime import datetime, timedelta
 
 
+
+
 def get_db_connection():
     """
     This function establishes and returns a connection to the MySQL database.

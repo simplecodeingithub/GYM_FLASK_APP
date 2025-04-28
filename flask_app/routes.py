@@ -89,6 +89,14 @@ def trainers():
     trainers = get_trainers()
     return render_template('trainers.html', trainers=trainers)
 
+@app.route('/admin')
+def admin():
+    if 'username' in session:
+        username = session['username']
+        return render_template('adminarea.html', username=username, title='Admin Area')
+    return render_template('adminarea.html', username=False, title='Admin Area')
+
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
@@ -232,6 +240,44 @@ def view_users():
     cursor.close()
     db.close()
     return str(users)  # or jsonify(users) if you import jsonify
+
+
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    error = None
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM admin WHERE admin_username = %s AND admin_password = %s', (username, password))
+        admin = cursor.fetchone()
+
+        if admin:
+            session['admin_logged_in'] = True
+            return redirect(url_for('admin_dashboard'))
+        else:
+            error = 'Invalid credentials. Please try again.'
+
+    return render_template('admin_login.html', error=error)
+
+
+# Admin Dashboard Route
+@app.route('/admin')
+def admin_dashboard():
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+
+    cursor.execute('SELECT * FROM gym_user')
+    users = cursor.fetchall()
+    return render_template('admin_dashboard.html', users=users)
+
+
+# Admin Logout Route
+@app.route('/admin-logout')
+def admin_logout():
+    session.pop('admin_logged_in', None)
+    return redirect(url_for('admin_login'))
 
 
 
