@@ -134,6 +134,18 @@ def book_class(schedule_id):
     cursor = db_connection.cursor(dictionary=True)
 
     try:
+        # Check if the user has already booked this class
+        query_check_booking = """
+            SELECT 1 FROM classbooking
+            WHERE UserID = %s AND ScheduleID = %s AND BookingStatus = 'Booked';
+        """
+        cursor.execute(query_check_booking, (user_id, schedule_id))
+        existing_booking = cursor.fetchone()
+        if existing_booking:
+            flash('You have already booked this class. Please check your schedule in your '
+                  '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>.', 'warning')
+            return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
+
         # Check if user has an active Day Pass
         query_check_day_pass = """
             SELECT * FROM day_pass
@@ -162,37 +174,40 @@ def book_class(schedule_id):
         if active_day_pass:
             flash('You already have an active Day Pass. Booking your class now.', 'info')
 
-        booking_success = book_class_for_user(user_id, schedule_id)
-        if booking_success:
-            if not active_day_pass:
-                try:
+        booking_result = book_class_for_user(user_id, schedule_id)
+        print(f"Booking result: {booking_result}")
+        if booking_result == "DuplicateBooking":
+            flash('You have already booked this class. Please check your schedule in your '
+                  '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>.', 'warning')
+        elif booking_result == "NoSeats":
+            flash('Unable to book the class. No seats are available.', 'danger')
+        elif booking_result == "Success":
+            try:
+                if not active_day_pass:
+                    # Record payment for pay-per-class bookings
                     query_payment = """
                         INSERT INTO payment (UserID, PaymentDate, Amount, Status, PaymentType, ScheduleID)
                         VALUES (%s, %s, %s, %s, %s, %s)
                     """
                     payment_date = datetime.now()
-                    cursor.execute(query_payment, (user_id, payment_date, class_fee, 'Paid', 'PayPerClass', schedule_id))
+                    cursor.execute(query_payment,
+                                   (user_id, payment_date, class_fee, 'Paid', 'PayPerClass', schedule_id))
                     db_connection.commit()
                     flash(f'Class booked successfully! 🎉 Payment of £{class_fee:.2f} recorded. View your classes in your '
-                          '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>', 'success')
-                except Exception as e:
-                    db_connection.rollback()
-                    flash(f"Error processing payment: {str(e)}", 'danger')
-            else:
-                flash('Class booked successfully! 🎉 Your active Day Pass covers this booking.', 'success')
-        else:
-            flash('Unable to book the class. It may be full.', 'danger')
-
-    except Exception as e:
-        db_connection.rollback()
-        print(f"Booking error: {e}")
-        app.logger.error(f"Booking error: {str(e)}")
-        flash('Something went wrong while booking the class. Please try again later.', 'danger')
-
+                        '<a href="' + url_for('dashboard') + '" class="text-pink font-weight-bold">dashboard</a>.',
+                        'success')
+                else:
+                    flash('Class booked successfully! 🎉 Your active Day Pass covers this booking.', 'success')
+            except Exception as e:
+                db_connection.rollback()
+                flash(f"Error processing payment: {str(e)}", 'danger')
+        else:  # Handle unexpected errors or issues in `book_class_for_user`
+            flash('Unable to book the class. Please try again later.', 'danger')
     finally:
         cursor.close()
 
     return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
+
 
 
 @app.route('/membership_plans', methods=['GET'])

@@ -251,19 +251,31 @@ def book_class_for_user(user_id, schedule_id):
     connection = get_db_connection()
     cursor = connection.cursor()
     try:
+        # Check for duplicate booking
+        cursor.execute("""
+            SELECT 1 FROM classbooking
+            WHERE UserID = %s AND ScheduleID = %s AND BookingStatus = 'Booked'
+        """, (user_id, schedule_id))
+        existing_booking = cursor.fetchone()
+
+        if existing_booking:
+            print("Duplicate booking found.")  # Debug log
+            return "DuplicateBooking"
+
+        # Check seat availability
         cursor.execute("SELECT AvailableSeats FROM class_schedule WHERE ScheduleID = %s", (schedule_id,))
         schedule = cursor.fetchone()
-
         print(f"Schedule fetched: {schedule}")  # Debug log
 
-        if schedule and schedule[0] > 0:  # Access tuple by index
+        if schedule and schedule[0] > 0:  # Ensure seats are available
+            # Insert booking
             cursor.execute("""
                 INSERT INTO classbooking (UserID, ScheduleID, BookingDate, BookingStatus)
                 VALUES (%s, %s, NOW(), 'Booked')
             """, (user_id, schedule_id))
-
             print(f"Inserted booking for UserID: {user_id}, ScheduleID: {schedule_id}")  # Debug log
 
+            # Reduce available seats
             cursor.execute("""
                 UPDATE class_schedule
                 SET AvailableSeats = AvailableSeats - 1
@@ -272,13 +284,13 @@ def book_class_for_user(user_id, schedule_id):
             connection.commit()
 
             print(f"Reduced available seats for ScheduleID: {schedule_id}")  # Debug log
-            return True
+            return "Success"
         else:
             print("No available seats or schedule not found.")  # Debug log
-            return False
+            return "NoSeats"
     except Exception as e:
-        print(f"Error during booking: {e}")
-        return False
+        print(f"Error during booking: {e}")  # Debug log
+        return "Error"
     finally:
         cursor.close()
         connection.close()
@@ -431,17 +443,41 @@ def get_user_details(user_id):
         cursor.close()
         connection.close()
 
-
-
 def generate_recurring_schedules(schedules, weeks=4):
-    """Generate recurring schedules for the next `weeks` for the same days of the week."""
+    """Generate recurring schedules for the next `weeks` without creating duplicates."""
     recurring_schedules = []
+    existing_schedule_set = set()  # Track unique schedules using a set
+
     for schedule in schedules:
         for week in range(weeks):
             new_schedule = schedule.copy()
             new_schedule['ScheduleDate'] += timedelta(days=7 * week)  # Repeat every 7 days
-            recurring_schedules.append(new_schedule)
+
+            # Create a unique identifier for checking duplicates
+            unique_key = (
+                new_schedule['ScheduleDate'],
+                new_schedule['StartTime'],
+                new_schedule['EndTime'],
+                new_schedule['Location']
+            )
+
+            # Add schedule only if it's unique
+            if unique_key not in existing_schedule_set:
+                recurring_schedules.append(new_schedule)
+                existing_schedule_set.add(unique_key)  # Track generated schedule
+
     return recurring_schedules
+
+
+# def generate_recurring_schedules(schedules, weeks=4):
+#     """Generate recurring schedules for the next `weeks` for the same days of the week."""
+#     recurring_schedules = []
+#     for schedule in schedules:
+#         for week in range(weeks):
+#             new_schedule = schedule.copy()
+#             new_schedule['ScheduleDate'] += timedelta(days=7 * week)  # Repeat every 7 days
+#             recurring_schedules.append(new_schedule)
+#     return recurring_schedules
 
 def calculate_end_time(start_time, duration):
     """

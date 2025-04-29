@@ -26,6 +26,20 @@ SELECT * FROM gym_user ORDER BY UserID DESC LIMIT 1;
 SELECT * 
 FROM class_schedule;
 
+describe class_schedule;
+
+ALTER TABLE class_schedule
+ADD CONSTRAINT unique_schedule 
+UNIQUE (ScheduleDate, StartTime, EndTime, Location, class_id, TrainerID);
+
+
+
+SELECT ScheduleDate, StartTime, EndTime, class_id, COUNT(*)
+FROM class_schedule
+GROUP BY ScheduleDate, StartTime, EndTime, class_id
+HAVING COUNT(*) > 1;
+
+
 SELECT * 
 FROM fitness_class;
 --
