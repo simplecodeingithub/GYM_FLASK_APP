@@ -1,18 +1,78 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center">Nutrition Plan Details</h1>
-    <div class="card mt-4" style="border-radius: 15px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);">
-        <div class="card-body">
-            <h3>{{ plan_type }} Plan</h3>
-            <p>Here are your recommended meals:</p>
-            <ul>
-                <li>Breakfast: {{ breakfast }}</li>
-                <li>Lunch: {{ lunch }}</li>
-                <li>Dinner: {{ dinner }}</li>
+<!-- Banner Section -->
+<div class="position-relative" style="height: 50vh; background-image: url('{{ url_for('static', filename='images/food-girlcoded.png') }}'); background-size: cover; background-position: center;">
+    <div class="position-absolute top-50 start-50 translate-middle text-center text-white" style="text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);">
+        <h1 class="fw-bold" style="font-family: 'Poppins', sans-serif; font-size: 3rem;">Nutrition Coaching</h1>
+        <p style="font-family: 'Poppins', sans-serif; font-size: 1.2rem;">Fuel your body, empower your journey.</p>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container my-5">
+    <!-- About Nutrition Coaching Section -->
+    <div class="row align-items-center my-5">
+        <div class="col-md-6">
+            <h3 class="fw-bold mb-4" style="font-family: 'Poppins', sans-serif; color: #333; font-size: 2.5rem;">What is Nutrition Coaching?</h3>
+            <p style="font-family: 'Poppins', sans-serif;">Nutrition Coaching helps you understand the fundamentals of healthy eating, meal planning, and making sustainable choices for your lifestyle. Our coaching focuses on:</p>
+            <ul class="list-unstyled" style="font-family: 'Poppins', sans-serif;">
+                <li><i class="bi bi-check-circle-fill text-success"></i> Personalized advice tailored to your unique needs.</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Science-backed tips for long-lasting health results.</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Support with meal preparation and nutrition strategies.</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Balancing fitness and dietary habits for success.</li>
             </ul>
         </div>
+        <div class="col-md-6 text-center">
+            <img src="{{ url_for('static', filename='images/nutritional-coaching.png') }}" alt="About Nutrition Coaching"
+                 class="img-fluid rounded shadow-lg mb-3"
+                 style="width: 100%; height: 350px; object-fit: cover;">
+        </div>
+    </div>
+
+    <!-- Health Tips Section -->
+    <div class="container mt-5 mb-5 p-4 rounded shadow-lg" style="background-color: #f9fdfd;">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center">
+                <img src="{{ url_for('static', filename='images/meal2_image.png') }}" alt="Health Tips"
+                     class="img-fluid rounded shadow-lg mb-3"
+                     style="width: 100%; height: 350px; object-fit: cover;">
+            </div>
+            <div class="col-md-6">
+                <h3 class="text-center mb-4" style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #333;">Health Tips for a Balanced Life 🌱</h3>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Stay hydrated by drinking water regularly throughout the day.</li>
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Prioritize whole foods like fruits, vegetables, lean proteins, and grains.</li>
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Balance your meals with a mix of carbohydrates, proteins, and healthy fats.</li>
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Choose nutrient-rich snacks to curb cravings and boost energy levels.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Free Meal Plans Section -->
+    <div class="row align-items-center my-5">
+        <div class="col-md-6">
+            <h3 class="fw-bold mb-4 text-center" style="font-family: 'Poppins', sans-serif; color: #333;">Free Meal Plans</h3>
+            <ul class="list-unstyled mx-auto" style="font-family: 'Poppins', sans-serif; max-width: 400px;">
+                <li><strong>Breakfast:</strong> Oatmeal with fresh berries and a drizzle of honey.</li>
+                <li><strong>Lunch:</strong> Grilled chicken salad with mixed greens and olive oil dressing.</li>
+                <li><strong>Dinner:</strong> Stir-fried vegetables with tofu and brown rice.</li>
+                <li><strong>Snack:</strong> Greek yogurt with almonds or fresh fruits.</li>
+            </ul>
+        </div>
+        <div class="col-md-6 text-center">
+            <img src="{{ url_for('static', filename='images/meal_image.png') }}" alt="Free Meal Plans"
+                 class="img-fluid rounded shadow-lg mb-3"
+                 style="width: 100%; height: 350px; object-fit: cover;">
+        </div>
+    </div>
+
+    <!-- Call-To-Action Section -->
+    <div class="text-center mt-5">
+        <h3 class="fw-bold" style="font-family: 'Poppins', sans-serif; color: #333; font-size: 2rem;">Ready for Tailored Solutions?</h3>
+        <p style="font-family: 'Poppins', sans-serif;">Upgrade to Premium Membership to access personalized coaching and advanced meal plans!</p>
+        <button class="btn btn-primary btn-lg" onclick="window.location.href='/membership_plans'">Explore Membership Plans</button>
     </div>
 </div>
 {% endblock %}

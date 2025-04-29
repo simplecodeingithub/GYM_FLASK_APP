@@ -684,16 +684,10 @@ def add_class_route():
 
 
 
-@app.route('/nutrition_details/<plan_type>')
-def nutrition_details(plan_type):
-    # Example meal plans (replace with database query logic)
-    nutrition_plans = {
-        'Basic': {'Breakfast': 'Scrambled eggs', 'Lunch': 'Grilled chicken salad', 'Dinner': 'Steamed broccoli and salmon'},
-        'Gold': {'Breakfast': 'Oatmeal with berries', 'Lunch': 'Grilled fish tacos', 'Dinner': 'Vegetarian stir-fry'},
-        'Platinum': {'Breakfast': 'Custom smoothie', 'Lunch': 'Quinoa salad with avocado', 'Dinner': 'Personalized based on consultation'}
-    }
-    plan = nutrition_plans.get(plan_type, {})
-    return render_template('nutrition_details.html', plan_type=plan_type, **plan)
+@app.route('/nutrition')
+def nutrition():
+    return render_template('nutrition_details.html')
+
 
 
 @app.route('/on_demand')
