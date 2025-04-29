@@ -2,18 +2,37 @@
 
 {% block content %}
 <!-- Top Image Section -->
-<div class="text-center mb-4" style="display: block; position: relative; top: 0px; height: 110vh;">
+<!-- Banner Section -->
+<!-- Banner Section -->
+<!-- Banner Section -->
+<div class="text-center mb-4" style="position: relative; height: 75vh; overflow: hidden;">
+    <!-- Enlarged image -->
     <img src="{{ url_for('static', filename='images/start_now_banner_2.png') }}"
          alt="Fitness Classes" class="img-fluid rounded"
-         style="width: 100%; height: 100%; object-fit: cover; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+         style="width: 100%; height: 100%; object-fit: cover; object-position: center top;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+    <!-- Text overlay -->
+    <div style="position: absolute; top: 10%; left: 10%; display: flex; align-items: center; gap: 20px;">
+        <!-- Start Now Text -->
+        <!--<span style="color: #fff; font-size: 3.5rem; font-weight: bold;
+                     text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);">
+            Start Now
+        </span>-->
+        <!-- Fitness Classes Text -->
+        <h1 style="color: #fff; font-size: 3.5rem; font-weight: bold;
+                   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5); margin: 0;">
+            Fitness Classes
+        </h1>
+    </div>
 </div>
-
 
 <!-- About Section -->
 <div class="about-section text-center">
-  <h1 style="color: #d63384; font-size: 2.5rem; font-weight: bold;">Fitness Classes</h1>
-  <p style="font-size: 1.2rem; color: #555;">Find the perfect fitness class to achieve your goals and maintain a healthy lifestyle.</p>
+  <p style="font-size: 1.2rem; color: #555; margin-top: 20px;">Find the perfect fitness class to achieve your goals and maintain a healthy lifestyle.</p>
 </div>
+
+
+
 
 <!-- Fitness Classes Cards -->
 <div class="container my-5">

@@ -1,32 +1,31 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<!-- Banner Section -->
 <div class="text-center mb-4" style="display: block; position: relative; height: 110vh;">
     <img src="{{ url_for('static', filename='images/trainers_image.jpg') }}"
          alt="Fitness Classes" class="img-fluid rounded"
-         loading="lazy"
-         style="width: 100%; height: 100%; object-fit: cover; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+         style="width: 100%; height: 100%; object-fit: cover; object-position: center top; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
 
-    <div style="position: absolute; top: 30%; left: 50%; transform: translateX(-50%); color: #d63384; font-size: 2.2rem; font-weight: bold; text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);">
-        Welcome to Our Gym<br><span style="font-size: 1.4rem;">Discover Passionate Classes Led by Experts</span>
+    <!-- Welcome Text on Top -->
+    <div style="position: absolute; top: 10%; left: 50%; transform: translateX(-50%); color: #d63384; font-size: 2.5rem; font-weight: bold; text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);">
+        Welcome to Our Gym<br><span style="font-size: 1.6rem; color: #fff;">Discover Passionate Classes Led by Experts</span>
     </div>
 </div>
-
-
-
 
 <!-- Main Content -->
 <div style="max-width: 1200px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);">
    <!-- Page Header -->
    <h1 style="text-align: center; margin-bottom: 20px; font-size: 2.5rem; color: #d63384; font-weight: bold;">Meet Our Trainers</h1>
    <p style="text-align: center; font-size: 1.25rem; color: #d63384; margin-bottom: 50px; font-weight: bold;">
-      Certified pros who <span style="color: #b71c1c; font-style: italic;">lift</span>, <span style="color: #b71c1c; font-style: italic;">teach</span>, and <span style="color: #b71c1c; font-style: italic;">code</span> — ready to guide your growth.
+        Meet the experts who inspire transformation! Our certified trainers combine skill, passion, and experience to help you unlock your potential — whether you're building strength, mastering technique, or pursuing lifelong fitness goals.
    </p>
 
    <!-- Trainers Section -->
    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
       {% for trainer in trainers %}
-      <div style="flex: 1 1 calc(33.333% - 20px); border: 1px solid #d63384; border-radius: 10px; box-shadow: 0px 5px 10px rgba(214, 51, 132, 0.3); overflow: hidden; padding: 15px;">
+      <div class="trainer-box"
+           style="flex: 1 1 calc(33.333% - 20px); border: 1px solid #d63384; border-radius: 10px; box-shadow: 0px 5px 10px rgba(214, 51, 132, 0.3); overflow: hidden; padding: 15px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
          <!-- FirstName and LastName -->
          <h5 style="font-size: 1.5rem; color: #d63384; font-weight: bold; text-align: center; margin-bottom: 15px;">
             {{ trainer['FirstName'] }} {{ trainer['LastName'] }}
@@ -56,4 +55,13 @@
       {% endfor %}
    </div>
 </div>
+
+<!-- Hover Effect CSS -->
+<style>
+    .trainer-box:hover {
+        transform: translateY(-10px); /* Slight elevation effect */
+        box-shadow: 0px 10px 20px rgba(214, 51, 132, 0.5); /* Enhanced shadow effect */
+    }
+</style>
+
 {% endblock %}

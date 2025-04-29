@@ -27,6 +27,7 @@ SELECT *
 FROM class_schedule;
 
 describe class_schedule;
+describe classbooking;
 
 ALTER TABLE class_schedule
 ADD CONSTRAINT unique_schedule 
