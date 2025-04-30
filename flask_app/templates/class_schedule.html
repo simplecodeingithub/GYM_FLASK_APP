@@ -48,8 +48,10 @@
                                     {% if schedule.AvailableSeats > 0 %}
                                         {% if session.user_id %}
                                             <form action="{{ url_for('book_class', schedule_id=schedule.ScheduleID) }}" method="POST">
+                                                <input type="hidden" name="ScheduleID" value="{{ schedule.ScheduleID }}">
                                                 <button type="submit" class="btn btn-pink">Book</button>
                                             </form>
+
                                         {% else %}
                                             <a href="{{ url_for('login', next=request.url) }}" class="btn btn-pink">Log In to Book</a>
                                         {% endif %}

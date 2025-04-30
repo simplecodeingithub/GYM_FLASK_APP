@@ -49,11 +49,6 @@ def classes():
     return render_template('classes.html', classes=classes)
 
 
-def get_week_label(schedule_date, start_date):
-    """Calculate the week number based on the start date."""
-    delta = schedule_date - start_date
-    return f"Week {delta.days // 7 + 1}"  # Determine week number
-
 
 @app.route('/view_schedule', defaults={'class_id': None}, methods=['GET'])
 @app.route('/view_schedule/<int:class_id>', methods=['GET'])
@@ -70,7 +65,7 @@ def view_schedule(class_id):
     schedules = get_schedule_by_days(class_id)
     print(schedules)
     # Add recurrence for 4 weeks
-    recurring_schedules = generate_recurring_schedules(schedules, weeks=4)  # Generate future occurrences
+    recurring_schedules = generate_recurring_schedules(schedules, weeks=2)  # Generate future occurrences
 
     # Define the batch classification function
     def get_batch_label(start_time):
@@ -89,7 +84,7 @@ def view_schedule(class_id):
         return f"Week {delta.days // 7 + 1}"  # Determine week number
 
     grouped_schedules = {}
-    week_start_date = date(2025, 4, 21)  # Define the start of Week 1
+    week_start_date = date(2025, 4, 28)  # Define the start of Week 1
 
     for schedule in recurring_schedules:
         # Calculate week label
@@ -207,7 +202,6 @@ def book_class(schedule_id):
         cursor.close()
 
     return redirect(request.referrer or url_for('view_schedule', class_id=schedule_id))
-
 
 
 @app.route('/membership_plans', methods=['GET'])

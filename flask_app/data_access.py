@@ -357,6 +357,7 @@ def cancel_booking_for_user(user_id, schedule_id):
         cursor.close()
         connection.close()
 
+
 def get_schedule_by_days(class_id):
     """Fetch schedules grouped by days of the week for a specific class, including price."""
     connection = get_db_connection()
@@ -382,6 +383,21 @@ def get_schedule_by_days(class_id):
     finally:
         cursor.close()
         connection.close()
+
+
+def generate_unique_schedule_id():
+    """Generate a new unique ScheduleID as an integer."""
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT COALESCE(MAX(ScheduleID), 0) + 1 FROM class_schedule")  # Fetch next available ID
+        next_id = cursor.fetchone()[0]
+        return next_id
+    finally:
+        cursor.close()
+        connection.close()
+
+
 
 
 # def get_schedule_by_days(class_id):
@@ -443,7 +459,9 @@ def get_user_details(user_id):
         cursor.close()
         connection.close()
 
-def generate_recurring_schedules(schedules, weeks=4):
+
+
+def generate_recurring_schedules(schedules, weeks=2):
     """Generate recurring schedules for the next `weeks` without creating duplicates."""
     recurring_schedules = []
     existing_schedule_set = set()  # Track unique schedules using a set
@@ -467,7 +485,6 @@ def generate_recurring_schedules(schedules, weeks=4):
                 existing_schedule_set.add(unique_key)  # Track generated schedule
 
     return recurring_schedules
-
 
 # def generate_recurring_schedules(schedules, weeks=4):
 #     """Generate recurring schedules for the next `weeks` for the same days of the week."""

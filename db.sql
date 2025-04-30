@@ -8,6 +8,8 @@ USE `gym_app`;
 SELECT * 
 FROM gym_user;
 
+SELECT * FROM class_schedule WHERE ScheduleDate = '2025-04-28';
+
 DELETE FROM gym_user 
 WHERE UserID IN ('GMUK0007', 'GMUK0008', 'GMUK0009', 'GMUK0010', 'GMUK0011');
 
@@ -27,7 +29,113 @@ SELECT *
 FROM class_schedule;
 
 describe class_schedule;
+
+DELETE FROM class_schedule
+WHERE ScheduleDate BETWEEN '2025-04-21' AND '2025-05-04';
+
+SELECT * FROM class_schedule WHERE Price IS NULL;
+
+UPDATE class_schedule
+SET ScheduleDate = DATE_ADD(ScheduleDate, INTERVAL 7 DAY)
+WHERE ScheduleDate BETWEEN '2025-04-21' AND '2025-04-27';
+
+DELETE FROM class_schedule
+WHERE ScheduleDate BETWEEN '2025-04-28' AND '2025-05-04'
+  AND Location = 'Studio A'
+  AND StartTime = '09:00:00'
+  AND class_id = 1;
+
+-- new insert values
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek, TrainerID)
+VALUES 
+(1201, 1, '2025-04-28', '09:00:00', '10:00:00', 'Studio A', 24, 'Monday', 1),
+(1202, 1, '2025-04-28', '18:00:00', '19:00:00', 'Studio A', 24, 'Monday', 1),
+(1203, 1, '2025-04-30', '09:00:00', '10:00:00', 'Studio A', 25, 'Wednesday', 1),
+(1204, 1, '2025-04-30', '18:00:00', '19:00:00', 'Studio A', 25, 'Wednesday', 1),
+(1205, 1, '2025-05-02', '09:00:00', '10:00:00', 'Studio A', 25, 'Friday', 1),
+(1206, 1, '2025-05-02', '18:00:00', '19:00:00', 'Studio A', 25, 'Friday', 1),
+(1207, 1, '2025-05-04', '09:00:00', '10:00:00', 'Studio A', 25, 'Sunday', 1),
+(1208, 1, '2025-05-04', '18:00:00', '19:00:00', 'Studio A', 25, 'Sunday', 1);
+
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek, TrainerID)
+VALUES 
+(1301, 2, '2025-04-29', '12:00:00', '13:00:00', 'Studio B', 20, 'Tuesday', 2),
+(1302, 2, '2025-05-01', '12:00:00', '13:00:00', 'Studio B', 20, 'Thursday', 2),
+(1303, 2, '2025-05-03', '12:00:00', '13:00:00', 'Studio B', 20, 'Saturday', 2),
+(1304, 2, '2025-04-29', '18:00:00', '19:00:00', 'Studio B', 20, 'Tuesday', 2),
+(1305, 2, '2025-05-01', '18:00:00', '19:00:00', 'Studio B', 20, 'Thursday', 2),
+(1306, 2, '2025-05-03', '18:00:00', '19:00:00', 'Studio B', 20, 'Saturday', 2);
+
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek, TrainerID)
+VALUES 
+(1401, 3, '2025-04-28', '11:00:00', '12:00:00', 'Studio C', 18, 'Monday', 3),
+(1402, 3, '2025-04-30', '11:00:00', '12:00:00', 'Studio C', 18, 'Wednesday', 3),
+(1403, 3, '2025-05-03', '11:00:00', '12:00:00', 'Studio C', 18, 'Saturday', 3),
+(1404, 3, '2025-04-28', '17:00:00', '18:00:00', 'Studio C', 18, 'Monday', 3),
+(1405, 3, '2025-04-30', '17:00:00', '18:00:00', 'Studio C', 18, 'Wednesday', 3),
+(1406, 3, '2025-05-03', '17:00:00', '18:00:00', 'Studio C', 18, 'Saturday', 3);
+
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek, TrainerID)
+VALUES 
+(1501, 4, '2025-04-29', '13:00:00', '14:00:00', 'Studio D', 15, 'Tuesday', 4),
+(1502, 4, '2025-05-01', '13:00:00', '14:00:00', 'Studio D', 15, 'Thursday', 4),
+(1503, 4, '2025-04-29', '18:00:00', '19:00:00', 'Studio D', 14, 'Tuesday', 4),
+(1504, 4, '2025-05-01', '18:00:00', '19:00:00', 'Studio D', 15, 'Thursday', 4);
+
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek, TrainerID)
+VALUES 
+(1601, 5, '2025-04-28', '08:00:00', '09:00:00', 'Studio E', 30, 'Monday', 5),
+(1602, 5, '2025-04-29', '08:00:00', '09:00:00', 'Studio E', 30, 'Tuesday', 5),
+(1603, 5, '2025-04-30', '08:00:00', '09:00:00', 'Studio E', 30, 'Wednesday', 5),
+(1604, 5, '2025-05-01', '08:00:00', '09:00:00', 'Studio E', 30, 'Thursday', 5),
+(1605, 5, '2025-05-02', '08:00:00', '09:00:00', 'Studio E', 30, 'Friday', 5),
+(1606, 5, '2025-04-28', '17:30:00', '18:30:00', 'Studio E', 30, 'Monday', 5),
+(1607, 5, '2025-04-29', '17:30:00', '18:30:00', 'Studio E', 30, 'Tuesday', 5),
+(1608, 5, '2025-04-30', '17:30:00', '18:30:00', 'Studio E', 30, 'Wednesday', 5),
+(1609, 5, '2025-05-01', '17:30:00', '18:30:00', 'Studio E', 30, 'Thursday', 5),
+(1610, 5, '2025-05-02', '17:30:00', '18:30:00', 'Studio E', 30, 'Friday', 5);
+
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek, TrainerID)
+VALUES 
+(1701, 6, '2025-04-30', '10:30:00', '11:30:00', 'Studio F', 16, 'Wednesday', 6),
+(1702, 6, '2025-05-02', '10:30:00', '11:30:00', 'Studio F', 16, 'Friday', 6),
+(1703, 6, '2025-05-04', '10:30:00', '11:30:00', 'Studio F', 16, 'Sunday', 6),
+(1704, 6, '2025-04-30', '18:30:00', '19:30:00', 'Studio F', 16, 'Wednesday', 6),
+(1705, 6, '2025-05-02', '18:30:00', '19:30:00', 'Studio F', 16, 'Friday', 6),
+(1706, 6, '2025-05-04', '18:30:00', '19:30:00', 'Studio F', 16, 'Sunday', 6);
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+--
+INSERT INTO class_schedule (ScheduleID, class_id, ScheduleDate, StartTime, EndTime, Location, AvailableSeats, DayOfWeek, TrainerID)
+VALUES 
+(1201, 1, '2025-04-28', '09:00:00', '10:00:00', 'Studio A', 24, 'Monday', 1),
+(1202, 1, '2025-04-28', '18:00:00', '19:00:00', 'Studio A', 24, 'Monday', 1),
+(1203, 1, '2025-04-30', '09:00:00', '10:00:00', 'Studio A', 25, 'Wednesday', 1),
+(1204, 1, '2025-04-30', '18:00:00', '19:00:00', 'Studio A', 25, 'Wednesday', 1),
+(1205, 1, '2025-05-02', '09:00:00', '10:00:00', 'Studio A', 25, 'Friday', 1),
+(1206, 1, '2025-05-02', '18:00:00', '19:00:00', 'Studio A', 25, 'Friday', 1),
+(1207, 1, '2025-05-04', '09:00:00', '10:00:00', 'Studio A', 25, 'Sunday', 1),
+(1208, 1, '2025-05-04', '18:00:00', '19:00:00', 'Studio A', 25, 'Sunday', 1);
+
+DELETE FROM class_schedule;
+
+SET SQL_SAFE_UPDATES = 0;
+
+SELECT *
+FROM class_schedule
+WHERE ScheduleDate = '2025-04-28'
+  AND StartTime = '09:00:00'
+  AND EndTime = '10:00:00'
+  AND Location = 'Studio A'
+  AND class_id = 1;
+
+
+describe class_schedule;
 describe classbooking;
+
+SELECT * 
+FROM classbooking;
 
 ALTER TABLE class_schedule
 ADD CONSTRAINT unique_schedule 
